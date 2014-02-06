@@ -246,11 +246,11 @@ never really specified. We only stated that it should be a positive
 constant. The power comes from the fact that the lemma holds for {\bf
 any} assignment of positive weights to the nodes. By carefully
 choosing the weights, we can prove many interesting properties of
-splay trees. Let us look at some examples.
+splay trees. Let us look at some examples, starting with the most mundane.
 
 \begin{thm}[Balance Theorem]
 Given a sequence of $m$ accesses into an $n$ node splay tree $T$, the
-total access time is $O((m+n)\log n)$.
+total access time is $O(n\log n + m\log n)$.
 \end{thm}
 
 \begin{proof}
@@ -297,28 +297,118 @@ such as an $n$-node path, and still achieve good behaviour.
 %$\Phi_{max}(T) - \Phi_{min}(T) = \sum_{i=1}^n \log(q(i)/m)$.
 %\end{proof}
 
-\begin{thm}[Static Optimality Theorem] 
-Fix some static binary search tree $T^*$ that contains the elements
-$1,\ldots,n$, fix an access sequence $a_1,\ldots,a_m$, and let $T^*(n)$
-denote the cost of searching for $a_1,\ldots,a_m$ using $T^*$.  Then the
-cost of accessing $a_1,\ldots,a_m$ using a splay tree is $O(n\log n + T^*(n))$.
+\begin{thm}[Static Optimality Meta-Theorem] 
+Fix some static binary search tree $T^*$ and let $d(x)$ denote the depth
+of the node containing $x$ in $T^*$. 
+For any access sequence $a_1,\ldots,a_m$ consisting of elements in $T^*$,
+the cost of accessing $a_1,\ldots,a_m$ using a splay tree is at most
+$O(n\log n + m + \sum_{i=1}^m d(a_i)$.
 \end{thm}
 
 \begin{proof}
 If $d(x)$ is the depth of node $x$ in $T^*$, then we assign a weight of
-$w(x)=1/3^{d(x)}$ to the node containing $x$ in the splay tree.  Now, note that the size of the root (and hence any node) is at most 
 \[
-    \sum_{i=0}^\infty 2^i/3^i = 3 \enspace ,
+   w(x)=1/n+1/3^{d(x)}
+\]
+to the node containing $x$ in the splay tree.  Now, note that the size of the root (and hence any node) is at most 
+\[
+    \sum_{x\in T}\left(1/n + 1/3^{d(x)}\right) = 
+    1 + \sum_{x\in T}1/3^{d(x)} 
+    \le 1 + \sum_{i=0}^\infty 2^i/3^i 
+    = 4 \enspace ,
 \]
 since $T^*$ has at most $2^i$ nodes with depth $j$ and these each have
-weight $1/3^j$.
+weight $1/3^j$. 
 
 Now, according to the Access Lemma, the amortized cost of accessing node $x$ is
 at most
+\begin{align*}
+    3(\log 4 - \log(s(x)) + 1 
+    & = 6 - 3\log(1/n+1/3^{d(x)})  \\
+    & \le 6 - 3\log(1/3^{d(x)})   \\
+    & = 6 + 3\log(3^{d(x)})   \\
+    & = 6 + (3\log 3)d(x) 
+\end{align*}
+
+All that remains is to bound the net drop in potential, $\Phi_{max}-\Phi_{min}$.
+We have already determined that $s(x)\le 4$ for any node $x$, so $r(x)\le 2$ and $\Phi_{max} \le 2n$.  On the other hand, $s(x)\ge w(x)\ge 1/n$ for every node $x$, so $r(x)\ge -\log n$ and $\Phi_{min}\ge -n\log n$.  Putting everything together, we get that the total cost of accessing $a_1,\ldots,a_m$
+using a splay tree is
+\begin{align*}
+   \Phi_{max} - \Phi_{min} + \sum_{i=1}^m \left(6 + (3\log 3)d(a_i)\right)
+  & = 2n - (-n\log n) + \sum_{i=1}^m \left(6 + (3\log 3)d(a_i)\right) \\
+  & = n\log n + 2n + 6m + (3\log 3)\sum_{i=1}^m d(a_i) \\
+  & = O\left(n\log n + m + \sum_{i=1}^m d(a_i)\right) \enspace .\qedhere
+\end{align*}
+\end{proof}
+
+The Static Optimality Meta-Theorem allows us to compare the performance
+of splay trees with that of \emph{any} fixed binary search tree.
+For example, letting $T^*$ be a perfectly balanced binary search tree
+on $n$ items---so that $d(x)\le \log_n$ for every $x$---and applying
+the Static Optimality Theorem gives the Balance Theorem.
+
+For another example, in \chapref{entropy}, we saw that for any
+probability distribution on $1,\ldots,n$, there exists a binary search
+tree with keys $1,\ldots,n$ whose expected search time is proportional
+to the entropy of that distribution, when the value being searched for
+is drawn from that distribution.  This implies the following corollary:
+
+\begin{cor}(Static Optimality Theorem)
+If $a_1,\ldots,a_m$ are drawn independently from the a probability
+distribution with entropy $H$, then the expected time to access
+$a_1,\ldots,a_m$ using a splay tree is $O(n\log n + m + mH)$.
+\end{cor}
+
+As another example, we obtain the \emph{static finger property}. As an
+exercise, show how, given any integer $f\in\{1,\ldots,n\}$ to design a
+static tree that stores $1,\ldots,n$ and such that the time to search
+for $x$ is $O(1+\log|f-x|)$. (Hint: Try the special case $f=1$ first.)
+The existence of this tree implies the following result:
+
+\begin{cor}(Static Finger Theorem)
+Let $a_1,\ldots,a_m$ be a sequence of values in $\{1,\ldots,n\}$.  Then,
+for any $f\in\{1,\ldots,n\}$, the time to access $a_1,\ldots,a_m$ using
+a splay tree is $O(n\log n + m + \sum_{i=1}^m \log|a_i-f|)$.
+\end{cor}
+
+We finish with one additional property of splay trees that is not covered by the Static Optimality Theorem: 
+
+\begin{thm}(Working-Set Theorem)
+For any access sequence $a_1,\ldots,a_m$
+the cost of accessing $a_1,\ldots,a_m$ using a splay tree is at most
+$O(n\log n + m + \sum_{i=1}^m\log w_i(a_i))$, where
 \[
-    3(\log 3 - \log(s(x)) + 1 = O(1) + 3\log(3^{d(x)}) 
-    = O(1) + (3\log_2 3)d(x) = O(1+d(x))
+   w_i(x) = \begin{cases}
+        \min\{j\ge 1 : a_{i-j}=x\} & \text{if $x\in\{a_1,\ldots,a_{i-1}\}$} \\
+        $n$ & \text{otherwise.}
+       \end{cases}
 \]
+\end{thm}
+
+\begin{proof}
+Assign the weights $1, 1/4, 1/9, \ldots, 1/n^2$ to the values in the splay tree in the order of their first access in the sequence $a_1,\ldots,a_m$.  Immediately after an access to element $x$, whose weight is $1/i^2$, occurs we will \emph{reweight} elements as follows: $x$ will be assigned weight $1$, the item with weight $1$ will be assigned weight $1/4$, the item with weight $1/4$ will be assigned weight $1/9$ and, in general, any item with weight $1/j^2$, $j<i$ will be assigned weight $1/(j+1)^2$.
+
+Notice that, with this scheme, the sum of all the weights, and hence the size of the root is
+\[
+    \sum_{i=1}^n 1/i^2 \le \sum_{i=1}^\infty 1/i^2 = \pi^2/6 \enspace .
+\]
+This initial assignment of weights along with the reassignment of
+weights ensures that the weight of $a_i$ at the time it is accessed
+is $1/(w_i(a_i))^2$.  The Access Lemma then implies that the amortized
+cost to access $a_i$ is at most
+\[
+   3(\log(\pi^2/6) - \log(1/w_i(a_i)^2)) + 1 
+   = 3(\log(\pi^2/6) + 2\log(w_i(a_i)) + 1
+\]
+This is all great, except that we also have to account for any increase in potential caused by the reweighting. The reweighting increases the weight of $a_i$ from $1/(w_i(a_i))^2$ to $1$. For values other than $a_i$, the weights only decrease or remain unchanged.  Since, by the time we do reweighting $a_i$ is at the root, the reweighting does not increase the rank of $a_i$.  On the other hand, it can only decrease the ranks of other nodes, so overall it can not result in an increase in potential.
+
+To finish, we need only bound $\Phi_{max}$ and $\Phi_{min}$.  We already have an upper bound of $\log (\pi^2/6)$ on the rank of the root, which gives an upper bound of $\Phi_{max}\le \log (\pi^2/6)$.  For the lower-bound, note that every node has weight at least $1/n^2$, so it's rank is at least $-2\log n$.  To summarize, the total cost of accessing $a_1,\ldots,a_m$ is
+\begin{align*}
+   \Phi_{max} - \Phi_{min} + \sum_{i=1}^m 3\left(\log\pi^2/6 + 2\log w_i(a_i)\right) 
+   & = (\pi^2/6)n + 2n\log n + 3\log(\pi^2/6)m + \sum_{i=1}^m 6\log w_i(a_i) \\
+  & = O\left(n\log n + m + \sum_{i=1}^m \log w_i(a_i)\right) \enspace .\qedhere
+\end{align*}
+
 \end{proof}
 
 \section{Pairing Heaps}
