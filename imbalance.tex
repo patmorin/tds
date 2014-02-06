@@ -1,0 +1,296 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Deliberate Imbalance}\chaplabel{imbalance}
+\bibliographystyle{plain}
+
+In many data structures and algorithms, the idea of \emph{balance} is
+used to ensure efficient running times for various operations.  The
+most of obvious example of this is balanced search trees, in which
+great care is taken to ensure that the sizes (or heights) of the
+subtrees of each node are roughly the same.
+
+In this section, we study data structures that try to achieve
+\emph{imbalance}, the more the better.  Intuitively, splitting a
+problem into two subproblems with one subproblem much smaller than the
+other is a useful thing to do, \emph{provided that the cost of solving
+the entire problem is a function of the smaller problem} rather than
+the bigger one.
+
+Two examples of this are the recurrences
+\[ 
+	T(n) = T(n_1) + T(n_2) + \min\{n_1,n_2\}  
+\]
+and 
+\[
+	T(n) = T(\min\{n_1,n_2\}) + f(n) \enspace ,
+\]
+where $n_1$ and $n_2$ satisfy $n_1+n_2=n$.  The first recurrence is
+always bounded by $O(n\log n)$ while the second recurrence is always
+bounded by $O(f(n)\log n)$.\footnote{For $f(n)=\Omega(n^c)$, $c>0$,
+the second recurrence is actually bounded by $O(f(n))$.}
+
+In this section we study three data structures that use the principle
+of imbalance to achieve logarithmic running times.  The first data
+structure is used to maintain a set of disjoint sets while the other
+two are used to implement priority queues.  All three of these data
+structures have applications in network algorithms.
+
+%======================================================================
+\section{Disjoint Sets}
+
+Let $U=\{u_1,\ldots,u_n\}$ be a set of elements.  We want to maintain
+a \emph{partition} of $U$ into disjoint sets $S_1,\ldots,S_m$.
+Initially, each member $u_i\in U$ is part of the singleton set
+$S_i=\{u_i\}$.  Data structures for maintaining partitions need to
+support two operations: 
+\begin{enumerate}
+\item \textsc{Merge$(S_i,S_j)$}.  Merge the two sets $S_i$ and $S_j$
+of the partition into a single set $S_i\cup S_j$.  This destroys $S_i$
+and $S_j$.
+
+\item \textsc{Find$(u_i)$}. Return a pointer to the unique set $S_j$
+such that $u_i\in S_j$.
+\end{enumerate}
+
+To maintain disjoint sets we use a set of linked lists
+$L_1,\ldots,L_m$, where $L_j$ contains all the elements of $S_j$.  One
+nice property of linked lists is that two linked lists can be
+concatenated in constant time provided that we maintain a pointer to
+the last element in each list.  In addition, each list item $l_i\in
+L_j$ maintains a pointer, denoted by $\rep(l_i)$, to the first element of
+$L_j$.
+
+Initially, we create $n$ different lists, each containing a different
+element $u_i\in U$.  When merging two lists $L_1$ and $L_2$ we append
+the shorter of the two lists, say $L_2$, onto the longer of the two
+lists, $L_1$.  We then update $\rep(l_i)$ for all elements in $l_i\in
+L_2$.  The cost of a merge operation is therefore
+$O(\min\{|L_1|,|L_2|\})$.  A find operation on node $u_i$ can be
+implemented in constant time by simply returning $\rep(l_i)$.
+
+The worst-case running time of the merge operation is not very
+impressive, since $L_1$ and $L_2$ could both be as large as $n/2$.
+However, what we are interested in is the cost of $n$ merge
+operations.  To analyze this cost, we observe that the total cost of
+merge operations is bounded by the number of times we update $\rep$
+pointers.  Next, we note that each time that $\rep(l_i)$ is updated,
+the size of the list to which $l_i$ belongs at least doubles.
+Therefore, $\rep(l_i)$ is updated at most $\lfloor\log_2 n\rfloor$
+times.  Since this is true for each $1\le i\le n$, the total cost of
+$n$ merge operations is $O(n\log n)$.
+
+Alternatively, we can look at the binary \emph{merge tree}, whose
+leaves correspond to the singleton lists created initially, and for
+which each internal node corresponds to a merge operation and has the
+two merged lists as its children.  The weight $W(u)$ of a node $u$ is
+the length of the list corresponding to $u$.  The total cost of all
+merges performed in the subtree rooted at the root $r$ is therefore
+given by the recurrence.
+\[
+	T(r) = T(\rght(r)) + T(\lft(r)) + \min\{C(\rght(r)),C(\lft(r))\}
+\]
+which we saw in the introduction solves to $O(n\log n)$.
+
+\begin{thm}
+Using the linked-list representation of disjoint sets, a sequence of
+$n$ merge and $m$ find operations on a total of $n$ elements can be
+implemented in $O(m+n\log n)$ time.
+\end{thm}
+
+%======================================================================
+\section{Leftist Heaps}
+
+Next we consider the problem of maintaining a priority queue.  A
+priority queue is a data structure that stores real valued
+\emph{priorities} and supports the following operations:
+
+\begin{enumerate}
+\item \textsc{MakeQueue$(p)$}.  Create a new priority queue $Q$ containing
+	only the priority $p$.
+
+\item \textsc{Insert$(p,Q)$}. Insert the priority $p$ into the queue
+$Q$.
+
+\item \textsc{FindMin$(Q)$}. Report the minimum priority stored in
+the queue $Q$.
+
+\item \textsc{DeleteMin$(Q)$}. Delete the minimum priority from the
+queue $Q$.
+
+\item \textsc{Merge$(P,Q)$}. Merge the two priority queues $P$ and
+$Q$, i.e, create a new priority queue $R$ containing all the
+priorities in $P$ and $Q$.  At the same time, destroy $P$ and $Q$.
+\end{enumerate}
+
+The most common implementations of priority queues use trees whose
+nodes are labelled with priorities, and which satisfy the \emph{heap
+property} (\propref{heap}), namely that the priorities stored at the
+children of any node $u$ are less than the priority of $u$.  We call
+any tree with this property a \emph{heap ordered tree}.
+
+For a binary tree $T$, we define the \emph{null path length} of $T$,
+denoted $\npl(T)$ as the shortest path from the root of $T$ to a node
+that does not have two children.  To implement leftist heaps, each
+subtree $T'$ maintains, in addition to the priority at its root, the
+value of $\npl(T')$.  The overall structure of a leftist tree is
+described by the following \emph{leftism} property.
+
+\begin{prop}[Leftism]\proplabel{leftism}
+ $\npl(\lft(T'))\ge \npl(\rght(T')$ for all subtrees $T'$ of $T$.
+\end{prop}
+
+The leftism property ensures that the rightmost path in a leftist heap
+leads to a node with less than 2 children in $O(\log n)$ steps.  To
+see this, assume that a leftist tree $T$ containing $n$ priorities has
+null path length $d$.  Then, it must be that the first $d$ levels of
+$T$ form a complete binary tree and therefore have $2^d$ nodes.  Since
+$T$ contains only $n$ nodes it follows that $d\le \lfloor\log_2
+n\rfloor$.  However, by the leftism property, the shortest path to a
+node of $T$ with less than 2 children must be the rightmost path in
+$T$.  Thus, this path has length at most $\lfloor\log_2 n\rfloor$.
+
+
+The \textsc{MakeQueue}$(p)$ operation is trivial to implement in
+constant time for leftist heaps.  We simply make a new leftist heap
+$Q$ with one node whose priority is $p$.  The heap property and
+leftism property are obviously true for $Q$.
+
+The \textsc{Insert}$(p,Q)$ operation is implemented calling
+\textsc{MakeQueue$(p)$} and then merging the resulting priority queue
+with $Q$ with a call to \textsc{Merge}.  The running time of
+\textsc{Insert} is therefore dominated by the running time of
+\textsc{Merge}.
+
+To implement \textsc{FindMin}$(Q)$, we first note simply that in
+any heap-ordered tree, the minimum priority is stored at the
+root. Therefore we need only report the priority at the root of the
+leftist tree representing $Q$.
+
+To implement \textsc{DeleteMin$(Q)$}, we delete the root of the tree
+representing $Q$ and merge left and right children of $Q$ with a call
+to \textsc{Merge}. Again, the running time of \textsc{DeleteMin}
+therefore depends on the running time of \textsc{Merge}.
+
+Finally, to implement \textsc{Merge$(P,Q)$} we use a recursive
+procedure that operates on the rightmost paths of the two trees.  Let
+$T^Q$ denote the leftist tree representing $Q$ and let $T^P$ denote
+the leftist tree representing $P$.  Assume, that the priority at the
+root of $T^Q$ is less than that at the root of $T^P$, otherwise we can
+reverse the roles of $T^Q$ and $T^P$.  If $\rght(T^Q)$ is $\nil$, we
+make $T^P$ the right child of $T^Q$.  Otherwise, we recursively merge
+$T^P$ with the right child of $T^Q$.  After the merge, we check the
+values of $\npl(\rght(T^Q))$ and $\npl(\lft(T^Q))$ and swap
+$\rght(T^Q)$ and $\lft(T^Q)$ if necessary.  Finally, we update the
+value of $\npl(T^Q)$ by setting it to $\npl(\rght(T^Q))$.
+
+A simple inductive argument will verify that the above procedure
+maintains the heap property, the leftism property and correctly
+updates the $\npl$ values for each node.  To bound the running time of
+the procedure we observe that at each recursive invocation we either
+move down the right subtree of $T^Q$ or $T^P$, so there are at most
+$O(\log n)$ recursive calls, each taking constant time.  This gives an
+overall running time of $O(\log n)$ for merging two priority queues
+$P$ and $Q$ containing a total of $n$ priorities.
+
+\begin{thm}
+Leftist heaps support the operations \textsc{MakeQueue} and
+\textsc{FindMin} in constant time and the operations
+\textsc{Insert}, \textsc{DeleteMin} and \textsc{Merge} in $O(\log n)$
+time.
+\end{thm}
+
+%======================================================================
+\section{Randomized Meldable Heaps}
+
+\newcommand{\depth}{\mathrm{depth}}
+
+Next we consider another implementation of heaps that uses
+randomization.  The performance of this implementation is based on
+properties of random walks in binary trees.  Take any binary tree $T$
+and augment it into a binary tree $T'$ by adding one or two leaves to
+any node that has one or zero children, respectively.  Note $T'$ is
+\emph{full}; all internal nodes of $T'$ have 2 children, $T'$ has
+$n+1$ leaves and $n$ internal nodes.  A \emph{random walk} in $T'$ is
+a root-to-leaf path obtained as follows: Start at the root, and while
+the current node is not a leaf, toss a fair coin and go to the left
+child of the current node or the right child of the current node
+depending on whether the coin comes up heads or tails, respectively.
+
+Let us consider the expected length of a random walk in $T'$.  Observe
+that, if a leaf $v$ of $T'$ has depth $\depth(v)$ then the probability
+that the walk terminates at $v$ is exactly $p_v = 2^{-d}$.  Thus, the
+expected length of the random walk is
+\[
+   \sum_{\mbox{$v$ is a leaf of $T'$}} 2^{-\depth(v)}\depth(v)
+     = \sum_{\mbox{$v$ is a leaf of $T'$}} p_v\log(1/p_v) = H 
+\]  
+where $H$ is the entropy of the probability distribution that the
+random walk induces over the leaves of $T'$.  
+We saw in \chapref{entropy} that a probability distribution of
+$r$ items has entropy at most $\log_2 r$, so the value of $H$ above is
+at most $\log(n+1)$.  That is, a random walk in a full binary tree
+with $n+1$ leaves has expected length at most $\log(n+1)$, \emph{and
+this is true regardless of the shape of the tree}.
+
+Next we see how to use this fact to obtain an efficient algorithm for
+merging two heaps.  Let $T_1$ and $T_2$ be two heap-ordered binary
+trees with $n_1$ and $n_2$ nodes, respectively.  If either $T_1$ or
+$T_2$ is empty, then we are done.  Otherwise we first check which of
+the two trees has a smaller root, since this will become the root of
+the new heap.  Suppose, wlog, that $T_1$ has the smaller root.  Then
+we toss a fair coin and recursively merge $T_2$ with the left or right
+subtree of $T_1$ depending on whether the coin came up heads or tails,
+respectively.
+
+What is the expected running time of this merge operation?  We can
+view the merge operation as taking two random walks on the augmented
+full binary trees $T_1'$ and $T_2'$, where we interleave the steps of
+the random walks depending on the values in the trees.  The merge
+operation completes when one of the random walks reaches a leaf.
+Together, the two random walks have expected length at most
+$\log_2(n_1+1)+\log_2 (n_2+1)$.  Therefore, the expected cost of a
+merge operation on two heaps of size $n_1$ and $n_2$ is $O(\log n_1 +
+\log n_2)$.  Again, this does not depend on the shapes of the trees
+representing the two heaps.
+
+Now, once we have an efficient merge operation, all other operations
+are easy to implement.  To insert a new element $x$ into a heap we
+create a new heap containing only $x$ and merge it with the old heap.
+To delete the minimum element in a heap we simply remove the root and
+merge the left and right subtrees.  To delete an arbitrary element in
+a heap we delete it and perform two merges to merge the resulting
+three heaps.  And so on.  
+
+\begin{thm}\thmlabel{randmeld}
+Randomized meldeable heaps support the operations \textsc{MakeQueue}
+and \textsc{FindMin} in constant time and the operations
+\textsc{Insert}, \textsc{Delete}, \textsc{DeleteMin} and
+\textsc{Merge} in $O(\log n)$ expected time.
+\end{thm}
+
+With a little more work, \thmref{randmeld} can be strengthened to show
+that all the operations on heaps can be done in $O(\log n)$ time with
+high probability.  This is because each step of a random walk has
+probability at least $1/2$ of decreasing the size of the current
+subtree by a factor of at least $1/2$.  An easy application of
+Chernoff's bounds then shows that the probability that a random walk
+requires more than $(2+c)\log_2 n$ steps is $O(n^{-c})$.
+
+
+
+%======================================================================
+\section{Skew Heaps}
+
+This section is still to be written.
+
+
+%======================================================================
+\section{Discussion and References}
+
+The linked-list data structure for disjoint sets is due to Tarjan,
+though much more efficient data structures are possible \cite{t75}.
+Leftist heaps are described by Knuth \cite{k96}.  Randomized meldeable
+heaps are due to Gambin and Malinowsky \cite{gm98}.
+
+\bibliography{tds}
+
+

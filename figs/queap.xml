@@ -1,0 +1,60 @@
+<ipe creator="ipe5toxml 2003/04/10" media="-339.5 -373 255.5 469">
+<preamble>\usepackage{times,mathptm}
+</preamble>
+<page>
+<path stroke="black" pen="0.4">
+-96 108 m
+-156 -12 l
+-36 -12 l h
+</path>
+<path stroke="black" pen="0.4">
+-24 -12 m
+84 -12 l
+</path>
+<mark stroke="black" pos="-156 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-144 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-132 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-120 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-108 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-96 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-84 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-72 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-60 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-48 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-36 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-24 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-12 -12" shape="2" size="2"/>
+<mark stroke="black" pos="0 -12" shape="2" size="2"/>
+<mark stroke="black" pos="12 -12" shape="2" size="2"/>
+<mark stroke="black" pos="24 -12" shape="2" size="2"/>
+<mark stroke="black" pos="36 -12" shape="2" size="2"/>
+<mark stroke="black" pos="48 -12" shape="2" size="2"/>
+<mark stroke="black" pos="60 -12" shape="2" size="2"/>
+<mark stroke="black" pos="72 -12" shape="2" size="2"/>
+<mark stroke="black" pos="84 -12" shape="2" size="2"/>
+<text stroke="black" pos="-60 100" size="10" type="label" valign="bottom">$\min(T)$</text>
+<path stroke="black" pen="0.4" arrow="7">
+-48 96 m
+-48 48
+-92 32
+-96 -12 s
+</path>
+<text stroke="black" pos="8 100" size="10" type="label" valign="bottom">$\min(L)$</text>
+<path stroke="black" pen="0.4" arrow="7">
+20 96 m
+20 48
+44 24
+48 -12 s
+</path>
+<mark stroke="black" pos="-144 12" shape="2" size="2"/>
+<mark stroke="black" pos="-132 36" shape="2" size="2"/>
+<mark stroke="black" pos="-120 60" shape="2" size="2"/>
+<mark stroke="black" pos="-108 84" shape="2" size="2"/>
+<mark stroke="black" pos="-96 108" shape="2" size="2"/>
+<path stroke="black" pen="1.2">
+-96 108 m
+-156 -12 l
+</path>
+<text stroke="black" pos="-168 56" size="10" type="label" valign="bottom">left wall</text>
+</page>
+</ipe>

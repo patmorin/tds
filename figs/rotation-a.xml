@@ -1,0 +1,58 @@
+<ipe creator="ipe5toxml 2003/04/10" media="-505.265 -452.873 89.735 389.127">
+<page>
+<mark stroke="black" pos="-215.845 16.1429" shape="2" size="2"/>
+<mark stroke="black" pos="-191.759 -16.156" shape="2" size="2"/>
+<path stroke="black" pen="0.4">
+-215.845 16.1429 m
+-191.759 -16.156 l
+</path>
+<group>
+<mark stroke="black" pos="-207.918 -48.1665" shape="2" size="2"/>
+<path stroke="black" pen="0.4">
+-191.759 -16.156 m
+-207.918 -48.1665 l
+</path>
+</group>
+<group>
+<mark stroke="black" pos="-175.599 -48.1665" shape="2" size="2"/>
+<path stroke="black" pen="0.4">
+-191.759 -16.156 m
+-175.599 -48.1665 l
+</path>
+</group>
+<mark stroke="black" pos="-239.931 -16.156" shape="2" size="2"/>
+<path stroke="black" pen="0.4">
+-215.845 16.1429 m
+-239.931 -16.156 l
+</path>
+<path stroke="black" pen="0.4">
+-207.918 -48.1665 m
+-223.772 -80.177 l
+-207.918 -48.1665 m
+-192.063 -80.177 l
+-223.772 -80.177 m
+-192.063 -80.177 l
+</path>
+<path stroke="black" pen="0.4">
+-175.599 -48.1665 m
+-191.453 -80.177 l
+-175.599 -48.1665 m
+-159.744 -80.177 l
+-191.453 -80.177 m
+-159.744 -80.177 l
+</path>
+<path stroke="black" pen="0.4">
+-239.931 -16.156 m
+-255.786 -48.1665 l
+-239.931 -16.156 m
+-224.076 -48.1665 l
+-255.786 -48.1665 m
+-224.076 -48.1665 l
+</path>
+<text stroke="black" pos="-225.602 16.4313" size="10" type="label" valign="bottom">$T$</text>
+<text stroke="black" pos="-206.839 -19.1431" size="10" type="label" valign="bottom">$T'$</text>
+<text stroke="black" pos="-243.136 -41.8221" size="10" type="label" valign="bottom">$\alpha$</text>
+<text stroke="black" pos="-210.998 -73.5442" size="10" type="label" valign="bottom">$\beta$</text>
+<text stroke="black" pos="-178.454 -73.5442" size="10" type="label" valign="bottom">$\gamma$</text>
+</page>
+</ipe>

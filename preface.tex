@@ -1,0 +1,98 @@
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
+
+
+\noindent\textbf{TO DO:} Add full persistence with node splitting to
+the chapter on persistence.
+
+
+This document is intended to act as course notes for the course that
+currently goes by the name \emph{COMP5408: Advanced Data Structures}.
+The course is about techniques for the design and analysis of data
+structures.  The focus of the course is on general techniques that are
+simple, easy to understand, implementable and that lead to data
+structures with good worst-case or expected running times.
+
+The intended audience for this course is anyone who has taken an
+undergraduate course in algorithms and data structures.  I expect that
+students understand big-$O$ notation and have some experience with its
+use in analyzing algorithms.  It would also be helpful to have some
+experience with basic probability and the idea of \emph{amortized
+analysis}, but it is not strictly necessary.
+
+The bulk of this text is about dictionaries and priority queues.  For
+those who would like to use this text as a reference, rather than read
+it cover-to-cover, Tables~\ref{tab:dictionaries} and \ref{tab:pq}
+summarize the dictionary and priority queue data structures that are
+covered in these notes.  Dictionaries are classified primarily based
+on whether they are comparison-based or integer-based and secondarily
+on whether they are meant to store fixed-length or variable-length
+keys.  Priority queues are characterized based on the running times of
+various priority queue operations.  The names of the data structures are
+suffixed with an (E), (A) or (W) depending on whether they are efficient
+in an expected, amortized, or worst-case sense, respectively.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|}\hline
+Comparisons & Key size & Data Structure & Chapter \\ \hline\hline
+Comparison-based & Fixed  & Treaps (E) & \ref{chap:records} \\
+                 &                 & Skiplists (E) & \ref{chap:fractional} \\
+                 &                 & Scapegoat trees (A) & \ref{chap:laziness} \\
+                 &                 & Working set (W) & \ref{chap:entropy} \\
+                 &                 & Splay trees (A) & \ref{chap:adjusting} \\
+                 & Variable  & Ternary tries (E/W) & 
+			\ref{chap:strings} \\ \hline
+Integer-based    & Fixed  & van Emde Boas trees (W) & 
+			\ref{chap:bounded} \\
+                 &                 & Willard's trees (W) & 
+			\ref{chap:bounded} \\
+                 & Variable  & Tries (W) & \ref{chap:strings} \\
+                 &                    & PATRICIA trees (W) & \ref{chap:strings}
+			\\ \hline 
+\end{tabular}
+\end{center}
+\caption{Summary of dictionaries.}\tablabel{dictionaries}
+\end{table}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|l|l|}\hline
+Data structure & Chp. & FindMin & DeleteMin & Insert & Meld & Delete & Decrease-Key \\ \hline\hline
+Binary heaps (W) &  & $1$ & $\log n$ & $\log n$ & X & $\log n$ & $\log n$ \\
+Heaters (E) & \ref{chap:records} & $1$ & $\log n$ & $\log n$ & X & $\log n$ & $\log n$ \\
+Pairing-heaps (A) & \ref{chap:adjusting} & $1$ & $\log n$ & $1$ & $1$ & $\log n$ & $\log n$ \\
+Queaps (A) & \ref{chap:adjusting} & $1$ & $\log n$ & $1$ & X & $\log n$ & $\log n$ \\
+Leftist heaps (W) & \ref{chap:imbalance} & $1$ & $\log n$ & $\log n$ & $\log n$ & X & X \\
+Randomized heaps (E) & \ref{chap:imbalance} & $1$ & $\log n$ & $\log n$ & $\log n$ & X & X \\
+Skew heaps (A) & \ref{chap:imbalance} & $1$ & $\log n$ & $\log n$ & $\log n$ & $\log n$ & $\log n$ \\
+Binary-counting heaps (A) & \ref{chap:binary} & $1$ & $\log n$ & $\log n$ & $\log n$ & $\log n$ & $\log n$ \\
+Binomial heaps (W) & \ref{chap:binary} & $1$ & $\log n$ & $\log n$ & $\log n$ & $\log n$ & $\log n$ \\
+Fibonacci heaps (A) & \ref{chap:binary}  & $1$ & $\log n$ & $1$ & $1$  & $\log n$ & $1$ \\
+Min-max heaps (W) & \ref{chap:more-heaps}  & $1$ & $\log n$ & $\log n$ & X & $\log n$ & $\log n$ \\
+H.-O. stacks (W) & \ref{chap:more-heaps}  & $1$ & X & X & X  & X & X \\
+H.-O. queues (W) & \ref{chap:more-heaps}  & $1$ & X & X & X  & X & X \\
+H.-O. deques (W) & \ref{chap:more-heaps}  & $1$ & X & X & X  & X & X \\ \hline
+\end{tabular}
+\end{center}
+\caption{Summary of priority queues.}\tablabel{pq}
+\end{table}
+
+
+
+
+These notes are still a work in progress. Many of the chapters are
+unfinished (even unstarted) and probably contain many errors.  I
+intend to continue finishing chapters and correcting errors as the
+course progresses.  I would also like to get as much feedback as
+possible about any errors, omissions or inconsistencies that readers
+might find.  Anyone offering helpful comments will have their name
+appear in the acknowledgements section of future editions of the
+notes.  For now, I would like to thank the students of 95.590X W2002:
+
+\mbox{Ghada Badr}, \mbox{Paul Boone}, \mbox{Steven Bowles},
+\mbox{Xiaoli Chen}, \mbox{Ralf Dagher}, \mbox{Andras Frankel},
+\mbox{Bo Han}, \mbox{Jon Harris}, \mbox{Xiaofei Jia}, \mbox{Xiaobing
+Jin}, \mbox{Aaron Lee}, \mbox{Rocky Ng}, \mbox{Sylvain Pitre},
+\mbox{Cynthia Sun}, \mbox{Haibo Wang}, and \mbox{Juemin Yu}.
+

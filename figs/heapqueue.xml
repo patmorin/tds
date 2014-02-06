@@ -1,0 +1,148 @@
+<ipe creator="ipe5toxml 2003/04/10" media="-303.394 -374.101 291.606 467.899">
+<preamble>\usepackage{times,mathptm}
+</preamble>
+<page>
+<text stroke="black" pos="-92.3898 30.5224" size="10" type="label" valign="bottom">7</text>
+<text stroke="black" pos="-68.3774 30.4224" size="10" type="label" valign="bottom">5</text>
+<text stroke="black" pos="-44.3774 30.4874" size="10" type="label" valign="bottom">4</text>
+<text stroke="black" pos="-20.3774 30.4224" size="10" type="label" valign="bottom">8</text>
+<text stroke="black" pos="3.62256 30.4224" size="10" type="label" valign="bottom">6</text>
+<text stroke="black" pos="27.6226 30.5224" size="10" type="label" valign="bottom">7</text>
+<text stroke="black" pos="51.6226 30.3824" size="10" type="label" valign="bottom">9</text>
+<path stroke="black" pen="0.4">
+-96.0124 40 m
+-83.7873 40 l
+-83.7873 27.7749 l
+-96.0124 27.7749 l h
+</path>
+<path stroke="black" pen="0.4">
+-72 40 m
+-59.7749 40 l
+-59.7749 27.7749 l
+-72 27.7749 l h
+</path>
+<path stroke="black" pen="0.4">
+-48 40 m
+-35.7749 40 l
+-35.7749 27.7749 l
+-48 27.7749 l h
+</path>
+<path stroke="black" pen="0.4">
+-24 40 m
+-11.7749 40 l
+-11.7749 27.7749 l
+-24 27.7749 l h
+</path>
+<path stroke="black" pen="0.4">
+0 40 m
+12.2251 40 l
+12.2251 27.7749 l
+0 27.7749 l h
+</path>
+<path stroke="black" pen="0.4">
+24 40 m
+36.2251 40 l
+36.2251 27.7749 l
+24 27.7749 l h
+</path>
+<path stroke="black" pen="0.4">
+48 40 m
+60.2251 40 l
+60.2251 27.7749 l
+48 27.7749 l h
+</path>
+<path stroke="black" pen="0.4" arrow="7">
+-83.7873 33.8874 m
+-72.0093 33.8874 l
+</path>
+<path stroke="black" pen="0.4" arrow="7">
+-59.7749 33.8874 m
+-48.4768 33.8874 l
+</path>
+<path stroke="black" pen="0.4" arrow="7">
+-35.7749 33.8874 m
+-24.0031 33.8874 l
+</path>
+<path stroke="black" pen="0.4" arrow="7">
+-11.7749 33.8874 m
+0 33.8874 l
+</path>
+<path stroke="black" pen="0.4" arrow="7">
+12.2251 33.8874 m
+24.0031 33.8874 l
+</path>
+<path stroke="black" pen="0.4" arrow="7">
+36.2251 33.8874 m
+48.0062 33.8874 l
+</path>
+<text stroke="black" pos="75.6226 30.3824" size="10" type="label" valign="bottom">8</text>
+<path stroke="black" pen="0.4">
+48 40 m
+60.2251 40 l
+60.2251 27.7749 l
+48 27.7749 l h
+</path>
+<path stroke="black" pen="0.4">
+72 40 m
+84.2251 40 l
+84.2251 27.7749 l
+72 27.7749 l h
+</path>
+<path stroke="black" pen="0.4" arrow="7">
+60.2251 33.8874 m
+72.0062 33.8874 l
+</path>
+<path stroke="black" pen="0.4">
+72 40 m
+84.2251 40 l
+84.2251 27.7749 l
+72 27.7749 l h
+</path>
+<text stroke="black" pos="-44.3775 56.5097" size="10" type="label" valign="bottom">4</text>
+<path stroke="black" pen="0.4">
+-48 66.0222 m
+-35.7749 66.0222 l
+-35.7749 53.7971 l
+-48 53.7971 l h
+</path>
+<text stroke="black" pos="3.62255 56.4447" size="10" type="label" valign="bottom">6</text>
+<path stroke="black" pen="0.4">
+8.88178e-16 66.0222 m
+12.2251 66.0222 l
+12.2251 53.7971 l
+8.88178e-16 53.7971 l h
+</path>
+<text stroke="black" pos="27.6225 56.5447" size="10" type="label" valign="bottom">7</text>
+<path stroke="black" pen="0.4">
+24 66.0222 m
+36.2251 66.0222 l
+36.2251 53.7971 l
+24 53.7971 l h
+</path>
+<text stroke="black" pos="75.6225 56.4447" size="10" type="label" valign="bottom">8</text>
+<path stroke="black" pen="0.4">
+72 66.0222 m
+84.2251 66.0222 l
+84.2251 53.7971 l
+72 53.7971 l h
+</path>
+<path stroke="black" pen="0.4">
+72 66.0222 m
+84.2251 66.0222 l
+84.2251 53.7971 l
+72 53.7971 l h
+</path>
+<path stroke="black" pen="0.4" arrow="7" backarrow="7">
+-35.7749 59.9097 m
+-0.291851 59.9097 l
+</path>
+<path stroke="black" pen="0.4" arrow="7" backarrow="7">
+12.2251 59.9097 m
+23.736 59.9097 l
+</path>
+<path stroke="black" pen="0.4" arrow="7" backarrow="7">
+36.2251 59.9097 m
+71.7917 59.9097 l
+</path>
+</page>
+</ipe>

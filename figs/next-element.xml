@@ -1,0 +1,38 @@
+<ipe creator="ipe5toxml 2003/04/10" media="-323.375 -395.15 271.625 446.85">
+<page>
+<path stroke="black" pen="0.4">
+-124.308 61.931 m
+32.1937 61.931 l
+</path>
+<path stroke="black" pen="0.4">
+-51.3684 25.1425 m
+76.8072 25.1425 l
+</path>
+<path stroke="black" pen="0.4">
+-94.5654 6.04065 m
+-30.832 6.04065 l
+</path>
+<path stroke="black" pen="0.4">
+-151.926 45.6593 m
+-75.4454 45.6593 l
+</path>
+<path stroke="black" pen="0.4">
+-132.806 -10.2311 m
+-71.1964 -10.2311 l
+</path>
+<path stroke="black" pen="0.4">
+-43.5784 -7.40131 m
+100.176 -7.40131 l
+</path>
+<path stroke="black" pen="0.4">
+-25.1666 44.2443 m
+19.447 44.2443 l
+</path>
+<mark stroke="black" pos="-64.006 16.0543" shape="2" size="2"/>
+<path stroke="black" pen="0.4" arrow="7">
+-64.006 16.0543 m
+-64.006 61.931 l
+</path>
+<text stroke="black" pos="-72.0163 11.9214" size="10" type="label" valign="bottom">$q$</text>
+</page>
+</ipe>

@@ -1,0 +1,81 @@
+<ipe creator="ipe5toxml 2003/04/10" media="-347.137 -396.186 247.863 445.814">
+<page>
+<text stroke="black" pos="-8.73322 33.8212" size="10" type="label" valign="bottom">$v$</text>
+<text stroke="black" pos="-8.73322 21.8197" size="10" type="label" valign="bottom">$w$</text>
+<path stroke="black" pen="0.4">
+-71.9179 17.9639 m
+-59.9162 17.9639 l
+-59.9162 5.96245 l
+-71.9179 5.96245 l h
+</path>
+<path stroke="black" pen="0.4" arrow="7">
+-65.9171 35.9662 m
+-11.8717 35.9662 l
+</path>
+<path stroke="black" pen="0.4" arrow="7">
+-65.9171 23.9647 m
+-11.8717 23.9647 l
+</path>
+<group>
+<text stroke="black" pos="-74.7729 49.0993" size="10" type="label" valign="bottom">$u$</text>
+<group>
+<group>
+<path stroke="black" pen="0.4">
+-71.9179 41.967 m
+-59.9162 41.967 l
+-59.9162 29.9655 l
+-71.9179 29.9655 l h
+</path>
+<mark stroke="black" pos="-65.9171 35.9662" shape="2" size="2"/>
+</group>
+<group>
+<path stroke="black" pen="0.4">
+-71.9179 29.9655 m
+-59.9162 29.9655 l
+-59.9162 17.964 l
+-71.9179 17.964 l h
+</path>
+<mark stroke="black" pos="-65.9171 23.9647" shape="2" size="2"/>
+</group>
+<path stroke="black" pen="0.4">
+-83.9196 41.967 m
+-71.9179 41.967 l
+-71.9179 29.9655 l
+-83.9196 29.9655 l h
+</path>
+<path stroke="black" pen="0.4">
+-83.9196 29.9655 m
+-71.9179 29.9655 l
+-71.9179 17.964 l
+-83.9196 17.964 l h
+</path>
+<path stroke="black" pen="0.4">
+-83.9196 17.964 m
+-71.9179 17.964 l
+-71.9179 5.9625 l
+-83.9196 5.9625 l h
+</path>
+<path stroke="black" pen="0.4">
+-71.9179 17.964 m
+-59.9162 17.964 l
+-59.9162 5.9625 l
+-71.9179 5.9625 l h
+</path>
+<text stroke="black" pos="-82.9038 9.81825" size="10" type="label" valign="bottom">$\infty$</text>
+<text stroke="black" pos="-79.7188 20.8998" size="10" type="label" valign="bottom">$t$</text>
+<text stroke="black" pos="-81.9537 32.1562" size="10" type="label" valign="bottom">$t_0$</text>
+</group>
+<text stroke="black" pos="-77.7329 -0.858339" size="10" type="label" valign="bottom">$\ldots$</text>
+</group>
+<path stroke="black" pen="0.4">
+-90.5413 56.2105
+-90.5413 56.2105
+-90.5413 -6.58311
+-90.5413 -6.58311
+-53.2945 -6.58311
+-53.2945 -6.58311
+-53.2945 56.2105
+-53.2945 56.2105 u
+</path>
+</page>
+</ipe>

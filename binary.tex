@@ -1,0 +1,142 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{The Binary Counting Trick}\chaplabel{binary}
+
+In this chapter we describe three implementations of mergeable heaps
+like those described in \chapref{imbalance}. What these three
+ implementations have in common is that they all use a property of
+binary arithmetic that we call the \emph{binary counting trick}.
+
+
+%======================================================================
+\section{Binary Counting Heaps}
+
+In this section we describe an implementation of mergeable heaps based
+on arrays that we call a \emph{binary counting heap}.  The
+implementation maintains a set of sorted arrays $A^i,\ldots,A^r$ where
+the length of $A^i$ is $2^i$.  These arrays contain priorities.  We
+assume that there is a special priority, denoted by $\infty$ that
+indicates an empty array slot.  Additionally, the implementation
+maintains an array set $x_1,\ldots,x_r$ where $x_i$ is the index of
+the first element of $A_i$ that is valid.  An example of a binary
+counting heap is given in \figref{counting-heap}.
+
+\begin{figure}
+\begin{center}\begin{tabular}{c@{\hspace{1cm}}c}
+\includegraphics{figs/counter} & \includegraphics{figs/counter2} \\
+(a) & (b) 
+\end{tabular}\end{center}
+\caption{A binary counting heap (a)~before and (b)~after the insertion
+	of priority 32.}\figlabel{counting-heap}
+\end{figure}
+
+From the above description it follows that the element with minimum
+priority in a binary counting heap is one of
+$A^0{}_{x_0},\ldots,A^r{}_{x_r}$.  Therefore the
+\textsc{ExtractMin$(Q)$} operation can be implemented in $O(r)$ time.
+Similarly, the \textsc{DeleteMin$(Q)$} operation can be implemented by
+incrementing the value of $x_i$ for which $A^r{}_{x_r}$ is minimum.
+
+To insert a priority $p$ into the data structure we first check if
+$A^0$ is empty (i.e., $A^0{}_{x_0}=\infty$).  If it is, we insert $p$
+into $A^0$ and we are done.  Otherwise, we merge $p$ with $A^0$ to
+obtain a sorted array $A^*$ of length 2.  Next, if $A^1$ is empty we 
+set $A^1=A^*$ and we are done.  Otherwise we merge $A^*$ and $A^1$ and
+continue in this manner.  In pseudocode:
+
+\begin{algorithmic}[1]
+\STATE{$A^*\gets p$}
+\STATE{$i\gets 0$}
+\WHILE{$A^i{}_{x_i}\neq\infty$ \COMMENT{$A^i$ is not empty}}
+   \STATE{$A^*\gets A^* \oplus A^i$}
+   \STATE{$x_i\gets 0$}
+   \STATE{$A^i{}_{x_i}=\infty$ \COMMENT{mark $A^i$ as empty}}
+\ENDWHILE
+\STATE{$A^i\gets A^*$}
+\end{algorithmic}
+
+Here $A\oplus B$ denotes the new sorted list obtained by merging the
+two lists $A$ and $B$.  Note the similarity between the above
+pseudocode and the operation of incrementing a binary counter.  Using
+a similar algorithm, merging two binary counting heaps can be done in
+exactly the same way as the addition of two binary numbers is done.
+
+What is the running time of the algorithms for insertion and merging?
+In the worst case, it can be linear in $n$, the total number of items
+inserted.  This happens, for example, when all of $A^0,\ldots A^{r-1}$
+in which case two sorted lists of size $2^{r-1}$ have to be merged in
+the last step of the algorithm.  Luckily, this situation doesn't
+happen very often.  So instead we will analyze the cost of performing
+$m$ operations on a set of queues, where exactly $n$ of these
+operations are insertion operations.
+
+We say that a priority contained in an array of size $2^i$ has
+\emph{height} $2^i$.  The first thing to note is that after $n$
+insertion operations, no priority has height greater than
+$\lceil\log_2 n\rceil$.  To see this, observe that only insertions and
+merges increase the height of an element.  Furthermore, if no deletion
+operations are performed then every occupied array is full.  In
+particular, if the array $A^i$, for any $i>\lceil\log n\rceil$
+contains any priorities then it is full, and it contains more than $n$
+priorities.  Since no array can contain more priorities than were
+inserted into all queues it must be that no priority has height more
+than $\lceil\log_2 n\rceil$.
+
+To analyze the cost of operations we break the cost into two parts,
+the \emph{fixed cost} and \emph{restructuring cost}.  The
+restructuring costs accounts for all the merging of sorted arrays that
+is performed.  The fixed cost accounts for all other operations.  It
+follows immediately from the the fact that no element has height
+greater than $\lceil\log_2 n\rceil\ge r$ that the fixed cost of all
+operations is $O(\log n)$.
+
+To count the restructuring cost we use the following three facts:
+(1)~The height of a priority only increases, (2)~The height of a
+priority is at most $\lceil\log_2 n\rceil$ and (3)~The cost of a merge
+operation is proportional to the number of priorities being merged and
+increases the levels of all priorities involved.  Because of (3), the
+cost of restructuring is proportional to the total number of times the
+level of a priority is increased.  However, (1) and (2) imply that
+each priority is increased at most $\lceil\log_2 n\rceil$ times.
+Therefore the total cost of restructuring is $O(n\log n)$.
+
+\begin{thm}
+Using a binary counting heap, a series of $m$ operations on a set of
+queues, $n$ of which are \textsc{Insert} operations and the remainder
+of which are \textsc{Insert}, \textsc{ExtractMin}, \textsc{DeleteMin},
+and \textsc{Merge} operations taken $O(m\log n)$ time.
+\end{thm}
+
+\begin{rem}
+By rebuilding the set of binary counting heaps after every $2^i$
+operations, it is straightforward to verify that the above theorem can
+be made to hold when $n$ represents the largest number of items in any
+queue at any given time.
+\end{rem}
+
+\begin{rem}
+One operation that is not efficiently supported by this implementation
+of binary counting queues is the \textsc{DecreaseKey} operation.
+However, this operation can be supported in $O(\log n)$ time if,
+instead of making each $A^i$ an array, we make it an array based
+implementation of a priority queue.
+\end{rem}
+
+%======================================================================
+\section{Binomial Heaps}
+
+The previous implementation of mergeable heaps supports all operations
+in $O(\log n)$ time, but only in an \emph{amortized} sense.  Although
+a set of $m$ operations always completes in $O(m\log n)$ time, some
+individual operations may take $\Omega(n)$ time.  In this section we
+show how the same ideas can be used to make a data structure that
+operates in $O(\log n)$ worst case time per operation.
+
+The main problem with the binary counting heap implementation is that
+merging arrays takes time that is linear in the size of the arrays
+being merged.  To avoid this excessive merging cost, we introduc
+
+%======================================================================
+\section{Fibonacci Heaps}
+
+%======================================================================
+\section{Discussion and References}

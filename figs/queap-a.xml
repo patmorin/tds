@@ -1,0 +1,40 @@
+<ipe creator="ipe5toxml 2003/04/10" media="-333.5 -377.916 261.5 464.084">
+<preamble>\usepackage{times,mathptm}
+</preamble>
+<page>
+<path stroke="black" pen="0.4">
+-96 108 m
+-156 -12 l
+-36 -12 l h
+</path>
+<path stroke="black" pen="0.4">
+-24 -12 m
+84 -12 l
+</path>
+<mark stroke="black" pos="-156 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-108 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-24 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-12 -12" shape="2" size="2"/>
+<mark stroke="black" pos="0 -12" shape="2" size="2"/>
+<mark stroke="black" pos="12 -12" shape="2" size="2"/>
+<mark stroke="black" pos="24 -12" shape="2" size="2"/>
+<mark stroke="black" pos="36 -12" shape="2" size="2"/>
+<mark stroke="black" pos="48 -12" shape="2" size="2"/>
+<mark stroke="black" pos="60 -12" shape="2" size="2"/>
+<mark stroke="black" pos="72 -12" shape="2" size="2"/>
+<mark stroke="black" pos="84 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-144 12" shape="2" size="2"/>
+<mark stroke="black" pos="-132 36" shape="2" size="2"/>
+<text stroke="black" pos="-109.377 -21.831" size="10" type="label" valign="bottom">$v$</text>
+<path stroke="black" pen="0.4">
+-108 -12 m
+-132 36 l
+</path>
+<text stroke="black" pos="-142.399 36.5989" size="10" type="label" valign="bottom">$u$</text>
+<mark stroke="black" pos="-137.943 24.1149" shape="2" size="2"/>
+<mark stroke="black" pos="-150.356 -0.711803" shape="2" size="2"/>
+<mark stroke="black" pos="-126.33 24.6605" shape="2" size="2"/>
+<mark stroke="black" pos="-119.292 10.583" shape="2" size="2"/>
+<mark stroke="black" pos="-113.542 -0.91659" shape="2" size="2"/>
+</page>
+</ipe>

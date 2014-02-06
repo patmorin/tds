@@ -1,0 +1,132 @@
+<ipe creator="ipe5toxml 2003/04/10" media="-282.91 -390.672 312.09 451.328">
+<page>
+<mark stroke="black" pos="-15.5314 63.4766" shape="2" size="2"/>
+<mark stroke="black" pos="16.9434 48.9005" shape="2" size="2"/>
+<mark stroke="black" pos="-0.470649 35.735" shape="2" size="2"/>
+<mark stroke="black" pos="9.41298 17.8675" shape="2" size="2"/>
+<path stroke="black" dash="[15 1] 0" pen="0.4">
+-48.0062 48.9005 m
+-74.8332 -0.470234 l
+</path>
+<path stroke="black" dash="[15 1] 0" pen="0.4">
+-48.0062 48.9005 m
+-21.1792 -0.470237 l
+</path>
+<path stroke="black" pen="0.4">
+-15.5314 63.4766 m
+-48.0062 48.9005 l
+</path>
+<path stroke="black" pen="0.4">
+-15.5314 63.4766 m
+16.9434 48.9005 l
+</path>
+<group>
+<mark stroke="black" pos="-0.470649 35.735" shape="2" size="2"/>
+<mark stroke="black" pos="-10.3543 17.8675" shape="2" size="2"/>
+</group>
+<path stroke="black" pen="0.4">
+-10.3543 17.8675 m
+-17.8847 -0.470234 l
+</path>
+<path stroke="black" dash="[15 1] 0" pen="0.4">
+-10.3543 17.8675 m
+-2.82396 -0.470206 l
+</path>
+<path stroke="black" pen="0.4">
+-10.3543 17.8675 m
+-0.470649 35.735 l
+9.41298 17.8675 l
+</path>
+<path stroke="black" pen="0.4">
+-0.470649 35.735 m
+16.9434 48.9005 l
+</path>
+<path stroke="black" pen="0.4">
+9.41298 17.8675 m
+1.88263 -0.470251 l
+</path>
+<path stroke="black" dash="[15 1] 0" pen="0.4">
+9.41298 17.8675 m
+16.9433 -0.470223 l
+</path>
+<mark stroke="black" pos="1.88263 -0.470251" shape="2" size="2"/>
+<mark stroke="black" pos="16.9433 -0.470223" shape="2" size="2"/>
+<path stroke="black" pen="0.4">
+-74.8332 -0.470234 m
+-21.1792 -0.470237 l
+</path>
+<path stroke="black" pen="0.4">
+-17.8847 -0.470234 m
+-2.82396 -0.470206 l
+</path>
+<mark stroke="black" pos="34.3574 35.735" shape="2" size="2"/>
+<path stroke="black" pen="0.4">
+34.3574 35.735 m
+20.7086 -0.470236 l
+</path>
+<path stroke="black" dash="[15 1] 0" pen="0.4">
+34.3574 35.735 m
+48.0062 -0.470227 l
+</path>
+<path stroke="black" pen="0.4">
+20.7086 -0.470236 m
+48.0062 -0.470227 l
+</path>
+<path stroke="black" pen="0.4">
+34.3574 35.735 m
+16.9434 48.9005 l
+</path>
+<text stroke="black" pos="14.5901 -11.7549" size="10" type="label" valign="bottom">$k$</text>
+<path stroke="black" pen="1.2">
+-15.5314 63.4766 m
+16.9434 48.9005 l
+-0.470649 35.735 l
+9.41298 17.8675 l
+16.9433 -0.470223 l
+</path>
+<path stroke="black" pen="1.2">
+51.3007 63.4766 m
+83.7755 48.9005 l
+66.3615 35.735 l
+76.2451 17.8675 l
+83.7755 -0.470223 l
+</path>
+<mark stroke="black" pos="51.3007 63.4766" shape="2" size="2"/>
+<mark stroke="black" pos="83.7755 48.9005" shape="2" size="2"/>
+<mark stroke="black" pos="66.3615 35.735" shape="2" size="2"/>
+<mark stroke="black" pos="83.7755 -0.470223" shape="2" size="2"/>
+<text stroke="black" pos="-19.1364 72.4103" size="10" type="label" valign="bottom">$T$</text>
+<text stroke="black" pos="46.2957 72.4103" size="10" type="label" valign="bottom">$T'$</text>
+<mark stroke="black" pos="-15.5314 63.4766" shape="2" size="2"/>
+<mark stroke="black" pos="-48.0062 48.9005" shape="2" size="2"/>
+<path stroke="black" pen="0.4">
+51.3007 63.4766 m
+51.3007 63.4766 51.3007 63.4766 43.2997 63.4766 c
+35.2986 63.4766 19.2966 63.4766 2.74544 61.0472 c
+-13.8057 58.6179 -30.906 53.7592 -39.4561 51.3299 c
+-48.0062 48.9005 -48.0062 48.9005 -48.0062 48.9005 c
+</path>
+<path stroke="black" pen="0.4">
+83.7755 48.9005 m
+83.7755 48.9005 83.7755 48.9005 87.1484 48.1168 c
+90.5213 47.3332 97.2672 45.7658 89.0308 43.5716 c
+80.7945 41.3773 57.5759 38.5562 45.9667 37.1456 c
+34.3574 35.735 34.3574 35.735 34.3574 35.735 c
+</path>
+<path stroke="black" pen="0.4">
+66.3615 35.735 m
+66.3615 35.735 66.3615 35.735 57.5761 34.6379 c
+48.7906 33.5407 31.2197 31.3465 18.4337 28.3685 c
+5.64777 25.3906 -2.35327 21.6291 -6.35378 19.7483 c
+-10.3543 17.8675 -10.3543 17.8675 -10.3543 17.8675 c
+</path>
+<mark stroke="black" pos="76.2451 17.8675" shape="2" size="2"/>
+<path stroke="black" pen="0.4">
+76.2451 17.8675 m
+76.2451 17.8675 76.2451 17.8675 68.95 17.2406 c
+61.655 16.6136 47.0649 15.3598 34.6712 12.3035 c
+22.2774 9.24718 12.08 4.38847 6.98133 1.95911 c
+1.88263 -0.470251 1.88263 -0.470251 1.88263 -0.470251 c
+</path>
+</page>
+</ipe>

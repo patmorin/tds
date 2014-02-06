@@ -1,0 +1,254 @@
+\chapter{Laziness}\chaplabel{laziness}
+\bibliographystyle{plain}
+ 
+In this chapter, we study a data structuring technique that could be
+called \emph{laziness}.  Although we have no formal definition of
+laziness, applications of it are usually easy to recognize and come
+in two flavours.
+
+The first form of laziness is what we call \emph{procrastination}.  As
+any student knows, the most efficient way to deal with the problem of
+dirty dishes is to wait until all dishes in the house are dirty and
+then clean them all at once.  When we procrastinate, we put off doing
+work for as long as we possible can, and then we do it all at once.
+
+Another form of laziness is what we call XXXX. In this form of
+laziness, we always do the absolute minimum amount of work required to
+accomplish what we are trying to do.  If this form of laziness were
+applied to the problem of dirty dishes, all the dishes would be dirty
+all the time and people would do the minimum number of dishes required
+to make a meal just before preparing that meal.
+
+Using procrastination we often obtain data structures with good
+amortized running time per operation, while using XXXX often allows us
+to obtain data structures with good worst-case running time per
+operation.  In the following two sections, we show how procrastination
+and XXXX can be applied to the problems of maintaining a balanced
+binary search tree and solving a problem on sets of intervals,
+respectively.
+
+%======================================================================
+\section{Scapegoat Trees}
+
+Consider the problem of maintaining a balanced binary search tree $T$
+under a sequence of insertions and deletions.  That is, we want to
+maintain the invariant that the height of $T$ is $O(\log n)$, where
+$n$ is the number of elements currently stored in $T$.  Furthermore,
+we would like to do this using the smallest amount of storage
+possible.  That is, we would like to only have $n$ nodes, where each
+node $u$ only stores the fields $\key(u)$, $\lft(u)$ and $\rght(u)$.
+
+To accomplish this goal, we use notion of weight-balancing. Let $w(u)$
+denote the number of nodes in the subtree rooted at $u$.  Then we say
+that $w(u)$ is $\alpha$-weight-balanced, for some $1/2 < \alpha < 1$
+if $w(\rght(u)) \le \alpha w(u)$ and $w(\lft(u))\le \alpha w(u)$.  An
+easy consequence of this definition is that, if $P$ is root-to-leaf
+path in a binary search tree $T$ with $n$ vertices, and each node of
+$P$ is $\alpha$-weight-balanced, then $P$ has length at most
+$\log_{1/\alpha} n$.
+
+Surprisingly, $\alpha$-weight-balancing can be used to keep a tree
+balanced without explicitly storing the sizes of all subtrees.  First,
+we consider a data structure that only supports insertions.  Suppose
+we have a tree $T$ at most $n-1$ nodes, which has height at most
+$\log_{1/\alpha} n$ and we perform an insertion of some key $k$ by
+searching for $k$ and then making $k$ the child of a leaf of $T$.  If
+the depth of the newly inserted key $k$ is at most $\log_{1/\alpha} n$
+then we don't do any rebalancing.  Otherwise, we know that there is
+some node $v$, which we call the \emph{scapegoat}, on the path from
+the leaf containing $k$ to the root of $T$ that is not
+$\alpha$-weight-balanced.  We can find such a node in $O(w(v))$ time
+by working backwards from the leaf containing $k$ to the root of $T$.
+
+Once we have identified the node $v$, we completely rebuild the
+subtree rooted at $v$ so that it becomes a perfectly balanced binary
+tree.  That is, after rebuilding, for any node $u$ in the subtree,
+$|w(\lft(u))-w(\rght(u))| \le 1$.  It is a fairly easy exercise to do
+this rebuilding in an additional $O(w(v))$ time.  Furthermore, after
+doing this rebuilding, all affected nodes are now
+$\alpha$-weight-balanced, since for any node $u$ in the subtree,
+$w(\lft(u))\le \frac{1}{2}w(u)$ and $w(\rght(u))\le \frac{1}{2}w(u)$.
+
+We claim that by rebuilding the subtree rooted at $v$, the height of
+this subtree, and hence the height of $T$ decreases by at least 1.
+Therefore, after the rebuilding step, the height of $T$ is still at
+most $\log_{1/\alpha } n$.
+
+To see this, observe that there is only one node at depth greater than
+$\log_{1/\alpha} n$ and it is the newly inserted node.  Consider the
+subtree $T_v$ rooted at $v$ before the rebalancing takes place.  Since
+$v$ is not $\alpha$-weight-balanced, there must be at least one node
+of $u$ of $T_v$ (in the smaller of the two subtrees rooted at $v$)
+whose depth in $T_v$ is at most $\lfloor\log_2 w(v)\rfloor$ and that
+does not have two children.  Note that we could obtain a new binary
+tree with height less than that of $T_v$ by making the newly inserted
+node a child of $u$ instead of its current parent.  Now, after we
+rebuild, the height of the newly rebuilt subtree is $\lceil\log_2
+w(v)\rceil$ which is the minimum height of any binary tree containing
+$w(v)$ nodes.  Therefore, the height of the new subtree is less than
+the height of $T_v$, as desired.
+
+Clearly, the cost of a particular insertion using this rebalancing
+scheme can be large.  In fact, if the scapegoat is the root of $T$,
+then the cost is $\Omega(n)$.  Therefore, we analyze the cost of a
+sequence of $n$ insertions, and to do this we use a credit scheme.
+Each node of $T$ keeps some number of credits.  When we insert a new
+node into $T$, we give one credit to every node along the path from
+the root of $T$ to the newly inserted node.  Since this path has
+length $\log_{1/\alpha} n$, this costs us only $O(\log n)$ credits.
+When a node $v$ is found to be a scapegoat, we spend all the credits
+stored at $v$ to offset the cost of rebuilding the subtree rooted at
+$v$.  
+
+We claim that when node $v$ is found to be a scapegoat, then node $v$
+is storing $\Omega(w(v))$ credits, so if these credits are
+sufficiently valuable then these are enough to pay for all the cost of
+finding $v$ and rebuilding the subtree rooted at $v$.  To see why this
+is so, observe that the last time a subtree rooted at $v$ was deleted,
+$v$ was $\frac{1}{2}$-weight-balanced and when $v$ is found as the
+scapegoat, it is no longer $\alpha$-weight-balanced.  Thus, it must
+be that
+\[  w'(v) \le \frac{w(v)}{\frac{1}{2}+\alpha} \enspace ,\]\
+where $w'(v)$ was the size of the subtree rooted at $v$ the last time
+it was rebuilt.  Furthermore, the number of credits now stored at $v$
+is at least
+\[  m \ge w(v)-w'(v) \ge w(v) - \frac{w(v)}{\frac{1}{2}+\alpha} = 
+\frac{(\alpha-\frac{1}{2})w(v)}{\frac{1}{2}+\alpha} = \Omega(w(v)) \enspace , \]so the cost of finding $v$ is rebuilding the subtree rooted at $v$
+is paid for by these credits.
+
+To summarize, for a sequence of $n$ insertions, we give out $O(\log
+n)$ credits per insertion, and do $O(\log n)$ work that is not paid
+for by any credits.  The only other work we do is that of finding
+scapegoat nodes and rebuilding subtrees, which is paid for using the
+credits we collect during insertion.  Thus, the total cost of a
+sequence of $n$ insertions is $O(n \log n)$.
+
+To extend this data structure to handle deletions, we procrastinate
+even more.  To delete a node $v$ with 0 or 1 children, we simply
+splice $v$ from its current location and connect the (at most one)
+child of $v$ to its parent.  To delete a node $v$ with two children,
+we find the largest value in the left subtree of $v$ (the node
+containing this value has 0 or 1 children), delete this node from its
+current location and use it to replace $v$.  Note that this does not
+increase the depth of any node, so if the height of $T$ was at most
+$\log_{1/\alpha} n$ before the deletion then it is still at most
+$\log_{1/\alpha} n$ after the deletion.
+
+However, we cannot do this forever, since we want to maintain the
+height of $T$ as $O(\log n)$, where $n$ is the number of elements
+\emph{currently} stored in $T$.  To get around this, we maintain two
+counters $n_1$ and $n_2$ which we periodically reset.  Initially, and
+when we reset the counters, $n_1=n_2=n$, the number of elements
+currently stored in $T$.  During insertion, we increment both $n_1$
+and $n_2$ and during deletion, we decrement $n_1$ only.  Therefore,
+$n_1$ keeps track of the actual number of elements in $T$ and $n_2$
+keeps track of the number of elements in $T$ if we had not done any
+deletions since the last time the counters were reset.  It follows that the height of $T$ never
+exceeds $\log_{1/\alpha} n_2$.  To make sure that $n_1$ and $n_2$
+never differ by too much, we make a completely balanced binary tree
+and reset the counters whenever $n_1 < \frac{1}{2} n_2$ and reset both
+counters.  
+
+Observe that the value $n_2-n_1$ keeps track of the number of
+deletions since the last time the counters were reset.  The cost of
+rebuilding $T$ is $O(n_1)$, and at the time of rebuilding, $n_2-n_1\ge
+n_1$, so if we give 1 credit to $T$ during each insertion operation,
+we will have $n_1$ credits available that can be used to pay for the
+cost of rebuilding $T$.
+
+\begin{thm}
+Scapegoat trees maintain a tree of height $O(\log n)$ at an amortized
+cost of $O(\log n)$ per insertion and deletion.
+\end{thm}
+
+%%======================================================================
+\section{Power Trees}
+
+This section discusses Goodrich et al's power trees.  These trees do a
+partial rebuilding whenever the number of accesses to the left subtree and
+the number of accesses to the right subtree differ by more than a constant
+factor.
+
+%%======================================================================
+\section{Array Based Dictionaries}
+
+In this section, we give another implementation of a dictionary, this
+time based on arrays.  Suppose we have an infinitely large array
+$A=A_1,\ldots,A_\infty$ of elements, where each element is either a
+key that belongs to some total order or is the placeholder $\nil$.
+Let $n$ be the largest value such that $A_n$ is a key value.  The
+elements that are keys appear in increasing order in the array.
+Furthermore, the array has the property the first element is never
+$\nil$ and the number of $\nil$ elements between two consecutive key
+elements is at most $3$.  In this way, the number of keys in $A$ is at
+least $n/4$.
+
+With such an array, we can locate any key element in the array in
+$O(\log n)$ time using binary search, where each step of the binary
+search requires looking at up to $4$ elements.
+
+To insert the element $x$ into the array, we search for $x$ using
+binary search. This gives us a value $i$ such that $A_i$ is the
+smallest value in the array that is greater than $x$.  We then scan
+forward from $A_i$ until we find the first $j>i$ such that $A_j$ is
+$\nil$.  If $j-i\le 4$ then we shift $A_i,\ldots,A_{j-1}$ forward by
+one position and then set $A_i\gets x$.  Otherwise, we continue
+scanning forward until we find the first $k>i$ such that
+\[
+      m_{\nil} > m/2 \enspace ,
+\]
+where $m=i-j+1$ and $m_\nil$ is the number of $\nil$ elements in
+$A_i,\ldots,A_k$.  We then redistribute $x$ and the key elements in
+$A_i,\ldots,A_k$ across $A_i,\ldots,A_k$ so that every second element
+in a key and every other element is $\nil$.
+
+To delete an element $x$ from the array, we search for $x$, find it at
+some position $A_i$ and set $A_i\gets\nil$.  We now have to ensure
+that $i\neq 1$ and/or $A_i$ is not part of a run of 4 or more
+consecutive $\nil$ elements.  If either of these conditions is true,
+then we scan from $i$ until we find the first value $k$ such that
+$k=n$ or
+\[
+      m_{\nil} < 2m/3 \enspace ,
+\]
+where $m=i-j+1$ and $m_\nil$ is the number of $\nil$ elements in
+$A_i,\ldots,A_k$.  We then redistribute $A_i,\ldots,A_k$ so that $A_i$
+is a key and every third element following $A_i$ is also a key.
+
+The cost of insertion and deletion is clearly $O(\log n)$ plus the
+cost of redistributing elements across $A_i,\ldots,A_k$, which is
+$O(m)$.  To analyze this cost, we give one credit to an array element
+$A_j$ when it is inserted or deleted.
+
+%%======================================================================
+%\section{Fibonacci Heaps}
+
+
+%======================================================================
+\section{Max-Clique Interval Trees}
+
+In this section, we present a data structure for maintaining a set of
+intervals under insertions and deletions, so that we can always report
+a value $x$ that is contained in the maximum number of intervals.
+
+\ldots
+
+%======================================================================
+\section{Discussion and References}
+
+Scapegoat trees are due to Galperin and Rivest \cite{gr93}, although a
+very similar data structure was discovered independently by Andersson
+\cite{a99}.  Goodrich \cite{g00} shows how procrastination can be used
+to produce a data structure that gives $O(H)$ amortized time per
+operation, where $H$ is the empirical entropy of the access sequence,
+thus providing yet another alternative to Iacono's working set
+structure (\secref{iacono}) and splay trees (\secref{splay-trees}).
+
+A version of max-clique interval trees supporting insertions and
+deletions from a static set of $O(n)$ endpoints is used by Lee
+\cite{l83} to solve the problem of computing a maximum clique in a
+rectangle intersection graph.  The version of max-clique intervals
+trees described here is due to Bose \etal \cite{bkmmm01a}.  A similar
+data structure was described by van~Kreveld and Overmars \cite{ko89}.
+
+\bibliography{tds}

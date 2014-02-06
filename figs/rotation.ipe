@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<!DOCTYPE ipe SYSTEM "ipe.dtd">
+<ipe version="70005" creator="Ipe 7.1.1">
+<info created="D:20140206095611" modified="D:20140206095611"/>
+<ipestyle name="ipe6">
+<symbol name="mark/circle(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e
+0.4 0 0 0.4 0 0 e
+</path>
+</symbol>
+<symbol name="mark/disk(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e
+</path>
+</symbol>
+<symbol name="mark/fdisk(sfx)" transformations="translations">
+<group>
+<path fill="sym-fill">
+0.5 0 0 0.5 0 0 e
+</path>
+<path fill="sym-stroke" fillrule="eofill">
+0.6 0 0 0.6 0 0 e
+0.4 0 0 0.4 0 0 e
+</path>
+</group>
+</symbol>
+<symbol name="mark/box(sx)" transformations="translations">
+<path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m
+0.6 -0.6 l
+0.6 0.6 l
+-0.6 0.6 l
+h
+-0.4 -0.4 m
+0.4 -0.4 l
+0.4 0.4 l
+-0.4 0.4 l
+h
+</path>
+</symbol>
+<symbol name="mark/square(sx)" transformations="translations">
+<path fill="sym-stroke">
+-0.6 -0.6 m
+0.6 -0.6 l
+0.6 0.6 l
+-0.6 0.6 l
+h
+</path>
+</symbol>
+<symbol name="mark/fsquare(sfx)" transformations="translations">
+<group>
+<path fill="sym-fill">
+-0.5 -0.5 m
+0.5 -0.5 l
+0.5 0.5 l
+-0.5 0.5 l
+h
+</path>
+<path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m
+0.6 -0.6 l
+0.6 0.6 l
+-0.6 0.6 l
+0 -0.4 m
+0.4 -0.4 l
+0.4 0.4 l
+-0.4 0.4 l
+h
+</path>
+</group>
+</symbol>
+<symbol name="mark/cross(sx)" transformations="translations">
+<group>
+<path fill="sym-stroke">
+-0.43 -0.57 m
+0.57 0.43 l
+0.43 0.57 l
+-0.57 -0.43 l
+h
+</path>
+<path fill="sym-stroke">
+-0.43 0.57 m
+0.57 -0.43 l
+0.43 -0.57 l
+-0.57 0.43 l
+h
+</path>
+</group>
+</symbol>
+<pen name="heavier" value="0.8"/>
+<pen name="fat" value="1.2"/>
+<pen name="ultrafat" value="2"/>
+<symbolsize name="large" value="5"/>
+<symbolsize name="small" value="2"/>
+<symbolsize name="tiny" value="1.1"/>
+<arrowsize name="large" value="10"/>
+<arrowsize name="small" value="5"/>
+<arrowsize name="tiny" value="3"/>
+<color name="red" value="1 0 0"/>
+<color name="green" value="0 1 0"/>
+<color name="blue" value="0 0 1"/>
+<color name="yellow" value="1 1 0"/>
+<color name="gray1" value="0.125"/>
+<color name="gray2" value="0.25"/>
+<color name="gray3" value="0.375"/>
+<color name="gray4" value="0.5"/>
+<color name="gray5" value="0.625"/>
+<color name="gray6" value="0.75"/>
+<color name="gray7" value="0.875"/>
+<dashstyle name="dashed" value="[4] 0"/>
+<dashstyle name="dotted" value="[1 3] 0"/>
+<dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
+<dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
+<textsize name="large" value="\large"/>
+<textsize name="Large" value="\Large"/>
+<textsize name="LARGE" value="\LARGE"/>
+<textsize name="huge" value="\huge"/>
+<textsize name="Huge" value="\Huge"/>
+<textsize name="small" value="\small"/>
+<textsize name="footnote" value="\footnotesize"/>
+<textsize name="tiny" value="\tiny"/>
+<textstyle name="center" begin="\begin{center}" end="\end{center}"/>
+<textstyle name="itemize" begin="\begin{itemize}" end="\end{itemize}"/>
+<textstyle name="item" begin="\begin{itemize}\item{}" end="\end{itemize}"/>
+</ipestyle>
+<page>
+<layer name="alpha"/>
+<view layers="alpha" active="alpha"/>
+<use layer="alpha" matrix="1 0 0 1 335.819 118.828" name="mark/disk(sx)" pos="-215.845 16.1429" size="2" stroke="black"/>
+<use matrix="1 0 0 1 335.819 118.828" name="mark/disk(sx)" pos="-191.759 -16.156" size="2" stroke="black"/>
+<path matrix="1 0 0 1 335.819 118.828" stroke="black" pen="0.4">
+-215.845 16.1429 m
+-191.759 -16.156 l
+</path>
+<group matrix="1 0 0 1 335.819 118.828">
+<use name="mark/disk(sx)" pos="-207.918 -48.1665" size="2" stroke="black"/>
+<path stroke="black" pen="0.4">
+-191.759 -16.156 m
+-207.918 -48.1665 l
+</path>
+</group>
+<group matrix="1 0 0 1 335.819 118.828">
+<use name="mark/disk(sx)" pos="-175.599 -48.1665" size="2" stroke="black"/>
+<path stroke="black" pen="0.4">
+-191.759 -16.156 m
+-175.599 -48.1665 l
+</path>
+</group>
+<use matrix="1 0 0 1 335.819 118.828" name="mark/disk(sx)" pos="-239.931 -16.156" size="2" stroke="black"/>
+<path matrix="1 0 0 1 335.819 118.828" stroke="black" pen="0.4">
+-215.845 16.1429 m
+-239.931 -16.156 l
+</path>
+<path matrix="1 0 0 1 335.819 118.828" stroke="black" pen="0.4">
+-207.918 -48.1665 m
+-223.772 -80.177 l
+-207.918 -48.1665 m
+-192.063 -80.177 l
+-223.772 -80.177 m
+-192.063 -80.177 l
+</path>
+<path matrix="1 0 0 1 335.819 118.828" stroke="black" pen="0.4">
+-175.599 -48.1665 m
+-191.453 -80.177 l
+-175.599 -48.1665 m
+-159.744 -80.177 l
+-191.453 -80.177 m
+-159.744 -80.177 l
+</path>
+<path matrix="1 0 0 1 335.819 118.828" stroke="black" pen="0.4">
+-239.931 -16.156 m
+-255.786 -48.1665 l
+-239.931 -16.156 m
+-224.076 -48.1665 l
+-255.786 -48.1665 m
+-224.076 -48.1665 l
+</path>
+<text matrix="1 0 0 1 335.819 118.828" transformations="translations" pos="-225.602 16.4313" stroke="black" type="label" valign="bottom" size="10">$x$</text>
+<text matrix="1 0 0 1 335.819 118.828" transformations="translations" pos="-203.954 -18.6628" stroke="black" type="label" valign="bottom" size="10">$y$</text>
+<text matrix="1 0 0 1 335.819 118.828" transformations="translations" pos="-249.383 -16.7328" stroke="black" type="label" valign="bottom" size="10">$a$</text>
+<text matrix="1 0 0 1 335.819 118.828" transformations="translations" pos="-217.065 -47.3014" stroke="black" type="label" valign="bottom" size="10">$b$</text>
+<text matrix="1 0 0 1 335.819 118.828" transformations="translations" pos="-186.576 -47.3014" stroke="black" type="label" valign="bottom" size="10">$c$</text>
+<text matrix="1 0 0 1 335.819 118.828" transformations="translations" pos="-243.136 -41.8221" stroke="black" type="label" valign="bottom" size="10">$\alpha$</text>
+<text matrix="1 0 0 1 335.819 118.828" transformations="translations" pos="-210.998 -73.5442" stroke="black" type="label" valign="bottom" size="10">$\beta$</text>
+<text matrix="1 0 0 1 335.819 118.828" transformations="translations" pos="-178.454 -73.5442" stroke="black" type="label" valign="bottom" size="10">$\gamma$</text>
+</page>
+</ipe>

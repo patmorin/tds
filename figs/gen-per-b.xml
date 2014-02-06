@@ -1,0 +1,276 @@
+<ipe creator="ipe5toxml 2003/04/10" media="-379.772 -432.787 215.228 409.213">
+<page>
+<text stroke="black" pos="-6.93654 -39.3796" size="10" type="label" valign="bottom">$w$</text>
+<path stroke="black" pen="0.4" arrow="7">
+-64.1204 -37.2346 m
+-10.075 -37.2346 l
+</path>
+<path stroke="black" pen="0.4">
+-88.7446 -16.9903
+-88.7446 -16.9903
+-88.7446 -79.7839
+-88.7446 -79.7839
+-51.4978 -79.7839
+-51.4978 -79.7839
+-51.4978 -16.9903
+-51.4978 -16.9903 u
+</path>
+<text stroke="black" pos="-74.3712 -26.2661" size="10" type="label" valign="bottom">$u'$</text>
+<text stroke="black" pos="-75.9362 -74.0592" size="10" type="label" valign="bottom">$\ldots$</text>
+<text stroke="black" pos="-6.93654 33.8212" size="10" type="label" valign="bottom">$v$</text>
+<text stroke="black" pos="-6.93654 8.8532" size="10" type="label" valign="bottom">$y$</text>
+<path stroke="black" pen="0.4">
+-70.1212 17.9639 m
+-58.1195 17.9639 l
+-58.1195 5.96245 l
+-70.1212 5.96245 l h
+</path>
+<path stroke="black" pen="0.4" arrow="7">
+-64.1204 35.9662 m
+-10.075 35.9662 l
+</path>
+<path stroke="black" pen="0.4" arrow="7">
+-64.1204 23.9647 m
+-10.075 23.9647 l
+</path>
+<path stroke="black" pen="0.4">
+-88.7446 56.2105
+-88.7446 56.2105
+-88.7446 -6.58311
+-88.7446 -6.58311
+-51.4978 -6.58311
+-51.4978 -6.58311
+-51.4978 56.2105
+-51.4978 56.2105 u
+</path>
+<text stroke="black" pos="-72.9762 49.0993" size="10" type="label" valign="bottom">$u$</text>
+<text stroke="black" pos="-75.9362 -0.858339" size="10" type="label" valign="bottom">$\ldots$</text>
+<group>
+<path stroke="black" pen="0.4">
+-70.1212 41.967 m
+-58.1195 41.967 l
+-58.1195 29.9655 l
+-70.1212 29.9655 l h
+</path>
+<mark stroke="black" pos="-64.1204 35.9662" shape="2" size="2"/>
+</group>
+<group>
+<path stroke="black" pen="0.4">
+-70.1212 29.9655 m
+-58.1195 29.9655 l
+-58.1195 17.964 l
+-70.1212 17.964 l h
+</path>
+<mark stroke="black" pos="-64.1204 23.9647" shape="2" size="2"/>
+</group>
+<path stroke="black" pen="0.4">
+-82.1229 41.967 m
+-70.1212 41.967 l
+-70.1212 29.9655 l
+-82.1229 29.9655 l h
+</path>
+<path stroke="black" pen="0.4">
+-82.1229 29.9655 m
+-70.1212 29.9655 l
+-70.1212 17.964 l
+-82.1229 17.964 l h
+</path>
+<path stroke="black" pen="0.4">
+-82.1229 17.964 m
+-70.1212 17.964 l
+-70.1212 5.9625 l
+-82.1229 5.9625 l h
+</path>
+<path stroke="black" pen="0.4">
+-70.1212 17.964 m
+-58.1195 17.964 l
+-58.1195 5.9625 l
+-70.1212 5.9625 l h
+</path>
+<text stroke="black" pos="-80.157 8.15325" size="10" type="label" valign="bottom">$t_2$</text>
+<text stroke="black" pos="-80.157 20.1547" size="10" type="label" valign="bottom">$t_1$</text>
+<text stroke="black" pos="-80.157 32.1562" size="10" type="label" valign="bottom">$t_0$</text>
+<mark stroke="black" pos="-64.1204 11.9632" shape="2" size="2"/>
+<path stroke="black" pen="0.4" arrow="7">
+-64.1204 11.9632 m
+-10.0749 11.9632 l
+</path>
+<text stroke="black" pos="-6.93654 21.8197" size="10" type="label" valign="bottom">$x$</text>
+<group>
+<path stroke="black" pen="0.4">
+-70.1212 -55.2369 m
+-58.1195 -55.2369 l
+-58.1195 -67.2384 l
+-70.1212 -67.2384 l h
+</path>
+<group>
+<path stroke="black" pen="0.4">
+-70.1212 -31.2338 m
+-58.1195 -31.2338 l
+-58.1195 -43.2353 l
+-70.1212 -43.2353 l h
+</path>
+<mark stroke="black" pos="-64.1204 -37.2346" shape="2" size="2"/>
+</group>
+<group>
+<path stroke="black" pen="0.4">
+-70.1212 -43.2353 m
+-58.1195 -43.2353 l
+-58.1195 -55.2368 l
+-70.1212 -55.2368 l h
+</path>
+<mark stroke="black" pos="-64.1204 -49.2361" shape="2" size="2"/>
+</group>
+<path stroke="black" pen="0.4">
+-82.1229 -31.2338 m
+-70.1212 -31.2338 l
+-70.1212 -43.2353 l
+-82.1229 -43.2353 l h
+</path>
+<path stroke="black" pen="0.4">
+-82.1229 -43.2353 m
+-70.1212 -43.2353 l
+-70.1212 -55.2368 l
+-82.1229 -55.2368 l h
+</path>
+<path stroke="black" pen="0.4">
+-82.1229 -55.2368 m
+-70.1212 -55.2368 l
+-70.1212 -67.2383 l
+-82.1229 -67.2383 l h
+</path>
+<path stroke="black" pen="0.4">
+-70.1212 -55.2368 m
+-58.1195 -55.2368 l
+-58.1195 -67.2383 l
+-70.1212 -67.2383 l h
+</path>
+<text stroke="black" pos="-81.1071 -63.3826" size="10" type="label" valign="bottom">$\infty$</text>
+<text stroke="black" pos="-81.1071 -51.3811" size="10" type="label" valign="bottom">$\infty$</text>
+<text stroke="black" pos="-77.9221 -40.2996" size="10" type="label" valign="bottom">$t$</text>
+</group>
+<path stroke="black" pen="0.4" arrow="7">
+-139.605 -37.2346 m
+-88.7446 24.3267 l
+</path>
+<path stroke="black" pen="0.4" arrow="7">
+-139.605 -49.2361 m
+-88.4047 -49.2361 l
+</path>
+<group>
+<path stroke="black" pen="0.4">
+-145.606 17.9639 m
+-133.604 17.9639 l
+-133.604 5.9625 l
+-145.606 5.9625 l h
+</path>
+<group>
+<path stroke="black" pen="0.4">
+-145.606 41.967 m
+-133.604 41.967 l
+-133.604 29.9655 l
+-145.606 29.9655 l h
+</path>
+<mark stroke="black" pos="-139.605 35.9662" shape="2" size="2"/>
+</group>
+<group>
+<path stroke="black" pen="0.4">
+-145.606 29.9655 m
+-133.604 29.9655 l
+-133.604 17.964 l
+-145.606 17.964 l h
+</path>
+<mark stroke="black" pos="-139.605 23.9647" shape="2" size="2"/>
+</group>
+<path stroke="black" pen="0.4">
+-157.607 41.967 m
+-145.606 41.967 l
+-145.606 29.9655 l
+-157.607 29.9655 l h
+</path>
+<path stroke="black" pen="0.4">
+-157.607 29.9655 m
+-145.606 29.9655 l
+-145.606 17.964 l
+-157.607 17.964 l h
+</path>
+<path stroke="black" pen="0.4">
+-157.607 17.964 m
+-145.606 17.964 l
+-145.606 5.96255 l
+-157.607 5.96255 l h
+</path>
+<path stroke="black" pen="0.4">
+-145.606 17.964 m
+-133.604 17.964 l
+-133.604 5.96255 l
+-145.606 5.96255 l h
+</path>
+<text stroke="black" pos="-153.407 8.8983" size="10" type="label" valign="bottom">$t$</text>
+<text stroke="black" pos="-155.642 20.1548" size="10" type="label" valign="bottom">$t_5$</text>
+<text stroke="black" pos="-155.642 32.1563" size="10" type="label" valign="bottom">$t_4$</text>
+<mark stroke="black" pos="-139.605 11.9633" shape="2" size="2"/>
+</group>
+<group>
+<path stroke="black" pen="0.4">
+-145.606 -55.2369 m
+-133.604 -55.2369 l
+-133.604 -67.2384 l
+-145.606 -67.2384 l h
+</path>
+<group>
+<path stroke="black" pen="0.4">
+-145.606 -31.2338 m
+-133.604 -31.2338 l
+-133.604 -43.2353 l
+-145.606 -43.2353 l h
+</path>
+<mark stroke="black" pos="-139.605 -37.2346" shape="2" size="2"/>
+</group>
+<group>
+<path stroke="black" pen="0.4">
+-145.606 -43.2353 m
+-133.604 -43.2353 l
+-133.604 -55.2368 l
+-145.606 -55.2368 l h
+</path>
+<mark stroke="black" pos="-139.605 -49.2361" shape="2" size="2"/>
+</group>
+<path stroke="black" pen="0.4">
+-157.607 -31.2338 m
+-145.606 -31.2338 l
+-145.606 -43.2353 l
+-157.607 -43.2353 l h
+</path>
+<path stroke="black" pen="0.4">
+-157.607 -43.2353 m
+-145.606 -43.2353 l
+-145.606 -55.2368 l
+-157.607 -55.2368 l h
+</path>
+<path stroke="black" pen="0.4">
+-157.607 -55.2368 m
+-145.606 -55.2368 l
+-145.606 -67.2383 l
+-157.607 -67.2383 l h
+</path>
+<path stroke="black" pen="0.4">
+-145.606 -55.2368 m
+-133.604 -55.2368 l
+-133.604 -67.2383 l
+-145.606 -67.2383 l h
+</path>
+<text stroke="black" pos="-156.592 -63.3826" size="10" type="label" valign="bottom">$\infty$</text>
+<text stroke="black" pos="-153.407 -52.3011" size="10" type="label" valign="bottom">$t$</text>
+<text stroke="black" pos="-155.642 -41.0446" size="10" type="label" valign="bottom">$t_3$</text>
+</group>
+<path stroke="black" pen="0.4" arrow="7">
+-139.605 23.9647 m
+-88.7446 24.3267 l
+</path>
+<path stroke="black" pen="0.4" arrow="7">
+-139.605 11.9633 m
+-88.4047 -49.2361 l
+</path>
+</page>
+</ipe>

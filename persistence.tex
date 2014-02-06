@@ -1,0 +1,414 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Persistence}\chaplabel{persistence}
+\bibliographystyle{plain}
+
+
+This chapter introduces the topic of \emph{persistence} in data
+structures.  A dynamic data structure evolves through time as elements
+are inserted and deleted.  Usually, operations on the data structure
+are always performed on the most recent version.  In contrast, a
+\emph{persistent} data structure is one that allows access to all
+previous versions of the data structure.
+
+Since it may not immediately be obvious that persistence is useful, we
+begin this chapter with a motivating example from the field of
+computational geometry.  As it happens, persistence plays a central
+role in many algorithms for computational geometry problems.
+
+\comment{
+Persistent data structures have many applications. One example is the
+\emph{undo} feature of many text editors and word processors that allows a user to revert to a previous version the document they are editing.  In a more
+}
+
+%======================================================================
+\section{Next Element Search}
+
+Let $S=\{s_1,\ldots,s_n\}$ be a set of horizontal line segments in the
+plane.  The \emph{next element search} problem asks us to proprocess
+$S$ so that, given query point $q$ we can return the element of $S$
+that is directly above $q$ (see \figref{next-element}), or $\nil$ if
+no such element exists.
+
+\begin{figure}
+\centergraphics{next-element}
+\caption[The next element search problem.]{The correct answer for
+query point $q$ is the line segment directly above $q$.}
+\figlabel{next-element}
+\end{figure}
+
+The next element search problem can be solved in the following way
+(see \figref{next-element2}): Sort the endpoints of $S$ by
+$x$-coordinate.  Create a dictionary $D$ that will store intervals
+sorted by their $y$-coordinates.  We use the sorted list of endpoints
+to sweep the plane with a line from left to right.  When the line
+passes over the left endpoint of a segment we insert that segment into
+$D$.  When the line passes over the right endpoint of a segment we
+delete that segment from $D$. In both cases, we save a copy of $D$ and
+store all these copies sorted by the $x$-coordinate of the endpoint
+that created them.
+
+\begin{figure}
+\centergraphics{next-element2}
+\caption{The next element search problem can be solved by partitioning
+the plane into vertical strips and building a dictionary for each strip.}
+\figlabel{next-element2}
+\end{figure}
+
+To perform next element search for a query point $q$, we perform a
+binary search on the $x$-coordinate of $q$ to find the copy $D'$ of
+$D$ that contains exactly the segments that are above and below $q$.
+We then search $D'$ to find the segment that is directly above $q$.
+The first binary search takes $O(\log n)$ time and the second search
+takes $O(\log n)$ time if we implement $D$ using an efficient
+dictionary data structure.  Therefore, the cost of performing next
+element search with this data structure is $O(\log n)$.
+
+What is the cost of constructing the data structure?  Clearly the
+dictionary $D$ never contains more than $n$ elements, so it can be
+copied in $O(n)$ time.  Since we have to do this $2n$ times, the
+overall cost of copying is $O(n^2)$.  The costs of other operations
+(sorting endpoints and insertions and deletions into $D$) is $O(n\log
+n)$, so the total cost of building the data structure is $O(n^2)$.
+
+Plane sweep provides a nice simple, intuitive solution to the next
+element search problem.  However, if we want to do better with the
+plane sweep approach we need a faster way to copy the dictionary $D$.
+But if $D$ has size $\Omega(n)$ how can we copy it any faster?  The
+trick is that each copy of $D$ differs only from the previous one by
+one insertion or deletion, so we only need to copy the parts that
+change.
+
+%======================================================================
+\section{Path Copying}
+
+Suppose we have a dictionary implemented as a balanced binary search
+tree $T$.  Recall from \chapref{records} that when we insert a key $k$
+into a balanced binary search tree we create a new leaf containing $k$
+and then rebalance $T$ by performing rotations on some of the nodes on
+the path, $\path(k,T)$, from the newly created leaf to the root of
+$T$.  These rotations only modify the nodes of $\path(k,T)$, so the
+entire insertion process only modifies the nodes of $\path(k,T)$.
+
+Suppose that, before we perform insertion of the key $k$ into the tree
+$T$, we first copy all nodes on $\path(k, T)$ (see
+\figref{path-copy}).  We now have two search trees; the original tree
+$T$ is still valid, and the a new tree $T'$ whose root is a copy of
+the root of $T$ (see \figref{path-copy}).  Now, if we do an insertion
+on $T'$ we know that the insertion only modifies nodes on
+$\path(k,T')$, which are not nodes of $T$.  Therefore, after the
+insertion, $T'$ is balanced binary search tree that contains $k$ and
+$T$ is a balanced binary search tree that does not contain $k$.
+Copying $\path(k,T)$ before insertion does not increase the insertion
+time by more than a constant factor, and requires $O(\log n)$
+additional space.\footnote{In the case of randomized search trees the
+space bound is in the expected sense.}
+
+\begin{figure}
+\centergraphics{path-copy}
+\caption{Before inserting $k$ into $T$ we copy all nodes on $\path(k,T)$.}
+\figlabel{path-copy}
+\end{figure}
+
+
+Next we turn to the problem of deletions.  To delete key $k$, we first
+simulate the deletion of key $k$ to determine which nodes of $T$ will
+be modified by the deletion.  Now, for each node $v$ that is modified,
+we copy $v$ and all the nodes on the path from $v$ to the root of $T$,
+doing this in such a way as to avoid copying any node more than once.
+This gives us a new tree $T'$ whose root is a copy of $\rt(T)$.  We
+then perform the deletion on $T'$.  Since this deletion does not
+modify any nodes of $T$, we are left with a tree $T$ that contains $k$
+and a tree $T'$ that does not contain $k$.  Furthermore, any
+reasonable deletion algorithm runs in $O(\log n)$ time, and only
+modifies node $v$ if it reaches $v$ by following a path from $\rt(T)$
+to $v$.  Therefore, the number of nodes copied by this scheme, and
+hence the overall running time and space requirement is $O(\log n)$.
+
+For concrete examples of insertions and deletions, consider a treap
+$T$ as described in \secref{treaps}.  To insert the key $k$ we copy
+$\path(k,T)$, append a new node (with key $k$) and then use rotations
+to move $k$ upwards in the tree.  It is easy to verify that the only
+nodes modified by these rotations are those on
+$\path(k,T)$.\footnote{This is true if nodes only contain pointers to
+their left and right children. If they also contain pointers to their
+parents then the nodes adjacent to this path have their parent pointers
+changed.  Luckily, parent pointer are not used during the searches
+in old versions of the treap.}  To
+delete a key $k$, we make a copy of $\path(k,T)$ and then use
+rotations to move $k$ downwards in $T$ until it becomes a leaf.  Each
+rotation modifies two nodes: One node is a copy of the node with key
+$k$.  Therefore, before performing the rotation, we make a copy of the
+second node and do the rotation with the copy rather than the
+original.
+
+None of the work of copying increases the running time of treap
+operations by more than a constant factor, so the expected running
+times for insertion and deletion are still $O(\log n)$.  Furthermore,
+the number of nodes copied during an insertion or deletion does not
+exceed the running time, so the expected number of nodes copied during
+each insertion and deletion is $O(\log n)$.
+
+We have just shown how to implement a dictionary so that a sequence of
+insertions and deletions $o_1,\ldots o_n$ results in a sequence of
+dictionaries $D_0,\ldots,D_n$ where $D_i$ is the result of operations
+$D_1,\ldots,D_i$.  Each $D_i$ can be searched in $O(\log m_i)$ time
+where $m_i$ is the number of keys stored in $D_i$.  We call such a
+dictionary a \emph{persistent dictionary}.  The following theorem
+states the performance of this dictionary
+
+\begin{thm}
+There exists a persistent dictionary data structure that supports
+$\textsc{Insert}$, $\textsc{Delete}$ and $\textsc{Search}$ in $O(\log
+n)$ time and requires $O(n\log n)$ storage for a sequence of $n$
+operations.
+\end{thm}
+
+Using this data structure for the next element search problem
+we obtain the following corollary.
+
+\begin{thm}
+There exists a data structure that takes as input a set $S$ of $n$
+horizontal line segments and after $O(n\log n)$ preprocessing
+requiring $O(n\log n)$ storage, answers next element search queries on
+$S$ in $O(\log n)$ time.
+\end{thm}
+
+%======================================================================
+%\section{Persistent Search Trees}\seclabel{persistent-trees}
+
+%======================================================================
+\section{Generalized Persistence}\seclabel{generalized-persistence}
+
+Path copying is a nice simple method for implementing persistence in
+binary search trees, but it is \emph{ad hoc}.  It's not obvious how to
+extend it for data structures other than binary search trees.  Next we
+give a more general strategy for implementing persistence.
+
+Suppose we have a pointer-based data structure which we model as a
+directed graph $G$.  Each vertex of $G$ has some constant number $c\ge
+2$ of outgoing edges (representing pointers) and a label (representing
+data).  The restriction to a constant number of outgoing edges is, in
+many cases, not really a restriction since we can simulate one node
+with many outgoing edges by many nodes that we link together as a
+linked list.  Another possibility is to simulate a node with many
+outgoing edges as a binary tree whose leaves represent the edges.
+
+The real restriction we place on $G$ is that it have \emph{bounded
+in-degree}.  That is, no vertex of $G$ has more than $d$ edges leading
+into it, for some constant $d>1$.
+
+The operations we allow on $G$ are $\textsc{Create-Node}(G)$ which
+creates a new vertex with no outgoing or incoming edges,
+$\textsc{Change-Label}(v,x)$ which changes the value of the data
+stored at vertex $v$ to be $x$, and $\textsc{Change-Edge}(v,i,u)$
+which changes the $i$th outgoing edge of node $v$ so that it points to
+node $u$, where $u$ may be $\nil$.  After each update operation, the
+global time $t$ advances by 1 unit.  This gives us a sequence of
+graphs $G_0,\ldots,G_t$ where $G_{t'}$ denotes the graph $G$ at time
+$t'$.
+
+For a persistent graph representation we would like an application to
+have access to $G_{t'}$ for any $0\le t'\le t$.  Of course, to access
+$G_{t'}$ an application needs to have a pointer to some node $v$ that
+exists at time $t'$.  How this is done depends on the application, but
+in most cases it is obvious (e.g., for search trees it is usually the
+root of the tree).  The access operations we allow are
+$\textsc{Label}(v,t')$ which returns the label of the node $v$ at time
+$t'$ and $\textsc{Edge}(v,i,t')$ which returns the $i$th outgoing edge
+of $v$ at time $t'$.
+
+In order to implement this, we represent each vertex $v$ of $G$ as a
+table (array of structures).  Each table contains $d+1$ rows and has
+one column for a label (data), $c$ columns for outgoing edges
+(pointers), and one column which indicates the time at which the
+corresponding row was filled in.  In addition to this, $v$ maintains
+an array $\inptr(v)$ of $d$ pointers that keep track of the (at most
+$d$) other vertices of $G$ that have edges leading to $v$.
+
+\paragraph{Creating a vertex.}
+
+A call to \textsc{Create-Node} simply creates (and returns a pointer
+to) a new table in which all rows are empty and whose $\inptr$ values
+are all set to nil.
+
+\paragraph{Changing an edge.}
+
+In a call to $\textsc{Change-Edge}(v,i,u)$, two cases can occur:
+
+\noindent\textbf{Case 1:} The table for node $v$ has an empty row.  
+In this case, we modify the table for node $v$ by coping the last
+non-empty row into the first empty row and then modifying the entry
+for edge $i$ in the new row so that it contains $u$.  At the same time,
+we update the time column for the newly added row so that it contains
+the current global time $t$.
+
+We then update $\inptr$ arrays for $u$ and for the vertex $w$ that was
+previously contained in the column for the $i$th outgoing edge of $v$.
+We add an entry to $\inptr(u)$ containing a pointer to the table for
+$v$ (if no such entry existed previously), and we delete an entry that
+points to the table for $v$ from $\inptr(w)$.
+
+\noindent\textbf{Case 2:} The table for node $v$ has no empty row.  In
+this case, we make a new table for node $v$ with a call to
+\textsc{Create-Node}.  We then copy the last row out of the old table into
+the first row of the new table.  As before, we modify the entry for
+edge $i$ in the first row of the new table so that it points to $u$
+and we modify the time so that it contains the current time $t$.
+
+Next we modify the $\inptr$ arrays for every vertex $w$ such that the
+edge $(v,w)$ exists in $G$.  For every edge $(v,w)$ in the first row
+of the new table, we change the entry for $v$ in $\inptr(w)$ (which
+pointed to the old table) so that it points to the new table.
+
+At this point, there still exist up to $d$ references to the old table
+for node $v$.  To get rid of these, we recursively modify every node
+in $\inptr(v)$ so that it points to the new table for $v$.  More
+precisely, if $w$ contains the edge $(w,v)$ as it's $i$th edge, then
+we call $\textsc{Change-Edge}(w,i,v)$, where $v$ is a pointer to the
+new table for $v$.
+
+At this point we note that if there is some external reference to node
+$v$, then this reference should be updated to point to the new table
+for $v$.  For example, if $v$ is the root of a binary search tree then
+any accesses to the tree at time $t'\ge t$ will have to start at the
+new table for $v$ (until the time the new table is copied).
+
+\paragraph{Changing a label.}
+
+The implementation of $\textsc{Change-Label}(v,x)$ is exactly the same
+as a call to $\textsc{Change-Edge}(v,i,u)$ except that, instead of updating
+the column for edge $i$, we update the label column.  Because of this,
+there is no need to update the $\inptr$ array for $u$.
+
+\paragraph{Accessing label and edge data.}
+
+We say that a table for node $v$ in this implementation is
+\emph{active} during the time interval $[t_1,t_2)$, where $t_1$ is
+the time at which the table was first created with a call to
+$\textsc{Create-Node}$ and $t_2$ is the time at which the table was
+first copied as part of Case~2 of the procedure for changing an edge
+or label.  It follows that for any time $t$ such that $t_1\le t'\le
+t$, there is exactly one table for node $v$ that is active.
+
+To access an outgoing edge of $v$ or a label of $v$ at time $t'\le t$,
+we use the table for $v$ that was active at time $t'$. To determine
+the value of the edge or label, we look in the last row whose time
+value is less than or equal to $t'$.  If the vertex $v$ had label $x$
+at time $t'$, then it is clear that the label in this row is $x$.
+
+Similarly, if the vertex $v$ had edge $(v,w)$ as its $i$th outgoing
+edge at time $t'$ then the entry for edge $i$ in this row points to a
+table for $w$.  We claim that this table for $w$ is active at time
+$t'$.  Clearly, the table must be active at some time $t''\le t'$,
+otherwise a pointer to this table could not have existed at time $t'$.
+Therefore, the only way the table for $w$ could not be active at time
+$t'$ is if the table were copied (as part of Case~2 above) at some
+time $t''\le t'$.  But in this case, the table for $v$ would have been
+updated at time $t''$ to point to the new table for $w$.
+
+Thus, if we start at the table for node $v$ that is active at time
+$t'$ and only follow edges as described above then we can reach only
+tables that were active at time $t'$. Any such table corresponds to a
+vertex $w$ such that there is a path from $v$ to $w$ in $G_t$.  In
+other words, this scheme is correct.
+
+\paragraph{Analysis.}
+
+How efficient is this scheme?  To determine this, we use an accounting
+argument, also called a \emph{credit scheme}.  A credit can be thought
+of as a unit of currency that can pay for the cost of creating a new
+table.  In fact, every newly created table will be paid for with 1
+credit.  
+
+In addition to this, tables can accumulate credits which they can use
+later.  The accumulation of credits at a table satisfies the
+following \emph{credit invariant}: If the table is active, it has
+exactly the same number of credits as rows that have been filled in.
+Otherwise (the table is non-active) it has no credits.
+
+We claim that the above credit scheme can be maintained if we insert
+two credits every time the user calls \textsc{Create-Vertex} and one
+credit every time the user calls \textsc{Change-Edge} or
+\textsc{Change-Label}.  Note that we only insert a credit when a user
+calls one of these functions.  As part of their implementation, they
+may call each other or themselves recursively, but we do not create
+new credits for these internal calls.
+
+\textsc{Create-Vertex} creates a new active table with exactly one
+row.  If we insert two credit during a call to \textsc{Create-Vertex}
+then we can use one credit to pay for the cost of creating the table
+and give one credit to the table so that the credit invariant is
+maintained.
+
+\textsc{Change-Edge} has two cases.  In Case~1, we add one row to an
+existing table.  In this case we give our newly inserted credit to
+this table so that the credit scheme is maintained.  Case~2 is more
+complicated.  In this case, one (full) table becomes inactive, a new
+active table with one full row is created and up to $d$ recursive
+calls are made.
+
+Before the call to \textsc{Change-Edge}, the old (full) table stores
+$d+1$ credits and it becomes inactive, so we have $d+2$ credits at our
+disposal.  We use one credit to pay for creating the new table and we
+give one more credit to this new table to satisfy the credit
+invariant.  We are left with the cost of paying for $d$ recursive
+calls, each of which requires one input credit.  Luckily we have $d$
+credits left and we use each of these as input to one recursive call.
+
+The accounting for \textsc{Change-Label} is exactly the same as for
+\textsc{Change-Edge}.
+
+If there are $n_1$ calls to \textsc{Create-Node} and $n_2$ calls to \textsc{Change-Edge}, then the above argument shows that the total number of tables created is at most $2n_1+n_2$ since every table created is paid for with a credit.  However, looking a little more closely, we see that we never spend all our credits.  For every call to \textsc{Create-Node} there is an active table with at least one row filled in, so there are at least $n_1$ credits that never get spent.  Therefore, the total number of tables created does not exceed $2n_1 + n_2 - n_1 = n_1+n_2$.
+We have just shown the following result.
+
+\begin{lem}
+$n$ calls to \textsc{Create-Node} and \textsc{Change-Edge} and
+\textsc{Change-Label} results in the creation of at most $n$ tables.
+\end{lem}
+
+Each table has size $O(d)$ and, excluding recursive calls, filling in
+a table requires $O(d^2)$ work (the extra $d$ factor comes from
+updating $\inptr$ arrays at other nodes).  Therefore, the amount of
+work done during a sequence of operations is bounded by $O(d^2)$ times
+the number of tables created.  Each access operation (\textsc{Edge}
+and \textsc{Label}) can be done in $O(d)$ time, or in $O(\log d)$ time
+if we use binary search on the rows.
+
+\begin{thm}
+There exists a data structure that can complete any sequence of $n$
+\textsc{Create-Node}, \textsc{Change-Edge} and \textsc{Change-Label}
+operations and $m$ \textsc{Edge} and \textsc{Label} operations
+in $O(nd^2+m\log d)$ time.
+\end{thm}
+
+%======================================================================
+\section{Discussion and References}
+
+By now, the use of persistence is standard in data structure papers,
+so much so that most authors, after definining a dynamic data
+structure simply cite Driscoll \etal\ \cite{dsst89} to give a
+persistent version.  Path copying was discovered independently by many
+authors, including Myers \cite{m82,m84}, Krijnen and Meertens
+\cite{km83}, Reps, Teitelbaum and Demers \cite{rtd83}, and Swart
+\cite{s85}.
+
+Sarnak and Tarjan \cite{st86} first used a version of the generalized
+persistence scheme with red-black trees to give a data structure for
+the next-element search problem requiring $O(n)$ space.  The
+generalized persistence mechanism of \secref{generalized-persistence}
+is due to Driscoll \etal\ \cite{dsst89}.
+
+In computational geometry, a dynamic data structure for a problem in
+$d$-dimensions can often be combined with persistence and plane-sweep
+to yields a static data structure in $d+1$ dimensions.  Our next-element
+search data structure is an example of this, since a binary search tree
+can be thought of as a next-element search structure for $1$-dimensional
+data.  Unfortunately, since the resulting data structure is static,
+this trick can only be applied once.
+
+\bibliography{tds}
+
+
+
+
+

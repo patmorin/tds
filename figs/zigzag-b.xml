@@ -1,0 +1,46 @@
+<ipe creator="ipe5toxml 2003/04/10" media="-375.5 -431.56 219.5 410.44">
+<preamble>\usepackage{times,mathptm}
+</preamble>
+<page>
+<path stroke="black" pen="0.4">
+-104 -16 m
+-116 -40 l
+-92 -40 l
+-104 -16 l
+</path>
+<path stroke="black" pen="0.4">
+-76 -16 m
+-88 -40 l
+-64 -40 l
+-76 -16 l
+</path>
+<path stroke="black" pen="0.4">
+-52 0 m
+-64 -24 l
+-40 -24 l
+-52 0 l
+</path>
+<mark stroke="black" pos="-88 0" shape="2" size="2"/>
+<mark stroke="black" pos="-72 16" shape="2" size="2"/>
+<path stroke="black" pen="0.4">
+-88 0 m
+-104 -16 l
+</path>
+<path stroke="black" pen="0.4">
+-88 0 m
+-76 -16 l
+</path>
+<path stroke="black" pen="0.4">
+-72 16 m
+-88 0 l
+</path>
+<path stroke="black" pen="0.4">
+-72 16 m
+-52 0 l
+</path>
+<text stroke="black" pos="-74.2002 18.8797" size="10" type="label" valign="bottom">$x$</text>
+<text stroke="black" pos="-95.7482 -0.891087" size="10" type="label" valign="bottom">$y$</text>
+<text stroke="black" pos="-49.2796 0.469623" size="10" type="label" valign="bottom">$z$</text>
+<mark stroke="black" pos="-52 0" shape="2" size="2"/>
+</page>
+</ipe>

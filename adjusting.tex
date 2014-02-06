@@ -1,0 +1,490 @@
+\chapter{Self-Adjusting Data Structures}\chaplabel{adjusting}
+\bibliographystyle{plain}
+
+\chapref{entropy} describes a data structure that is able to achieve
+an expected query time that is proportional to the entropy of the
+query distribution.  The most interesting aspect of this data
+structure is that it does need to know the query distribution in
+advance.  Rather, the data structure adjusts itself using information
+gathered from previous queries.
+
+In this chapter we study several other data structures that adjust
+themselves in the same way.  All of these data structures are
+efficient only in an amortized sense.  That is, individual operations
+take may take a large amount of time, but over a sequence of many
+operations, the amortized (average) time per operation is still small.
+
+The advantage of self-organizing data structures is that they can
+often perform ``natural'' sequences of accesses much faster than their
+worst-case counterparts.  Examples of such natural sequences including
+accessing each of the elements in order, using the data structure like
+a stack or queue and performing many consecutive accesses to the same
+element.
+
+In other sections of this book we have analyzed the amortized cost of
+operations on data structures using the accounting method, in which we
+manipulate credits to bound the amortized cost of operations.  A
+different method of amortized analysis is the \emph{potential method}.
+For any data structure $D$, we define a potential $\Phi(D)$.  If we
+let $D_i$ denote our data structure after the $i$th operation and let
+$C_i$ denote the cost (running time) of the $i$th operation then the
+\emph{amortized cost} of the $i$th operation is defined as
+\[
+  A_i = C_i+\Phi(D_i)=\Phi(D_{i-1}) \enspace .
+\] 
+Note that this is simply a definition and, since $\Phi$ is arbitrary,
+$A_i$ has nothing to do with the real cost $C_i$.  However, the
+the cost of a sequence of $m$ operations is 
+\begin{eqnarray*}
+  \sum_{i=1}^m C_i 
+	& = & \sum_{i=1}^m \left(C_i + \Phi(D_i)-\Phi(D_{i-1})\right) -
+		\sum_{i=1}^m \left(\Phi(D_i)-\Phi(D_{i-1})\right) \\
+	& = & \sum_{i=1}^m A_i -
+		\sum_{i=1}^m \left(\Phi(D_i)-\Phi(D_{i-1})\right) \\
+	& = & \sum_{i=1}^m A_i + \Phi(D_0) - \Phi(D_m) \enspace .
+\end{eqnarray*}
+
+The quantity $\Phi(D_0) - \Phi(D_m)$ is referred to as the \emph{net
+drop in potential}.  Thus, if we can provide a bound $D$ on $A_i$,
+then the total cost of $m$ operations is $mD$ plus the net drop in
+potential.  
+
+The potential method is equivalent to the accounting method.  Anything
+that can be proven with the potential method can be proven with the
+accounting method. (Just think of $\Phi(D)$ as the number of credits
+the data structure stores, with a negative value indicating that the
+data structure owes credits) However, once a potential function is
+defined, mathematical manipulations that can lead to very compact
+proofs are convenient.  Of course, the rub is in finding the right
+potential function.
+
+\section{Splay Trees}\seclabel{splay-trees}
+
+One of the first-ever self-modifying data structures is the
+\emph{splay tree}.  We begin our discussion of splay trees with the
+definition and analysis of the splay operation. A splay tree is a
+binary search tree that is augmented with the splay operation. Given a
+binary search tree $T$ rooted at $r$ and a node $x$ in $T$, splaying
+node $x$ is a sequence of left and right rotations performed on the
+tree until $x$ is the root of $T$. This sequence of rotations is
+governed by the following rules: (Note: a node is a left
+(respectively, right) child if it is the {left (respectively, right)
+child of its parent) In what follows, $y$ is the parent of $x$ and $z$
+is the parent of $y$ (should it exist).
+
+\begin{figure}
+\begin{center}\begin{tabular}{ccc}
+\includegraphics{figs/zig-a} & \raisebox{1cm}{zig} & \includegraphics{figs/zig-b} \\[1cm]
+\includegraphics{figs/zigzig-a} & \raisebox{1cm}{zig-zig} & \includegraphics{figs/zigzig-b} \\[1cm]
+\includegraphics{figs/zigzag-a} & \raisebox{1cm}{zig-zag} & \includegraphics{figs/zigzag-b}
+\end{tabular}\end{center}
+\caption{Splay tree.}
+\end{figure}
+
+\begin{description}
+\item[1. Zig step:] If $y$ is the root of the tree, then rotate $x$ so
+that it becomes the root.
+
+\item[2. Zig Zig step:] The node $y$ is not the root. Both $x$ and $y$
+are left (or right) children, then first rotate $y$, so that $z$ and
+$x$ are children of $y$, then rotate $x$ so that it becomes the parent
+of $y$.
+
+\item[3. Zig Zag step:] Node $y$ is not the root. If $x$ is a right
+child and $y$ is a left child or vice-versa, rotate $x$ twice. After
+one rotation it is the parent of $y$ and after the second rotation,
+both $y$ and $z$ are children of $x$.
+\end{description}
+
+We are now ready to define the potential of a splay tree. Let $T$ be a
+binary search tree on $n$ nodes and let the nodes be numbered from 1
+to $n$. Assume that each node $i$ has a fixed positive weight
+$w(i)$. Define the size $s(x)$ of a node $x$ to be the sum of the
+weights of all the nodes in the subtree rooted at $x$, including the
+weight of $x$. The rank $r(x)$ of a node $x$ is $\log(s(x))$. By
+definition, the rank of a node is at least as large as the rank of any
+of its decendants. The potential of a given tree $T$ is $\Phi(T) =
+\sum_{i=1}^n \log(s(i))$.
+
+All of the properties of a splay tree are derived from the following
+lemma:
+
+\begin{lem}\lemlabel{splay}
+The amortized time to splay a binary search tree $T$ with root $t$ at
+a node $x$ is at most $3(r(t)-r(x)) + 1 = O(\log(s(t))/\log(s(x)))$
+\end{lem}
+
+\begin{proof}
+If node $x$ is the root, then the lemma holds trivially. If node $x$ is not the root, then a number of rotations are performed according to the rules of splaying. We first show that the lemma holds after each step (zig, zigzig or zigzag) is performed. Let $r_0(i)$, $r_1(i)$ and $s_0(i)$, $s_1(i)$ represent the rank and size of node $i$ before and after the first step, respectively. Recall that the amortized cost of an operation $a = t + \Phi_1(T) - \Phi_0(T)$ where $t$ is the actual cost of the operation, and $\Phi_0$ and $\Phi_1$ are the potentials before and after the step.
+
+\begin{description}
+\item[1. Zig step:] In this case, $y$ is the root of the tree and a
+single rotation is performed to make $x$ the root of the tree. In the
+whole splay operation, this step is only ever executed once. The
+actual cost of the rotation is 1. We show that the amortized cost is
+at most $3(r_1(x) - r_0(x)) + 1$.
+
+\begin{eqnarray}
+\mbox{amortized cost} & =  & 1 + r_1(x) + r_1(y) - r_0(x) -r_0(y) 
+	\eqlabel{a1}\\
+                      &\leq& 1 + r_1(x) - r_0(x) \eqlabel{a2} \\
+                      &\leq& 1 + 3(r_1(x) - r_0(x)) \eqlabel{a3}
+\end{eqnarray}
+
+\Eqref{a1} follows from the definition of amortized cost and
+the fact that the only ranks that changed are the ranks at $x$ and
+$y$. The ranks of all other nodes in the tree remain the same since
+the nodes in their subtrees remain the same. Therefore, the change in
+potential is determined by the change in the ranks of $x$ and
+$y$. \Eqref{a2} holds because prior to the rotation, node $y$
+was the root of the tree which implies that $r_0(y) \geq
+r_1(y)$. \Eqref{a3} follows since after the rotation, node $x$
+is the root the tree, which means that $r_1(x) - r_0(x)$ is positive.
+
+\item[2. Zig Zig step:] The node $y$ is not the root. Both $y$ and $z$
+are left (or right) children. In this case, two rotations are
+made. The first rotation is at $y$, so that $z$ and $x$ are children
+of $y$. The second rotation is at $x$ so that it becomes the parent of
+$y$ and grandparent of $z$. Since two rotations are performed, the
+actual cost of this step is 2.
+
+\begin{eqnarray}
+\mbox{amortized cost} & =  & 2 + r_1(x) + r_1(y) + r_1(z) - r_0(x) -r_0(y) - r_0(z) \eqlabel{b1}\\
+                      & =  & 2 + r_1(y) + r_1(z) - r_0(x) - r_0(y) 
+	\eqlabel{b2}\\
+                      &\leq& 2 + r_1(x) + r_1(z) - 2r_0(x)) \eqlabel{b3}\\
+\end{eqnarray}
+
+After the two rotations, the only ranks that change are the ranks of
+$x$, $y$ and $z$. Therefore, the change in potential is defined by the
+change in their ranks. \Eqref{b1} follows from the definition of
+amortized cost. Now, prior to the two rotations, $x$ is child of $y$
+which is a child of $z$ and after the two rotations, $z$ is a child of
+$y$ which is a child of $x$. This implies that $r_1(x) =
+r_0(z)$. \Eqref{b2} follows. Similarly, \eqref{b3} follows
+since $r_1(x) \geq r_1(y)$ and $r_0(x) \leq r_0(y)$. What remains to
+be shown is that $2 + r_1(x) + r_1(z) - 2r_0(x)) \leq 3(r_1(x) -
+r_0(x))$.
+
+With a little manipulation, we see that this is equivalent to showing
+that $r_1(z) + r_0(x) - 2r_1(x) \leq -2$.
+
+\begin{eqnarray}
+r_1(z) + r_0(x) - 2r_1(x) & = & \log(s_1(z)/s_1(x)) + \log(s_0(x)/s_1(x))
+	\eqlabel{b4}\\
+                       & = & \log((s_1(z)/s_1(x))*(s_0(x)/s_1(x))) 
+	\eqlabel{b5}\\ 
+                       &\leq& \log(1/4)
+	\eqlabel{b6}\\
+                       & = & -2
+\end{eqnarray}
+
+\Eqref{b4} simply follows from the definition of ranks. Notice that
+$s_1(x) \geq s_1(z) + s_0(x)$. This implies that $s_1(z)/s_1(x) +
+s_0(x)/s_1(x) \leq 1$. If we let $b= s_1(z)/s_1(x)$ and
+$c=s_0(x)/s_1(x)$, we note that $b+c\leq 1$ and the expression in
+\eqref{b5} becomes $\log(bc)$. Elementary calculus shows that given
+$b+c \leq 1$, the product $bc$ is maximized when $b=c=1/2$. This gives
+\eqref{b6}.
+
+ 
+\item[3. Zig Zag step:] Node $y$ is not the root. If $x$ is a right
+child and $y$ is a left child or vice-versa, rotate $x$ twice. After
+one rotation it is the parent of $y$ and after the second rotation,
+both $y$ and $z$ are children of $x$. Again since two rotations are
+performed, the actual cost of the operation is 2. Let us look at what
+the amortized cost is.
+
+\begin{eqnarray}
+\mbox{amortized cost} & =  & 2 + r_1(x) + r_1(y) + r_1(z) - r_0(x) -r_0(y) - r_0(z) \eqlabel{b7}\\
+                      & =  & 2 + r_1(y) + r_1(z) - r_0(x) - r_0(y) 
+	\eqlabel{b8}\\
+                      &\leq& 2 + r_1(y) + r_1(z) - 2r_0(x)) 
+	\eqlabel{b9}\\
+\end{eqnarray}
+
+After the two rotations, the only ranks that change are the ranks of
+$x$, $y$ and $z$. Therefore, the change in potential is again defined
+by the change in their ranks. \Eqref{b7} follows from the
+definition of amortized cost. Now, prior to the two rotations, $z$ is
+the root of the subtree under consideration and after the two
+rotations, $x$ is the root. Therefore, we have $r_1(x) =
+r_0(z)$. \Eqref{b8} follows. Similarly, $r_0(x) \leq r_0(y)$
+since $x$ is a child of $y$ prior to the rotations. What remains to be
+shown is that $2 + r_1(y) + r_1(z) - 2r_0(x)) \leq 3(r_1(x) -
+r_0(x))$. This is equivalent showing that $r_1(y) + r_1(z) + r_0(x) -
+3r_1(x) \leq -2$.
+
+\begin{eqnarray}
+r_1(y) + r_1(z) + r_0(x) - 3r_1(x) & = & \log((s_1(y)/s_1(x))*(s_1(z)/s_1(x))) + r_0(x) - r_1(x) \eqlabel{b10}\\
+                       &\leq& \log(1/4)
+	\eqlabel{b11}\\
+                       & = & -2
+\end{eqnarray}
+
+The argument is similar to the previous case. \Eqref{b10}
+simply follows from the definition of ranks and some manipulation of
+logs. The inequality \eqref{b11} follows because $s_1(x)\geq s_1(y) +
+s_1(z)$ and $r_0(x) \leq r_1(x)$.
+\end{description}
+
+Now, suppose that a splay operation requires $k>1$ steps. Only the kth
+step will be a zig step and all the others will either be zigzig or
+zigzag steps. From the three cases shown above, the amortized cost of
+the whole splay operation is
+\[
+3r_k(x) - 3r_{k-1}(x) + 1 + \sum_{j=1}^{k-1} (3r_{j}(x) - 3r_{j-1}(x)) =
+3r_k(x) - 3r_0(x) + 1 \enspace .
+\]  
+\end{proof}
+
+If each node is given a weight of 1, the above lemma suggests that the
+amortized cost of performing a splay operation is $O(\log n)$ where
+$n$ is the size of the tree. However, \lemref{splay} is
+surprisingly much more powerful. Notice that the weight of a node was
+never really specified. We only stated that it should be a positive
+constant. The power comes from the fact that the lemma holds for {\bf
+any} assignment of positive weights to the nodes. By carefully
+choosing the weights, we can prove many interesting properties of
+splay trees. Let us look at some examples.
+
+\begin{thm}[Balance Theorem]
+Given a sequence of $m$ accesses into an $n$ node splay tree $T$, the
+total access time is $O((m+n)\log n)$.
+\end{thm}
+
+\begin{proof}
+Assign a weight of $1$ to each node. The maximum value that $s(x)$
+can have for any node $x \in T$ is $n$ since the sum of the weights is
+$n$. The minimum value of $s(x)$ is $1$. Therefore, the amortized access cost
+for any element is at most $3(\log(n) - \log(1)) + 1 = 3\log(n)
++1$. The maximum potential $\Phi_{max}(T)$ that the tree can have is
+\[
+   \sum_{i=1}^n \log(s(i)) \leq \sum_{i=1}^n \log(n) = n\log n 
+\]
+The minimum
+potential $\Phi_{min}(T)$ that the tree can have is 
+\[
+   \sum_{i=1}^n \log(s(i)) \geq \sum_{i=1}^n \log(1) = 0 \enspace .
+\]
+Therefore, the maximum drop in potential over the whole sequence is
+$\Phi_{max}(T) - \Phi_{min}(T) = n\log n$.  Thus, the total cost of
+accessing the sequence is $O(m\log n + n\log n)$, as required.
+\end{proof}
+
+This means that starting from \emph{any} initial binary search tree, if
+we access $m > n$ keys, the cost per access will be $O(\log n)$. This
+is quite interesting since we can start with a very unbalanced tree,
+such as an $n$-node path, and still achieve good behaviour.
+
+%\begin{thm}[Empirical Static Optimality Theorem] 
+%Given a sequence of $m$ accesses into an $n$ node splay tree $T$, where
+%every node is accessed at least once, then the total access time is
+%$O(m + \sum_{i=1}^n q(i)\log(m/q(i))$, where $q(i)$ is the access
+%frequency of node $i$.
+%\end{thm}
+%
+%\begin{proof}
+%Assign a weight of $q(i)/m$ to each node. The maximum value that
+%$s(x)$ can have for any node $x \in T$ is 1 since the sum of the
+%weights is 1. The minimum value is $q(i)/m$. Therefore, the amortized
+%access cost for any element is at most $3(\log(1) - \log(q(i)/m)) + 1
+%= 3\log(m/q(i)) +1$. The maximum potential $\Phi_{max}(T)$ that the
+%tree can have is $\sum_{i=1}^n \log(s(i)) \leq \sum_{i=1}^n \log(1) =
+%0$. The minimum potential $\Phi_{min}(T)$ that the tree can have is
+%$\sum_{i=1}^n \log(s(i)) \geq \sum_{i=1}^n \log(q(i)/m)$. Therefore,
+%the maximum drop in potential over the whole sequence is
+%$\Phi_{max}(T) - \Phi_{min}(T) = \sum_{i=1}^n \log(q(i)/m)$.
+%\end{proof}
+
+\begin{thm}[Static Optimality Theorem] 
+Fix some static binary search tree $T^*$ that contains the elements
+$1,\ldots,n$, fix an access sequence $a_1,\ldots,a_m$, and let $T^*(n)$
+denote the cost of searching for $a_1,\ldots,a_m$ using $T^*$.  Then the
+cost of accessing $a_1,\ldots,a_m$ using a splay tree is $O(n\log n + T^*(n))$.
+\end{thm}
+
+\begin{proof}
+If $d(x)$ is the depth of node $x$ in $T^*$, then we assign a weight of
+$w(x)=1/3^{d(x)}$ to the node containing $x$ in the splay tree.  Now, note that the size of the root (and hence any node) is at most 
+\[
+    \sum_{i=0}^\infty 2^i/3^i = 3 \enspace ,
+\]
+since $T^*$ has at most $2^i$ nodes with depth $j$ and these each have
+weight $1/3^j$.
+
+Now, according to the Access Lemma, the amortized cost of accessing node $x$ is
+at most
+\[
+    3(\log 3 - \log(s(x)) + 1 = O(1) + 3\log(3^{d(x)}) 
+    = O(1) + (3\log_2 3)d(x) = O(1+d(x))
+\]
+\end{proof}
+
+\section{Pairing Heaps}
+
+John Iacono apparently has a mapping between splay trees and pairing
+heaps that makes all the analyses carry over.
+
+\section{Queaps}
+
+Next, we consider an implementation of priority queues.  These are
+data structures that support the insertion of real-valued priorities.
+At any time, the data structure can return a pointer to a node storing
+the minimum priority, and given a pointer to a node, that node (and
+it's corresponding priority) can be deleted.
+
+For the data structure we describe, the cost to insert an element is
+$O(1)$ and the cost to extract the element $x$ is $O(\log(q(x))$,
+where $q(x)$ denotes the number of elements that have been in the data
+structure longer than $x$.  Thus, if the priority queue is used as a
+normal queue (the first element inserted is the first element deleted)
+then all operations take constant time.  We say that a data structure
+that has this property is \emph{queueish}.
+
+The data structure consists of a balanced tree $T$ and a list $L$.
+Refer to \figref{queap}. The tree $T$ is 2-4 tree, that is, all leaves
+of $T$ are on the same level and each internal node of $T$ has between
+2 and 4 children.  From this definition, it follows immediately that
+the $i$th level of $T$ contains at least $2^i$ nodes, so the height of
+$T$ is logarithmic in the number of leaves.  Another property of 2-4
+trees that is not immediately obvious, but not difficult to prove, is
+that it is possible to insert and delete a leaf in $O(1)$ amortized
+time.  These insertions and deletions are done by splitting and
+merging nodes (see
+\figref{twofour}), but any sequence of $n$ insertions and deletions
+results only in $O(n)$ of these split and merge operations.
+
+\begin{figure}
+\begin{center}\begin{tabular}{ccc}
+\includegraphics{figs/twofour-a} & \raisebox{.6cm}{$\Leftrightarrow$} & \includegraphics{figs/twofour-b}
+\end{tabular}\end{center}
+\caption{Splitting (right to left) and merging (left to right) nodes in a 2-4 tree.}\figlabel{twofour}
+\end{figure}
+
+\begin{figure}
+\centergraphics{queap}
+\caption{A queap.}\figlabel{queap}
+\end{figure}
+
+It is important to note that $T$ is not being used as a search tree.
+Rather, the leaves of $T$ will store priorities so that the left to
+right order of the leaves is the same as the order in which the
+corresponding priorities were inserted.
+
+The nodes of $T$ also contain some additional information.  The
+\emph{left wall} of $T$ is the path from the root to the leftmost leaf.
+Each internal node $v$ of $T$ that is not part the left wall stores a
+pointer $\min(v)$ to the leaf in the subtree rooted at $v$ with
+minimum priority.  Each internal node $v$ that is part of the left
+wall stores a pointer $\min(v)$ to the leaf \emph{not} in the subtree
+rooted at $v$ with minimum priority.  Finally, we also store a pointer
+to the leaf with minimum priority in $T$ in the variable $\min(T)$.
+It is clear that updating the min values at a node that is split or
+two nodes that are merged can be done in constant time, so in all
+further discussions it is assumed that when nodes are split or merged
+the $\min$ values at those nodes are updated appropriately.
+
+The list $L$ is a list of priorities that were inserted after all the
+priorities in $T$.  The list is ordered by the order in which the
+priorities were inserted, so that the least recently inserted priority
+is the first element of $L$.  Along with $L$, we also maintain a
+pointer $\min(L)$ to the list node with minimum priority.
+
+To perform an insertion in the priority queue, we simply append the
+new priority to the list $L$ and, if necessary, update the value of
+$\min(L)$.
+
+To find the minimum element in the priority queue we simply return the
+smaller of the two values stored at $\min(L)$ and $\min(T)$.
+
+To delete the element $x$ from the priority queue given a pointer to
+node the node $v$ with priority $x$, there are two cases we have to
+consider.  
+
+\noindent\textbf{Case 1:} (See \figref{queap-a}) 
+The node $v$ is a node of $T$.  In this case, the deletion requires us
+to update some $\min$ values at nodes of $T$.  In particular, If $u$
+is the first node of the left wall on the path from $u$ to the root
+then we must update the min values of all nodes on the path from $v$
+to $u$ and on the path from $u$ to the leftmost node of $T$.  However,
+each of these updates is easily done in constant time by traversing
+upwards from $u$ to $v$ and then downwards from $v$ to the leftmost
+node of $T$.  Finally, we may have to update the value $\min(T)$,
+which can be done by looking at the second last node of the left roof
+and its four children.
+
+\begin{figure}
+\centergraphics{queap-a}
+\caption{Case~1 of deleting from a queap.  The tree nodes whose min values
+ are affected are highlighted.}\figlabel{queap-a}
+\end{figure}
+
+\noindent\textbf{Case 2:} (See \figref{queap-b}) 
+The node $v$ is a node of $L$.  In this case we
+delete $v$ from $L$ and then we destroy the list $L$ and insert all
+the priorities of $L$ into the tree $T$.  To do this, we first insert
+the priorities of $L$ one at a time to the right of the rightmost
+child of $T$.  Next, we have to update the $\min$ values in $T$.  Let
+$T'$ be the subtree of $T$ obtained by taking all nodes on paths from
+newly inserted nodes to the root of $T$.  The $\min$ values we need to
+update are at the nodes of $T'$ plus the min values on the left wall
+of $T$.  To update the $min$ values at the nodes of $T'$ we simply
+perform a post-order traversal of $T'$.  Once this is done we can
+update the min values on the left wall of $T$ by starting walking from
+the root to the leftmost leaf.
+
+\begin{figure}
+\centergraphics{queap-b}
+\caption{Case~2 of deleting from a queap.  The tree nodes whose min values
+ are affected are highlighted.}\figlabel{queap-b}
+\end{figure}
+
+To analyze the running time of this priority queue implementation, we
+use a credit scheme.  When a priority is inserted, it is given one
+credit and it uses this credit later on to pay for the cost of moving
+from the list $L$ to the tree $T$.  It is clear that the actual cost
+of insertion is $O(1)$, and we give only one credit per insertion, so
+the amortized cost of insertion is $O(1)$.  
+
+To analyze the cost of deletion, we consider the two cases separately.
+In Case~1 (the deleted node is in $T$), the cost is proportional
+to the length of the path from the deleted node $v$ to the first node
+$u$ on the left wall of $T$.  Suppose the length of this path is $l$.
+Then the number of leaves in the subtree rooted at the leftmost child
+of $u$ is at least $2^{l-1}$.  Furthermore, each of these leaves
+corresponds to a priority that was inserted before the priority we are
+deleting.  Therefore, $q(x)\ge 2^{l-1}$ and the cost of insertion is
+$O(l)=O(\log q(x))$.
+
+In Case~2, the actual cost of insertion is $O(|L|+\log(|L|+|T|))$.
+However, during this insertion we have $L$ credits that can pay for
+$O(L)$ work.  Also, $|T|$ is a lower bound on $q(x)$, i.e., all the
+elements in $T$ were inserted before the element we are deleting.  Therefore,
+if a credit pays for $c$ units of work, the amortized cost of the deletion is 
+\begin{eqnarray*}
+   \mbox{actual cost} - cL & = & O(|L|+\log(|L|+|T|)) - cL \\
+	& = & O(|L|+\log(|T|)) -cL \\
+	& = & O(\log|T|) \\
+	& = & O(\log q(x)) \enspace,
+\end{eqnarray*}
+if $c$ is sufficiently large.
+
+\begin{thm}
+Queaps support insertion and finding the minimum element in $O(1)$ time
+and deleting the element $x$ in $O(\log q(x))$ amortized time.
+\end{thm}
+
+\section{Self-Adjusting Lists}
+
+Competitive analysis of the \textsc{Move-to-Front} (2-competitive) and
+\textsc{Bit} ($<2$-competitive) list update rules. 
+
+\section{Discussion and References}
+
+Splay trees are due to Sleator and Tarjan \cite{st85}.  Since their
+introduction, splay trees have been the topic of intensive study and
+many conjectures about splay trees are still open today.  Queaps are
+due to Iacono and Langerman \cite{il02}.
+
+\bibliography{tds}

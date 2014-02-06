@@ -1,0 +1,249 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Bounded Universes}\chaplabel{bounded}
+\bibliographystyle{plain}
+
+Until so far, most of the data structures described in this book have
+been \emph{comparison based}.  Although they've been described as
+storing real-valued keys, the only operations performed on keys have
+been comparisons, so they could just as easily store keys from any
+total order.  In this chapter we study the issue of what happens when
+the keys are integers and we can do operations other than comparisons,
+like addition, subtraction, integer division, and using the number to
+index arrays.
+
+More specifically, our keys come from the universe $U=\{0,\ldots,N-1\}$
+and we assume a model that allows us to do most common mathematical
+operations on integers and gives integer results by truncating (taking
+the floor of) the results of operations when necessary.  The results
+of operations can also be used as indices into arrays.
+
+We are interested in data structures that support insertion, deletion,
+membership queries and next element queries on keys from $U$.  The
+meanings of insertion and deletion are obvious.  A membership query
+takes as input a key $k$ and determines whether $k$ is currently
+stored in the data structure.  An next element query takes a key $k$
+and returns the smallest value $k'$ stored in the data structure such
+that $k'\ge k$.
+
+As a first attempt, we might consider using an array $A_1,\ldots,A_N$
+of boolean values.  On creation, every array entry is initialized to
+\texttt{false}.  When an element $k$ is inserted, we simply set $A_k$
+to \texttt{true}.  Similarly, when an element $k$ is deleted we set
+$A_k$ to \texttt{false}.  To do a membership query on the key $k$ we
+just check the value of $A_k$.  Unfortunately, this is where this
+approach breaks down.  The only way to do a next element query on key
+$k$ is to check the values of $A_k$, $A_{k+1}$, $A_{k+2}$, and so on
+until we find the first value $A_{k'}$ that is set to true.  Thus,
+with this approach the first three operations can be done in constant
+time, but the fourth (next element search) operation takes $\Omega(N)$ time
+in the worst case.
+
+%======================================================================
+\section{Van Emde Boas Trees}
+
+An interesting (and old) method of doing searches on bounded universes
+was proposed by Peter~Van~Emde~Boas.  It is based on the recurrence
+\begin{equation}
+  T_N = \left\{\begin{array}{ll}
+	O(1)+ T_{\sqrt{N}} & \mbox{if $N\ge 2$} \\
+	O(1)               & \mbox{otherwise} 
+	\end{array}\right. \eqlabel{rootish}
+\end{equation}
+which solves to $O(\log\log N)$ (because $N^{1/\log n}=2$).
+Essentially, the above recurrence says that if we can, in constant
+time, reduce the search space to the square root of its original size
+and then recurse we will get a running time of $O(\log\log N)$.
+
+The data structure we use to achieve this is called a VEB-tree.
+Assume $N=2^{2^m}$ for some integer $m$.\footnote{We only make this
+assumption so that $N^{1/2^i}$ is an integer for all integers $i<m$.
+This allows us to avoid the need for floors, ceilings, and special
+cases.  The modifications required when $N$ is not of this form should
+be clear.}  The root of the VEB-tree for $U$ has $\sqrt{N}$ children
+that are stored in an array.  Each child of the root is also a
+VEB-tree, and the $i$th child corresponds to a VEB-tree for elements
+$i\sqrt{N},\ldots,(i+1)\sqrt{N}-1$.  The root of the VEB-tree also
+stores two integer values called min and max, which contain the
+smallest and largest element currently contained in the tree.  If no
+values are stored in the tree then min and max are set to some value
+not in $U$, say $-1$.  A crucial point to remember about a VEB-tree is
+that the min and max values at the root are only stored at the root.
+Because of this, we can insert into an initially empty tree or delete
+the last element from a tree in constant time.
+
+The root of the VEB-tree also contains another VEB-tree---and this is
+the truly clever part---for the universe
+$\{0,\ldots,\sqrt{N}-1\}$. This auxilliary tree is used to keep track
+of which children of the root contain data.  That is, the tree
+contains the element $i$ if the $i$th child of the root contains some
+key.
+
+From this definition, it follows that the storage used by a VEB-tree is given by the recurrence
+\[
+  S_N = (\sqrt{N}+1)S_{\sqrt{N}} + \sqrt{N}
+\]
+which solves to $O(N)$.  (The extra +1 comes from the auxilliary VEB-tree.)
+
+Although VEB-trees are not extremely complicated, their implementation
+requires some care.  In the following three sections we sketch the
+implementations of the algorithms for searching, inserting and
+deleting in VEB-trees, and provide more precise pseudocode.  In the
+pseudocode, $W$ is a VEB-tree node, $W[i]$ is the $i$th child of $W$,
+$\child(k,W)$ is the index of the child of $W$ that stores the key
+$k$, and $\aux(W)$ is the auxilliary VEB-tree stored at $W$.
+
+
+\subsection{Searching}
+
+To do a next element search for the key $k$ in a VEB-tree, we first
+check if $k$ is less than the min value stored at the root.  If so,
+then we simply report the min value.  Otherwise, we need to determine
+which child of the root stores the key $k$.  This can be done in
+constant time since it is the $i=\lfloor k/\sqrt{N}\rfloor$th child
+and the children are stored in an array.  We then inspect the max
+value for the $i$th child.  If it is larger than $k$, then we can be
+sure that the key $k'$ we are looking for is in the subtree rooted at
+the $i$th child and we recurse on the $i$th child.
+
+Otherwise, the key we are looking for is contained in the $j$th child
+of the root, where $j$ is the smallest value greater than $i$ such
+that the $j$th child of the root contains some key.  In fact, the key
+$k'$ we are looking for is the min value the $j$th child of the root.
+Therefore, we can use the auxilliary tree at the root to find the
+value of $j$ and then report the min value in constant time.
+
+In both cases, the algorithm makes one recursive search call and does
+$O(1)$ work.  The recursive search call is on a VEB-tree for a
+universe of size $\sqrt{N}$.  Thus, the running time of the search
+algorithm is given by the recurrence \eqref{rootish} and is
+$O(\log\log N)$.
+
+\noindent$\textsc{Successor}(k,W)$
+\begin{algorithmic}[1]
+\IF{$k<\min(W)$}
+  \STATE{\textbf{output} $\min(W)$ \COMMENT{$k$ is smaller than every element}}
+\ELSIF{$k>\max(W)$}
+  \STATE{\textbf{output} $\infty$ \COMMENT{$k$ is larger than every element}}
+\ENDIF
+\STATE{$i\gets\child(k,W)$}
+\IF{$\max(W[i])>k$}
+  \STATE{$\textsc{Successor}(k,W[i])$} \COMMENT{$k'$ is stored in $W[i]$}
+\ELSE
+  \STATE{$j\gets\textsc{Successor}(i,aux(W))$} \COMMENT{$k'$ is in first
+	non-empty sibling of $W[i]$} 
+  \STATE{\textbf{output} $\min(W[j])$}
+\ENDIF
+\end{algorithmic}
+
+\subsection{Inserting}
+
+To insert the key $k$ into a VEB-tree we proceed as follows.  If the
+root of $T$ is empty then we simply set the min and max values at the
+root to be $k$.  Otherwise, we check if $k$ is less than (respectively
+greater than) the min value (respectively max value) at the root.  If
+so, we swap the values of $k$ and the min value (respectively max
+value) before continuing.  Next, we find the child of the root that
+should contain the key $k$ using the formula $i=\lfloor
+k/\sqrt{N}\rfloor$.  If the $i$th child of the root contains no
+elements then we insert $i$ into the root's auxilliary VEB-tree and
+insert $k$ into the $i$th child of the root.  Otherwise (the $i$th
+child already contains some element) we only insert $k$ into the $i$th
+child of the root.
+
+Observe that, because we explicitly check this condition, inserting
+into an empty VEB-tree takes constant time.  This is very important,
+because the VEB-tree algorithm may make two recursive insertion calls;
+once to insert $k$ and once to insert $i$ into the auxilliarly
+VEB-tree.  However, in this case, the recursive call to insert $k$
+takes only constant time.  Thus, no matter what happens, the running
+time of the insertion algorithm satisfies the ``rootish'' recurrence
+\eqref{rootish} and therefore runs in $O(\log\log n)$ time.
+
+\noindent$\textsc{Insert}(k,W)$
+\begin{algorithmic}[1]
+\IF{$\min(W)=\max(W)=-1$}
+  \STATE{$\min(W)\gets\max(W)\gets k$ \COMMENT{tree is empty}} 
+\ELSIF{$\min(W)=\max(W)$}
+  \STATE{$\min(W)\gets\min\{k,\min(W)\}$} \COMMENT{tree contains 1 element}
+  \STATE{$\max(W)\gets\max\{k,\max(W)\}$}
+\ELSE
+  \IF{$k<\min(W)$}
+    \STATE{\textbf{swap} $k\leftrightarrow\min(W)$} \COMMENT{$k$ is 
+	the new min, insert the old min}
+  \ELSIF{$k>\max(W)$}
+    \STATE{\textbf{swap} $k\leftrightarrow\max(W)$} \COMMENT{$k$ is 
+	the new max, insert the old max}
+  \ENDIF
+  \STATE{$i\gets\child(k,W)$}
+  \STATE{$\textsc{Insert}(k,W[i])$}
+  \IF{$\max(W[i])=\min(W[i])=k$}
+    \STATE{$\textsc{Insert}(i,\aux(W))$ \COMMENT{$W[i]$ just went from empty to non-empty}}
+  \ENDIF
+\ENDIF
+\end{algorithmic}
+
+\subsection{Deleting}  
+
+Deleting the key $k$ from a VEB-tree is similar to insertion.  If the
+tree contains only the element $k$, it is stored as the min and max
+values of the root and we can delete it in constant time.  Otherwise,
+if $k$ is equal to the min (respectively max) value at the root then
+we swap $k$ and the min (respectively max) value at the root.  We then
+recursively delete $k$ from the child of the root that contains it
+and, if this child becomes empty we delete the child's index from the
+auxiliary VEB-tree.
+
+As with insertion, although there may be two recursive calls, only one
+of them takes more than constant time.  Thus, the running time of the
+deletion algorithm is given by recurrence \eqref{rootish} and runs
+in $O(\log\log n)$.
+
+\noindent$\textsc{Delete}(k,W)$
+\begin{algorithmic}[1]
+\IF{$\min(W)=\max(W)=k$}
+  \STATE{$\min(W)\gets\max(W)\gets -1$ \COMMENT{ $k$ is the last element }}
+\ELSIF{$\min(\aux(W))=-1$}
+  \IF{$\min(W)=k$}
+    \STATE{$\min(W)\gets\max(W)$}
+  \ELSE
+    \STATE{$\max(W)\gets\min(W)$}
+  \ENDIF
+\ELSIF{$k=\min(W)$}
+  \STATE{$j\gets\min(\aux(W))$}
+  \STATE{$\min(W)\gets\min(W[j])$}
+  \STATE{$k\gets\min(W)$}
+\ELSIF{$k=\max(W)$}
+  \STATE{$j\gets\max(\aux(W))$}
+  \STATE{$\max(W)\gets\max(W[j])$}
+  \STATE{$k\gets\max(W)$}
+\ENDIF
+\STATE{$i\gets\child(k,W)$}
+\STATE{$\textsc{Delete}(k,W[i])$}
+\IF{$\min(W[i])=\max(W[i])=-1$}
+  \STATE{$\textsc{Delete}(i,\aux(W))$}
+\ENDIF
+\end{algorithmic}
+
+
+\begin{thm}
+Van Emde Boas trees support insertion, deletion, and successor queries
+for elements in the universe $U=\{0,\ldots,N-1\}$ in $O(\log\log N)$
+time and require $O(N)$ storage.
+\end{thm}
+
+\section{Reducing Storage}
+
+\section{Willard's X- and Y-Fast Trees}
+
+Luc's notes go here.
+
+
+%======================================================================
+\section{Discussion and References}
+
+The Van Emde Boas tree (VEB-tree) was introduced by van Emde Boas
+\cite{veb74,vkz77}.  The description here was conveyed to us by
+Michael Bender.  Since then, several variants have been introduced,
+most with the goal of reducing the storage\ldots
+
+\bibliography{tds}

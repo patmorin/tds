@@ -1,0 +1,413 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{plain}
+\chapter{Fractional Cascading}\chaplabel{fractional}
+
+
+In this chapter, we study an algorithm design principle called
+\emph{fractional cascading}.  Essentially, fractional cascading says
+that many problems can be solved by first solving (recursively) a
+subproblem whose size is a constant fraction of the original problem
+size and then using this solution to get back to a solution of the
+original problem.
+
+
+%======================================================================
+\section{Iterated Search}
+
+Consider the following \emph{iterated search} problem.  We are given
+$h<n$ sorted arrays of numbers $A^{(1)},\ldots,A^{(h)}$ each of length
+$n$.  We want to preprocess these arrays so that we can quickly locate
+a query key $k$ in each of the $h$ arrays.  That is, for each $1\le
+i\le h$ we want to know the smallest value in $A^{(i)}$ greater than
+or equal to $k$.  For convenience, so that the output is well-defined,
+we define $A^{(i)}_{\infty}=\infty$.
+
+
+Since the arrays are sorted, we can solve this problem without any
+preprocessing by using binary search to locate $k$ in each of the
+arrays.  Since there are $h$ arrays and binary search takes $O(\log
+n)$ time, the query time we get from this is $O(h\log n)$.  Can we do
+better?
+
+Suppose we merge all the arrays into a single sorted array $A'$ as in
+\figref{casc-naive}.  Each element in $A'$ keeps track of which array
+$A^{(i)}$ that it came from.  With each element $x$ in $A'$ we also
+associate $h$ integers $x_1,\ldots,x_h$, where $x_i$ is smallest
+integer such that $A_{x_i}'\ge x$ and $A'_{x_i}$ came from array
+$A^{(i)}$.  Once this data structure is built, answering a query takes
+$O(h+\log hn)=O(h+\log n)$ time, since we only have to do binary
+search on $A'$ to find the element $x$ and then report
+$A'_{x_1},\ldots,A'_{x_h}$.
+
+\begin{figure}
+\centergraphics{casc-input} 
+\centergraphics{casc-naive}
+\caption{A first solution to the iterated search problem obtained by
+	merging the $h=3$ input arrays of size $n=5$ into one sorted
+	array of size $hn=15$.}
+\figlabel{casc-naive}
+\end{figure}
+
+A query time of $O(h+\log n)$ is certainly better than the $O(h\log
+n)$ query time we got without building the data structure, but what
+price did we pay for this query time?  The array $A'$ contains $hn$
+entries, and each entry contains $h$ integers ($x_1,\ldots,x_h)$, so
+this array takes up a memory of size $\Theta(h^2n)$.  Constructing the
+array can be done fairly easily in $O(hn\log n+h^2n)$ time by first
+sorting (in $O(hn\log n)$ time) and then scanning the sorted array
+using an auxilliary array of size $h$ (in $O(h^2n)$ time) to compute
+the $x_i$ values for each array entry.
+
+The $O(h^2n)$ term in the running time and memory requirements seems
+unfortunate.  Luckily, it can be avoided by using fractional
+cascading.  Let us define $B^{(h)}=A^{(h)}$ and suppose we take a
+sample of $B^{(h)}$ by selecting every second element, starting with
+the second element.  In this way, we obtain a sample $S^{(h)}$ of size
+$\lfloor n/2\rfloor$.  Next, we merge $S^{(h)}$ with $A^{h-1}$ to get
+a sorted array $B^{(h-1)}$.  For each element $x$ in $B^{(h-1)}$ we
+maintain two extra values, $\dwn(x)$ and $\rght(x)$.  The value of
+$\dwn(x)$ is the smallest integer $i$ such that $B^{(h)}_i\ge x$.  If
+$x$ comes from $A^{(h-1)}$, then the integer $\rght(x)$ is the index
+of $x$, otherwise $\rght(x)$ is the index of the first element of
+$B^{(h-1)}$ that comes from $A^{(h-1)}$ and appears after $x$.  See
+\figref{casc-fractional} for an example.
+
+\begin{figure}
+\centergraphics{casc-fractional}
+\caption{An iterated search data structure using fractional cascading.
+	Loops in $\rght$ pointers are ommitted to reduce clutter.}
+\figlabel{casc-fractional}
+\end{figure}
+
+Above, we've outlined a procedure that takes as input $B^{(h)}$ and
+$A^{(h-1)}$ and output $B^{(h-1)}$.  We can now repeat this procedure,
+using $A^{(h-2)}$ and $B^{(h-1)}$ to obtain $B^{(h-2)}$, and so on
+until we get $B^{(1)}$.  We claim that this data structure can be used
+to solve the iterated search problem in $O(h+\log n)$ time.
+
+Suppose we have done something to $B^{(i)}$, $1\le i< h$ to find the
+smallest integer $i$ such that $B^{(1)}_i\ge k$.  Let $x$ denote
+$B^{(1)}_i$.  Then the smallest element of $A^{(i)}$ greater than $k$
+is $A^{(i)}_{\rght(x)}$, so locating $k$ in $B^{(i)}$ is sufficient to
+locate $k$ in $A^{(i)}$.  Furthermore, we can locate $k$ in
+$B^{(i+1)}$ by looking at $\dwn(x)$.  It is not hard to verify that
+the smallest index $j$ such that $B^{(i+1)}_j\ge k$ is either $\dwn(x)$
+or $\dwn(x)-1$.  (It can't be $\dwn(x)-2$ otherwise $x$ would not be
+the smallest element in $B^{(i)}$ larger than $x$.)
+
+This is enough to solve an iterated search query because we can first
+locate the query key $k$ in $B^{(1)}$ using binary search and the
+repeatedly use the location of $k$ in $B^{(i)}$ to locate $k$ in
+$A^{(i)}$ and $B^{(i+1)}$, for each $1\le i< h$.  The binary search
+takes $O(\log n)$ time and each subsequent step takes constant time,
+for a total of $O(h+\log n)$.
+
+Next we analyze the preprocessing and storage requirements for this
+data structure.  Let $|X|$ denote the size of the array $X$.  Since
+$B^{(i)}$ is obtained by sampling every second element from
+$B^{(i+1)}$ and merging this sample with $A^{(i)}$, we have
+\begin{eqnarray*}
+|B^{(h)}| &=& n \\
+|B^{(h-1)}| &\le & n + \frac{1}{2}|B^{(h)}| \le n + \frac{1}{2}n \\
+|B^{(h-2)}| &\le & n + \frac{1}{2}|B^{(h-1)}| \le n + \frac{1}{2}n + \frac{1}{4}n \\
+|B^{(h-3)}| &\le & n + \frac{1}{2}|B^{(h-2)}| \le n + \frac{1}{2}n + \frac{1}{4}n + \frac{1}{8}n \\
+\end{eqnarray*}
+and, in general, 
+\[
+|B^{(i)}|\le\sum_{j=0}^\infty n/2^j = 2n
+\]
+Therefore, the total number of array entries in the entire data
+structure is $O(hn)$, and since each array entry contains only a
+constant amount of data, the entire data structure has size $O(hn)$.
+It is not hard to implement the preprocessing so that computing
+$B^{(i)}$ takes $O(n)$ time, so the preprocessing and memory
+requirements are $O(hn)$.
+
+\begin{thm}
+Given $h\le n$ sorted arrays each of size $n$, there exists a data
+structure requiring $O(hn)$ preprocessing time and memory that answers
+iterated search queries in $O(h+\log n)$ time.
+\end{thm}
+
+%======================================================================
+\section{Segment Trees}\seclabel{segment-trees}
+
+To be done later.
+
+\comment{
+In this section we show how fractional cascading can be used to speed
+up a data structure for next element search queries
+(\chapref{persistence}).  Recall that the input for a next element
+search data structure is a set $S=\{s_1,\ldots,s_n\}$ of
+non-intersecting horizontal line segments in the plane.  A query is a
+point $q$ in the plane, and the correct response is the line segment
+that lies directly above $q$.
+
+One way to tackle this problem is to build a \emph{segment tree}.  The
+$2n$ endpoints of $S$ partition the $x$-axis into $r\le 2n+1$
+intervals.  A segment tree $T$ is a complete binary tree with $r$
+leaves.  Each node $v$ of $T$ has an associated interval $\intv(v)$.
+If $v$ is a leaf, then $\intv(v)$ corresponds to one of the $r$
+$x$-intervals defined by the endpoints of $S$.  If $v$ is an internal
+node, then $\intv(v)$ is the union of the at most 2 intervals for $v$'s
+children.  See \figref{segment-tree} for an example.
+
+\begin{figure}
+\centergraphics{segment-tree}
+\caption{A segment tree (above) on 7 segments (below).}
+\figlabel{segment-tree}
+\end{figure}
+
+Additionally, each node of $v$ contains a \emph{catalogue}, $\cat(v)$,
+that stores segments from $S$.  Let $\proj_x(s)$ denote the orthogonal
+projection of the segment $s$ onto the $x$-axis.  The segments stored
+in $\cat(v)$ are precisely those segments $s_i\in S$ such that
+$\proj_x(s_i)$ contains $\int(v)$ but does not contain $\int(u)$,
+where $u$ is the parent of $v$.  The elements in each catalogue are
+stored in an array sorted by $y$ coordinate.  In this way, given a
+point $q$ such that $\proj(q)$ is contained in $\int(v)$ it is
+possible to find the element of $\cat(v)$ directly above $q$ in
+$O(\log n)$ time using binary search on the $y$-coordinate of $q$.
+
+Note that each segment in $s_i\in S$ can appear in at most 2
+catalogues at any level of the tree $T$.  To see this, assume that
+$s_i$ is contained in catalogues of three different nodes $u$, $v$,
+and $w$ at some level and that the nodes occur in the order $u,v,w$
+from left to right.  Then $s_i$ must contain $\intv(\prnt(v))$, which
+contradicts the assumption that $s_i$ is in $\cat(v)$.  Therefore,
+each segment appears in at most $2\log_2 (2n+1)$ catalogues overall,
+so the storage used by all the catalogues in a segment tree is
+$O(n\log n)$.
+
+To construct a segment tree we first sort the $2n$ endpoints of $S$ by
+$x$-coordinate to determine the $x$-intervals defined by these
+segments and then build a complete binary tree on these $x$-intervals,
+filling in the $\intv(v)$ information for every node $v$.  To build
+the catalogues we sort the intervals by $y$-coordinate and the
+\emph{insert} them into the segment tree in the following way:  To
+insert the segment $s_i$ we follow two paths in $T$.  The \emph{left
+path} of $s_i$ is the path from the root of $T$ to the leaf $v$ such
+that $\intv(v)$ has a left endpoint corresponding to the
+$x$-coordinate of the left endpoint of $s_i$.  The \emph{right path}
+of $s_i$ is defined similarly, except with respect to right endpoints.
+
+It follows from the above discussion that $s_i$ is in $\cat(v)$ only
+if $\cat(v)$ is on the left path or the right path of $s_i$.
+Therefore, we can insert $s_i$ into the catalogues at the appropriate
+nodes on these paths.  If the catalogues at the nodes are stored as a
+linked list, each insertion takes $O(1)$ time.  Therefore, the overall
+cost of inserting $s_i$ is $O(\log n)$ and the overall cost of
+constructing all the catalogues is $O(n\log n)$.  In a post-processing
+step we can covert all the catalogues, which are stored as lists, into
+arrays in $O(n\log n)$ time.  In this way, we can construct a segment
+tree for $n$ segment in $O(n\log n)$ time.
+
+Let $x$ be any point on the $x$-axis that is not coincident with the
+$x$-coordinate of some endpoint in $S$.  Consider the path in $T$ that
+go from the root of $T$ to a leaf $v$ such that $\intv(v)$ contains
+$x$.  We claim that any segment of $S$ that is above or below $x$ is
+contained in one of the catalogues of a node on this path.  To see
+this, let $s_i\in S$ be a segment that is above or below $x$ and note
+that $\proj_x(s_i)$ contains $\intv(v)$.  Since the root $r$ of $T$
+has $\intv(r)=(-\infty,\infty)$ there must be some ancestor $u$ of $v$
+such that $\proj_x(s_i)$ does not contain $\intv(u)$.  Then one of the
+children of $u$, say $w$, has $s_i$ in its catalogue.
+
+To answer next element search queries 
+}
+
+
+
+%======================================================================
+\section{Skip Lists}
+
+In the last section, we saw how fractional cascading can help when we
+are trying to locate the same element in many sorted arrays.  In this
+section, we will see fractional cascading can be used to locate an
+element in 1 sorted array.
+
+Let $X=\{k_1,\ldots,k_n\}$ be a set of $n$ distinct real numbers,
+where $k_i<k_{i+1}$ for all $1\le i< n$.  For convenience, we also
+define $k_0=-\infty$ and $k_{n+1}=+\infty$.  We define a
+\emph{gradation} $X^{(0)},\ldots,X^{(h)}$ as follows.  The level
+$X^{(0)}=X$.  The \emph{level} $X^{(i)}$, $i>0$, is obtained by
+selecting each element from $X^{(i-1)}$ with a fixed constant
+probability $0< p<1$.  The value $h$ is called the \emph{height} of
+the skip list and is defined as $h=\min\{i: |X^{(i+1)}|=0\}$.
+
+In a \emph{skip list}, we maintain each level in a sorted list. More
+precisely, for each level $X^{(i)}$, we maintain $\{k_0,k_{n+1}\}\cup
+X^{(i)}$ in a sorted list $L_i$.  We use the notation $\rght(v)$ to
+denote the successor of a node $v$ in one of these lists.  Each
+element of $L_i$, $i>0$ also maintains another pointer $\dwn(x)$ which
+points to the same element in $L_{i+1}$.  Note that $k_0$ and
+$k_{n+1}$ appear as the first and last elements, respectively, of
+every list.  We call the first node of $L_h$ the \emph{root} of the
+skip list.  See \figref{skiplist} for an example of a skip list
+generated by coin tosses.
+
+\begin{figure}
+\centergraphics{skiplist}
+\caption{A skip list.  The grey nodes show the search path for the key 11.}
+\figlabel{skiplist}
+\end{figure}
+
+To search for the key $k$ in a skip list, we start by setting $v$
+equal to the root of the skip list and repeating the following step:
+If the value stored at $\rght(v)$ is less than $q$ then we set $v$
+equal to $\rght(v)$, otherwise we set $v=\dwn(v)$.  The search ends
+when we try to set $v=\dwn(v)$ but $\dwn(v)$ is undefined.  It is not
+hard to verify that the search ends at a node $v$ whose value is the
+largest value $k_i$ smaller than $k$.  (This follows from the
+invariant that the value stored at $v$ is always less than $k$ and the
+search terminates at level 0.) The highlighted path in
+\figref{skiplist} shows the search path for key 11.
+
+To insert a new key $k$ into a skip list we first choose a random
+height $l$ for $k$, according to the distribution $\Pr\{l=i\} =
+p^i(1-p)$ .  We then follow the search path of $k$ in the skip list,
+except any time we follow a down pointer at level $i\le l$ we splice a
+new node into the skip list at level $i$ whose value is $k$.  If the
+value $h=\lceil\log_{1/p} n\rceil$ changes due to the insertion of the
+new element, then we add one more level to the skiplist and add each
+node at level $h-1$ to this new level with probability $p$.
+
+To delete the key $k$ from a skip list, we follow the search path for
+$k$ in the list, except that any time the data at $\rght(v)$ is equal
+to $k$ we splice $\rght(v)$ out of the list.  If the value
+$k=\lceil\log_{1/p} n\rceil$ decreases due to the deletion of $k$ then
+we remove the top level of the skip list.
+
+\paragraph{Analysis.}
+
+To start with something simple, we first analyze the expected number of
+nodes at level $i$.  A value $k$ appears at level $i$ because it was
+selected in the first $i$ gradation steps.  The probability that this
+happens is $p^i$.  Therefore, by linearity of expectation, the expected
+number of nodes at level $i$ is $\E[|L_i|]\le 2+np^i$. (The extra 2
+counts the elements $k_0$ and $k_{n+1}$, which appear on every level.)
+This works fine for small values of $i$, but when $i$ gets big the extra
+2 nodes start to add up.  To resolve this, we note that, for any level,
+$i$, $|L_i| \le 3 |X^{(i)}|$.  Taking expected values on both sides of
+this equation, we see that $\E[|L_i|]\le 3np^i$.
+
+We can now analyze the expected number of nodes in the skiplist as
+\begin{eqnarray*}
+   \E\left[\sum_{i=0}^\infty |L_i|\right]
+   & = & \sum_{i=0}^\infty \E[|L_i|] \\
+   & = & \sum_{i=0}^{\lceil\log_{1/p}n\rceil} \E[|L_i|] 
+     + \sum_{i=\lceil\log_{1/p}n\rceil+1}^\infty \E[|L_i|] \\
+   & \le & \sum_{i=0}^{\lceil\log_{1/p}n\rceil}(2+np^i)
+     + \sum_{i=\lceil\log_{1/p}n\rceil+1}^\infty 3np^i \\
+   & \le & \sum_{i=0}^{\lceil\log_{1/p}n\rceil}(2+np^i)
+     + \sum_{i=0}^\infty 3p^i \\
+   & \le & n/(1-p) + O(\log_{1/p} n) \\
+   & = & O(n) 
+\end{eqnarray*}
+for any constant $0 < p < 1$.
+
+For all three operations (search, insert, delete) the cost of
+operating on the key $k$ is closely related to the length of the
+search path for $k$ in a skip list of size $n$.  Therefore, we analyze
+the expected length of the search path for an arbitrary key $k$.  
+To analyze the cost of a search, we split the cost into two parts: The
+number of times the search follows a $\dwn$ pointer and the number of
+times the search follows a $\rght$ pointer.
+
+The first part, i.e., the number of times the search follows a $\dwn$
+pointer is exactly $h$, the height of the list. Let
+\[
+   h_i = \left\{ 
+           \begin{array}{ll}   
+             1 & \mbox{if $X^{(i)} \neq \emptyset$} \\
+             0 & \mbox{if $X^{(i)} = \emptyset$}
+            \end{array}
+         \right.
+\] 
+and observe that $h_i \le X^{(i)}$.  Then the expected height of the
+skiplist is given by
+\begin{eqnarray*}
+   \E\left[\sum_{i=0}^\infty h_i\right]
+   & = & \sum_{i=0}^\infty \E[h_i] \\
+   & = & \sum_{i=0}^{\lceil\log_{1/p}n\rceil} \E[h_i] 
+     + \sum_{i=\lceil\log_{1/p}n\rceil+1}^\infty \E[h_i] \\
+   & \le & \sum_{i=0}^{\lceil\log_{1/p}n\rceil} 1
+     + \sum_{i=\lceil\log_{1/p}n\rceil+1}^\infty \E[|X^{(i)}|] \\
+   & \le & 2 + \log_{1/p} n  
+     + \sum_{i=\lceil\log_{1/p}n\rceil+1}^\infty \E[np^i] \\
+   & \le & 2 + \log_{1/p} n  + \sum_{i=0}^\infty p^i \\
+   & \le & \log_{1/p} n  + O(1) \\
+\end{eqnarray*}
+
+All that remains is to analyze the cost of following right pointers.
+Let $r_i$ be the number of right pointers the search follows at level $i$.
+Again, we can always fall back on the trivial bound $r_i < X^{(i)}$.
+To get a more refined bound, imagine running the search backwards,
+starting from the node containing $k$ in $L_0$ and working our way
+left and upwards to the top left node.  When at a node $v$ in $L_i$,
+if $v$ appears in $L_{i+1}$ then we go up, otherwise, we go to $v$'s
+left neighbour.  This process traces exactly the same search path,
+except in reverse.
+
+For a node $v$ that appears in $L_i$, the probability that it also appears
+in $L_{i+1}$ is $p$, so the probability that this reverse path traverses
+exactly $j$ edges at level $i$ is at most $p(1-p)^j$. Therefore, the
+expected number of edges traversed at level $i$ is at most
+\[
+r_i \le \sum_{j=0}^\infty jp(1-p)^j = p\sum_{j=0}^\infty j(1-p)^j 
+   = (1-p)/p \enspace .\footnote{Here we use the identity
+	$\sum_{j=0}^\infty jx^j = x/(1-x)^2$, for any $x<1$.}
+\]
+Therefore, the expected total number of ($\dwn$ and $\rght$) pointers
+we follow at all levels is at most
+\[
+     \E\left[h + \sum_{i=0}^{\lceil\log_{1/p}n\rceil} r_i
+     + \sum_{i=\lceil\log_{1/p}n\rceil+1}^\infty |X^{(i)}| \right] 
+  = (1+1/p)\log_{1/p} n + O(1) \enspace ,
+\]
+for any constant $p$.
+
+The expected cost of searching for the key $k$ is proportional the
+expected length of the search path for $k$, which is $O(\log n)$.
+The cost of deleting the key $k$ is proportional to the length of the
+search path for $k$, which is also $O(\log n)$.  The cost of inserting
+a key $k$ is proportional to the length of the search path for $k$ in
+the skiplist we obtain after the insertion, which is $O(\log (n+1)) =
+O(\log n)$.
+
+\begin{thm}
+Skip lists support insertion, deletion, and searching of keys in
+$O(\log n)$ expected time and use $O(n)$ expected storage.
+\end{thm}
+
+Another nice property of skip lists is that the expected number of
+pointer updates during an insertion or deletion is $p/(1-p)$.  Therefore,
+if we combine skip lists with the persistence paradigm of
+\chapref{persistence} we get a data structure for next element search
+queries that whose expected size is $O(n)$ and that answers next
+element search queries in $O(\log n)$ time.
+
+
+%======================================================================
+\section{Discussion and References}
+
+Fractional cascading has found many applications over the years,
+especially in computational geometry.  Willard \cite{w78} and Luecker
+\cite{l78} both independently discovered the idea that iterated search
+could be solved in $O(k+\log n)$ time and used this idea to speed up
+searches in segment trees (\secref{segment-trees}).  Edelsbrunner
+\etal\ \cite{egs86} applied fractional cascading to speed up a
+next-element search data structure based on decomposing the elements
+into monotone chains.  Chazelle and Guibas' two part article
+\cite{cg86a,cg86b} describes a very general form of fractional
+cascading and its applications.  Cole \cite{c88} uses fractional
+cascading to obtain his celebrated $O(\log n)$-time, $O(n)$-processor
+parallel merge-sort algorithm.  Mehlhorn and N\"aher \cite{mn90} show
+that fractional cascading can be done in a dynamic setting.  That is,
+insertions and deletions to the individual lists can be done in
+$O(\log n\log\log n)$ time per operation and iterated search queries
+can be done in $O(\log n+h\log\log n)$ time.
+
+\bibliography{tds}
+
+

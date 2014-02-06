@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<!DOCTYPE ipe SYSTEM "ipe.dtd">
+<ipe version="70005" creator="Ipe 7.1.1">
+<info created="D:20140206094628" modified="D:20140206094628"/>
+<ipestyle name="ipe6">
+<symbol name="mark/circle(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e
+0.4 0 0 0.4 0 0 e
+</path>
+</symbol>
+<symbol name="mark/disk(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e
+</path>
+</symbol>
+<symbol name="mark/fdisk(sfx)" transformations="translations">
+<group>
+<path fill="sym-fill">
+0.5 0 0 0.5 0 0 e
+</path>
+<path fill="sym-stroke" fillrule="eofill">
+0.6 0 0 0.6 0 0 e
+0.4 0 0 0.4 0 0 e
+</path>
+</group>
+</symbol>
+<symbol name="mark/box(sx)" transformations="translations">
+<path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m
+0.6 -0.6 l
+0.6 0.6 l
+-0.6 0.6 l
+h
+-0.4 -0.4 m
+0.4 -0.4 l
+0.4 0.4 l
+-0.4 0.4 l
+h
+</path>
+</symbol>
+<symbol name="mark/square(sx)" transformations="translations">
+<path fill="sym-stroke">
+-0.6 -0.6 m
+0.6 -0.6 l
+0.6 0.6 l
+-0.6 0.6 l
+h
+</path>
+</symbol>
+<symbol name="mark/fsquare(sfx)" transformations="translations">
+<group>
+<path fill="sym-fill">
+-0.5 -0.5 m
+0.5 -0.5 l
+0.5 0.5 l
+-0.5 0.5 l
+h
+</path>
+<path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m
+0.6 -0.6 l
+0.6 0.6 l
+-0.6 0.6 l
+0 -0.4 m
+0.4 -0.4 l
+0.4 0.4 l
+-0.4 0.4 l
+h
+</path>
+</group>
+</symbol>
+<symbol name="mark/cross(sx)" transformations="translations">
+<group>
+<path fill="sym-stroke">
+-0.43 -0.57 m
+0.57 0.43 l
+0.43 0.57 l
+-0.57 -0.43 l
+h
+</path>
+<path fill="sym-stroke">
+-0.43 0.57 m
+0.57 -0.43 l
+0.43 -0.57 l
+-0.57 0.43 l
+h
+</path>
+</group>
+</symbol>
+<pen name="heavier" value="0.8"/>
+<pen name="fat" value="1.2"/>
+<pen name="ultrafat" value="2"/>
+<symbolsize name="large" value="5"/>
+<symbolsize name="small" value="2"/>
+<symbolsize name="tiny" value="1.1"/>
+<arrowsize name="large" value="10"/>
+<arrowsize name="small" value="5"/>
+<arrowsize name="tiny" value="3"/>
+<color name="red" value="1 0 0"/>
+<color name="green" value="0 1 0"/>
+<color name="blue" value="0 0 1"/>
+<color name="yellow" value="1 1 0"/>
+<color name="gray1" value="0.125"/>
+<color name="gray2" value="0.25"/>
+<color name="gray3" value="0.375"/>
+<color name="gray4" value="0.5"/>
+<color name="gray5" value="0.625"/>
+<color name="gray6" value="0.75"/>
+<color name="gray7" value="0.875"/>
+<dashstyle name="dashed" value="[4] 0"/>
+<dashstyle name="dotted" value="[1 3] 0"/>
+<dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
+<dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
+<textsize name="large" value="\large"/>
+<textsize name="Large" value="\Large"/>
+<textsize name="LARGE" value="\LARGE"/>
+<textsize name="huge" value="\huge"/>
+<textsize name="Huge" value="\Huge"/>
+<textsize name="small" value="\small"/>
+<textsize name="footnote" value="\footnotesize"/>
+<textsize name="tiny" value="\tiny"/>
+<textstyle name="center" begin="\begin{center}" end="\end{center}"/>
+<textstyle name="itemize" begin="\begin{itemize}" end="\end{itemize}"/>
+<textstyle name="item" begin="\begin{itemize}\item{}" end="\end{itemize}"/>
+</ipestyle>
+<page>
+<layer name="alpha"/>
+<view layers="alpha" active="alpha"/>
+<text layer="alpha" matrix="1 0 0 1 118.424 58.2253" transformations="translations" pos="-8.73322 33.8212" stroke="black" type="label" valign="bottom" size="10">$v$</text>
+<text matrix="1 0 0 1 118.424 58.2253" transformations="translations" pos="-8.73322 21.8197" stroke="black" type="label" valign="bottom" size="10">$w$</text>
+<path matrix="1 0 0 1 118.424 58.2253" stroke="black" pen="0.4">
+-71.9179 17.9639 m
+-59.9162 17.9639 l
+-59.9162 5.96245 l
+-71.9179 5.96245 l
+h
+</path>
+<path matrix="1 0 0 1 118.424 58.2253" stroke="black" pen="0.4" arrow="normal/7">
+-65.9171 35.9662 m
+-11.8717 35.9662 l
+</path>
+<path matrix="1 0 0 1 118.424 58.2253" stroke="black" pen="0.4" arrow="normal/7">
+-65.9171 23.9647 m
+-11.8717 23.9647 l
+</path>
+<group matrix="1 0 0 1 118.424 58.2253">
+<text transformations="translations" pos="-74.7729 49.0993" stroke="black" type="label" valign="bottom" size="10">$u$</text>
+<group>
+<group>
+<path stroke="black" pen="0.4">
+-71.9179 41.967 m
+-59.9162 41.967 l
+-59.9162 29.9655 l
+-71.9179 29.9655 l
+h
+</path>
+<use name="mark/disk(sx)" pos="-65.9171 35.9662" size="2" stroke="black"/>
+</group>
+<group>
+<path stroke="black" pen="0.4">
+-71.9179 29.9655 m
+-59.9162 29.9655 l
+-59.9162 17.964 l
+-71.9179 17.964 l
+h
+</path>
+<use name="mark/disk(sx)" pos="-65.9171 23.9647" size="2" stroke="black"/>
+</group>
+<path stroke="black" pen="0.4">
+-83.9196 41.967 m
+-71.9179 41.967 l
+-71.9179 29.9655 l
+-83.9196 29.9655 l
+h
+</path>
+<path stroke="black" pen="0.4">
+-83.9196 29.9655 m
+-71.9179 29.9655 l
+-71.9179 17.964 l
+-83.9196 17.964 l
+h
+</path>
+<path stroke="black" pen="0.4">
+-83.9196 17.964 m
+-71.9179 17.964 l
+-71.9179 5.9625 l
+-83.9196 5.9625 l
+h
+</path>
+<path stroke="black" pen="0.4">
+-71.9179 17.964 m
+-59.9162 17.964 l
+-59.9162 5.9625 l
+-71.9179 5.9625 l
+h
+</path>
+<text transformations="translations" pos="-82.9038 9.81825" stroke="black" type="label" valign="bottom" size="10">$\infty$</text>
+<text transformations="translations" pos="-79.7188 20.8998" stroke="black" type="label" valign="bottom" size="10">$t$</text>
+<text transformations="translations" pos="-81.9537 32.1562" stroke="black" type="label" valign="bottom" size="10">$t_0$</text>
+</group>
+<text transformations="translations" pos="-77.7329 -0.858339" stroke="black" type="label" valign="bottom" size="10">$\ldots$</text>
+</group>
+<path matrix="1 0 0 1 118.424 58.2253" stroke="black" pen="0.4">
+-90.5413 56.2105
+-90.5413 56.2105
+-90.5413 -6.58311
+-90.5413 -6.58311
+-53.2945 -6.58311
+-53.2945 -6.58311
+-53.2945 56.2105
+-53.2945 56.2105 u
+</path>
+</page>
+</ipe>

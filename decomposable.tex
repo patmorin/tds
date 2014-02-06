@@ -1,0 +1,382 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Decomposable Search Problems}
+\bibliographystyle{plain}
+
+Consider a searching problem $\mathcal{P}$ on a set $S$ of size $n$.
+We denote by $A(q,S)$ the answer to the query $q$ on the problem
+instance $S$.  We say that $\mathcal{P}$ is \emph{decomposable} if we
+can arbitrarily partition $S$ into two sets $S_1$ and $S_2$ such that
+$A(q,S)=A(q,S_1)\Box A(q,S_2)$, where $\Box$ is some easy to compute
+function.
+
+Many naturally occuring search problems are decomposable.  For
+instance, the next-element search problem from \chapref{persistence}
+is decomposable.  In this problem we were given a set $S$ of
+horizontal line segment.  A query involves a point $q$ and the answer
+$A(q,S)$ involves finding the segment of $S$ (if any) that lies
+directly above $q$.  If we have solutions $A(q,S_1)$ and $A(q,S_2)$ to
+this problem, then $A(q,S)$ is simply the segment (of the at most two
+segments) that is closer to $q$.
+ 
+In this chapter we show that, when a problem is decomposable, it is
+possible to obtain dynamic data structures (supporting insertion and
+deletion) given only a static data structure for the problem.  More
+specifically, suppose we are given an algorithm that preprocesses a
+set $S$ of size $n$ in time $P(n)$ so that $A(q,S)$ can be computed in
+time $Q(n)$.  We assume that $P(n)=\Omega(n)$, i.e., the preprocessing
+algorithm takes at least linear time.  In our next-element search
+example, $P(n)=O(n\log n)$ and $Q(n)=O(\log n)$.
+
+%======================================================================
+\section{Static to Insertion-Only Transformation}\seclabel{insertion-only}
+
+In this section we develop an \emph{insertion-only} data structure, a
+data structure that only supports insertions and queries.  The data
+structure works using a \emph{binary counting trick}.  The data
+structure partitions the elements of $S$ into $\lfloor\log n\rfloor$
+groups $I_0,\ldots,I_{\lfloor\log n\rfloor}$, where $I_i$ is either
+empty, or contains exactly $2^i$ elements.  For each group, we
+maintain a static data structure for the elements of that group.
+
+Queries on the data structure are done by querying each group
+individually and combining the results in $O(\log n)$ time using the
+$\Box$ operator.  This takes time
+\[
+	Q'(n) = \sum_{i=0}^{\lfloor\log n\rfloor} Q(2^i) 
+	= \left\{\begin{array}{ll}
+		O(Q(n)) & \mbox{if $Q(n)=\Omega(n^\epsilon)$ 
+			for some $\epsilon>0$} \\
+		O(Q(n)\log n) & \mbox{otherwise.} 
+	\end{array}\right.
+\]
+
+To insert a new element $p$ into the data structure, we find the
+smallest index $k$ such that $I_k$ is empty.  We then make
+$I_k=\{p\}\bigcup_{i=0}^{k-1}I_i$, build the static data structure
+for $I_k$ and make $I_0,\ldots,I_{k-1}$ empty.  The time to do
+this is 
+\[
+   U(n) = P\left(1+ \sum_{i=0}^{k-1}2^i\right) = P(2^k) \enspace .
+\]
+
+Since $k$ could be as large as $\log n$, this doesn't seem very
+efficient.  In fact, in that case $U(n)=P(n)$ and we could have just
+rebuilt the entire data structure from scratch.  Fortunately this
+doesn't happen very often, so instead of analyzing the cost of each
+individual insertion operation we analyze the cost of $n$ insertions,
+starting with an initially empty data structure.
+
+To do this, we use the accounting method of amortized analysis.  When
+we insert an element, we give it $\frac{1}{n}P(n)\log n$ credits,
+where a credit can pay for (suitably large) constant amount of work.
+An element will pay $P(n)/n$ credit every time it moves from one group
+to another.  When an element moves from group $I_j$ to group $I_k$, it
+is always the case that $i<k$.  Since there are at most $\log n$
+groups, it follows that each element moves at most $\log n$ times, and
+it never has to pay more credits than it was given at the time of its
+insertion.
+
+During insertion, we saw that the cost of insertion was $P(2^k)$, but
+during an insertion, $2^k$ elements move from one group to another.
+While moving, these elements pay 
+\[
+2^kP(n)/n = \Omega(P(2^k))
+\]
+credits, which is enough to pay for the entire cost of the insertion.
+
+We have shown that, by giving each element $\frac{1}{n}P(n)\log n$
+credits when it is inserted, the elements can pay for all costs
+associated with a sequence of $n$ insertions.  Therefore the total
+cost of $n$ insertions does not exceed $O(P(n)\log n)$.
+
+\begin{thm}
+There exists an insertion only data structure for decomposable search
+problems such that a sequence of $n$ insertions takes time
+$U(n)=O(P(n)\log n)$ and each query takes time
+\[
+	Q'(n) 
+	= \left\{\begin{array}{ll}
+		O(Q(n)) & \mbox{if $Q(n)=\Omega(n^\epsilon)$ 
+			for some $\epsilon>0$} \\
+		O(Q(n)\log n) & \mbox{otherwise.} 
+	\end{array}\right.
+\]
+\end{thm}
+
+
+%======================================================================
+\section{Static to FIFO Transformation}
+
+An insertion-only data structure amounts to some progress, but what we
+really want is a fully dynamic data structure that supports insertion
+and deletion.  Unfortunately, deletions seem to be much more difficult
+to cope with than insertions.  There is one special case, however,
+that is easier to cope with.  This is when the insertions and
+deletions are done in a FIFO (First-In-First-Out) manner, so that the
+$i$th element inserted is also the $i$th element deleted.
+
+To handle FIFO insertions and deletions we partition $S$ into groups
+$I_0,\ldots,(I_m=D_m),\ldots,D_0$, where $I_i$ (respectively, $D_i$)
+is either empty or contains exactly $2^i$ elements.  For each $I_i$
+(respectively, $D_i$) we maintain a static data structure on the
+elements of $I_i$.  The partition into $I_0,\ldots,(I_m=D_m),\ldots,D_0$
+maintains three invariants:
+
+\begin{enumerate}
+\item All the elements in $I_i$ will be deleted before any of the elements
+	in $I_{i-1}$ for all $i\ge 1$.
+\item All the elements in $D_i$ will be deleted before any of the elements
+	in $D_{i+1}$ fo all $i\ge 0$.
+\item $I_m$, which is identical to $D_m$ is non-empty.
+\end{enumerate}
+
+The query algorithm is the same as the insertion-only case.
+Specifically, we perform queries on each of
+$I_0,\ldots,(I_m=D_m),\ldots,D_0$ and get our final answer by
+combining the results using the $\Box$ operator.  The running time
+of the query algorithm is the same.
+
+The insertion algorithm is also exactly the same as in the previous
+case.  We find the smallest index $k$ such that $I_k$ is empty.  If no
+such $k$ exists then we increment $m$ so that $I_m$ is empty.  We then
+merge $I_{0},\ldots,I_{k-1}$ into $I_k$.  It's clear that this maintains
+invariants~1--3.
+
+To delete the element $p$ from the data structure we find the smallest
+index $k$ such that $D_k$ is non-empty.  Invariants~2 and 3 ensure
+that $p$ is stored in $D_k$.  We then partition $D_k\setminus\{p\}$
+across $D_{k-1},\ldots,D_{0}$ so that invariant~1 is maintained.  This
+is easily done by maintaining the elements of $D_k$ in a queue ordered
+by insertion time.  To tidy things up and maintain invariant~3, we
+check if $k=m$.  If so, we check if $I_{k-1}$ is empty and if it is we
+decrement $m$, otherwise we merge $I_{k-1}$ and $D_{k-1}$ into
+$I_{k}=D_{k}$.
+
+The cost of a deletion is given by
+\[
+  D(n) = O(2^k) + \sum_{i=0}^{k-1} P(2^k) \enspace .
+\]
+
+Again, we can analyze the cost of a sequence of $n$ insertions and
+deletions beginning with an initially empty data structure using the
+accounting method.  This time we give each element
+$\frac{2}{n}P(n)\log n$ credits when it inserted and observe that no
+element moves more than $2\log n$ times.  An insertion or deletion
+causes to $2^k$ elements to move and these elements pay
+$2^kP(n)/n=\Omega(P(2^k))$ credits for the cost of rebuilding the data
+structures.  Thus, the cost $n$ insertions and deletions does not
+exceed $O(P(n)\log n)$.
+
+\begin{thm}
+There exists a data structure for decomposable search problems that
+handles FIFO insertions and deletions such that a sequence of $n$
+insertions and deletions takes time $O(P(n)\log n)$ and each query
+takes time 
+\[
+	Q'(n) 
+	= \left\{\begin{array}{ll}
+		O(Q(n)) & \mbox{if $Q(n)=\Omega(n^\epsilon)$ 
+			for some $\epsilon>0$} \\
+		O(Q(n)\log n) & \mbox{otherwise.} 
+	\end{array}\right.
+\]
+\end{thm}
+
+%======================================================================
+\section{Static to LIFO Transformation}
+
+Use $O(\log_2 n)$ groups $I_0,\ldots,I_{\lfloor\log_2 n\rfloor}$.  Group
+$I_i$ contains either $0$,  $2^{i}$ or $2^{i+1}$ elements\ldots
+
+
+%======================================================================
+\section{Static to Offline Transformation}
+
+Static to offline using a time-tree.
+
+%======================================================================
+\section{Static to Semidynamic Transformation}
+
+Consider the case where, when an element $x$ is inserted, the time
+$t_x$ at which it will be deleted is also given\ldots
+Use intervals trees as described by Hirschberger and Suri.
+
+%======================================================================
+\section{Static to Fully-Dynamic Transformation}
+
+We now turn our attention to the fully dynamic case, where insertions
+and deletions occur arbitrarily.  Here we use another grouping trick,
+but now all groups have size $O(n^\alpha)$ for some $\alpha>0$ and
+there are $n^\beta$ groups, where $\alpha,\beta>0$ and
+$\alpha+\beta=1$.  Here we assume $n$ is the maximum number of items
+that will ever be stored in the data structure, and is known in
+advance.  When $n$ is not known in advance a standard doubling/halving
+trick can be used.
+
+The data structure partitions its elements into groups
+$G_1,\ldots,G_{n^{\alpha}}$ and each group has a static data structure
+associated with it.  We assume that the groups are ordered by size, 
+so that $G_1$ is the smallest group.  Since insertions and deletions
+only affect the size of $G_i$ by one, this ordering is easily maintained
+in constant time per insertion or deletion.
+
+The query algorithm queries each of the $n^\alpha$ groups and uses the
+$\Box$ operator to combine the results.  This takes $O(n^\alpha
+Q(n^{\beta}))$ time.
+
+To insert into the data structure we insert the new element into the
+group $G_1$.  Since $G_1$ is the smallest group and the data structure
+never contains more than $n$ elements, $G_1$ must contain less than
+$n^{\beta}$ elements.  We then rebuild the static data structure for
+$G_1$ and the newly inserted element in $O(P(n^{\beta}))$ time.  Thus,
+the cost of insertion is $O(P(n^{\beta}))$.
+
+To delete element $p$ from the data structure remove $p$ from the
+group $G_i$ that contains $p$ and rebuild the static data structure
+for $G_i$.  Again, $G_i$ has size at most $n^{\beta}+1$, since every
+insertion placed an element into a group of size less than $n^{\beta}$.
+Therefore, the cost of deletion is $O(P(n^{\beta}))$.
+
+\begin{thm}
+There exists a data structure for decomposable search problems with
+insertion and deletion time $O(P(n^\beta))$ time and query time
+$O(n^\alpha Q(n^\beta))$.
+\end{thm}
+
+
+\comment{
+%======================================================================
+\section{Static to Semi-Dynamic Transformations}
+
+In this section, we consider the semi-dynamic case in which, when an
+item $x$ is inserted, it comes with a ``time'', $t_x$ that says when
+$x$ will be deleted.  Note that this case is more general than the
+LIFO case, but not as general as the fully dynamic case.
+
+One way to handle this case is to partition the elements, $G_1$ which
+is of size at most $2\sqrt{n}$ and $G_2$ which contains all remaining
+elements.  As before, we assume that $n$ is the maximum number of
+items that will ever be stored in the data structure, and that it is
+known in advance.  We also keep track of two ``times'' $t_1$ and $t_2$
+which are the minimum deletion times for items in $G_1$ and $G_2$,
+respectively.  The values of $t_1$ and $t_2$ are implicitly updated
+every time we perform an insertion or deletion.
+
+Periodically, we will require a \emph{complete rebuild} of the data
+structure.  When this occurs, we take the $\sqrt{n}$ elements with
+smallest deletion time and rebuild $G_1$ so that it contains these
+elements and rebuild $G_2$ so that it contains the remaining elements.
+
+To perform a query on this data structure we simply query $G_1$ and
+$G_2$ and use $\Box$ to combine the two results and obtain our answer.
+To do an insertion into this data structure, we add the new element to
+the group $G_1$ and build a whole new data structure for $G_1$.  If
+this causes $G_1$ to contain more than $2\sqrt{n}$ elements then we do
+a complete rebuild of the data structure.  When we delete the item $x$
+from the data structure we know that $x$ will be in group $G_1$, so we
+rebuild $G_1$ without $x$.  When we do this, we obtain a new value for
+$t_1$.  If $t_1>t_2$ then we do a complete rebuild.
+
+The cost of querying the above data structure is
+$O(Q(n)+Q(\sqrt{n}))=O(Q(n))$.  If we ignore the cost of complete
+rebuilds, then the costs of insertions and deletions is clearly
+$O(P(\sqrt{n}))$.  A complete rebuild takes $O(P(n))$ time.  To
+account for the cost of complete rebuilds, we give the data structure
+$P(n)/\sqrt{n}$ credits each time we insert or delete.  This increases
+the cost of insertion and deletion to 
+\[
+  O(P(n)/\sqrt{n}+P(\sqrt{n})) = O(P(n)/\sqrt{n}) \enspace ,
+\]
+since $P(n)=\Omega(n)$.
+
+If a complete rebuild occurs during an insertion, this is because at
+least $\sqrt{n}$ insertions occured since the last complete rebuild so
+the data structure must be storing at least $P(n)$ credits.  If a
+complete rebuild occurs during an deletion, it must be that at least
+$\sqrt{n}$ deletions occured since the last partial rebuild, so the
+data structure is storing at least $P(n)$ credits.  In either case,
+the $P(n)$ credits can be used to pay for the cost of the rebuilding.
+
+\begin{thm}
+There exists a data structure for decomposable search problems in
+which a sequence of $n$ semi-dynamic insertions and deletions takes
+$O(\sqrt{n}P(n))$ time and each query takes $O(Q(n)$ time.
+\end{thm}
+
+There is a second method of performing semi-dynamic operations that
+trades off query time for insertion/deletion time.  With this method,
+we use $O(\log n)$ groups $D_k,\ldots,D_0$, where group $D_i$ is
+either empty or contains somewhere between $2^i$ and $2^{i+1}$
+elements.  The groups are made according to deletion time, so that the
+elements in group $D_i$ all have deletion times that are smaller than
+those of the elements in group $D_{i+1}$.  For each group $D_i$ we
+keep track of the smallest deletion time of all the elements in $D_i$.
+In order to handle insertions efficiently, we maintain each group
+using the insertion-only data structure of \secref{insertion-only}.
+
+To perform a query on this data structure, we query each of the $k$
+groups individually and combine the results using the $\Box$ operator.
+Since we perform $k=O(\log n)$ queries, each at a cost of $O(Q(n)\log
+n)$, the overall cost is $O(Q(n)\log^2 n)$.
+
+To delete an element $x$ in this data structure, we find the smallest
+value of $i$ such that $D_i$ is non-empty.  By definition, the element
+$x$ that we want to delete is in this group.  We then repartition
+$D_i\setminus\{x\}$ among the groups $D_0,\ldots,D_k$, $k\le i$.  To
+do this, we look at the binary expansion of $m=|D_i\setminus\{x\}|$.
+For each $0\le j\le i$, if the $j$th bit of the expansion is 1 then we
+put $2^j$ elements in $D_j$, otherwise we put no elements in $D_j$.
+We then rebuild the insertion-only data structures for each of
+$D_0,\ldots,D_k$.
+
+To insert the value $x$ into this data structure we find the smallest
+value of $i$ such that $D_i$ contains an element $z$ with $t_z>t_x$
+and then insert $x$ into this group.  If, after the insertion $D_i$
+contains more than $2^{i+1}$ elements, then we find the smallest value
+$j>i$ such that $D_j$ is empty and merge $D_i,\ldots,D_{j-1}$ to make
+group $D_j$.
+
+To analyze the cost of insertions and deletions we use the potential
+method (see \chapref{adjusting}).  We define the potential of $D_i$ as
+\[
+  \Phi(D_i) = \frac{P(n)}{n}\times \left\{\begin{array}{ll} 
+	0 & \mbox{if $D_i$ is empty} \\
+	|D_i|-2^i & \mbox{otherwise}
+	\end{array}\right.
+\]
+and the potential of the entire data structure is $\sum_{i}\Phi(D_i)$.
+For an empty data structure, the potential is 0 and the potential is
+always non-negative.  Therefore the net drop in potential over a
+sequence of operations beginning with an empty data structure is never
+positive.
+
+Insertion comes in two phases: The initial insertion into $D_i$ and
+then restructuring.  The initial insertion into $D_i$ that
+$O(iP(n)/n)$ time and increases the potential of the data structure by
+$P(n)/n$, for an amortized cost of $O(iP(n)/n)$.  The restructuring
+takes 
+
+
+
+When we perform an insertion, we increase 
+}
+
+
+%======================================================================
+\section{Discussion and References}
+
+Bentley and Saxe \cite{bs80} study many different methods of obtaining
+dynamic and semi-dynamic data structure from static data structures
+using the property of decomposability.  The data structure for FIFO
+insertions and deletions appears in the paper by Langerman \etal\
+\cite{lms02} (but this may not be the first place).  
+\comment{
+The semi-dynamic
+transformation using two groups is due to Hershberger and Suri
+\cite{X} and has been applied successfully by Chan to a variety of
+problem in computational geometry \cite{X,X}.  The semi-dynamic data
+structure using $\log n$ groups came about from discussions with
+Stefan Langerman.
+}
+
+\bibliography{tds}

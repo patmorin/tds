@@ -1,0 +1,60 @@
+<ipe creator="ipe5toxml 2003/04/10" media="-393.5 -383.19 201.5 458.81">
+<preamble>\usepackage{times,mathptm}
+</preamble>
+<page>
+<path stroke="black" fill="0.898039" pen="0.4">
+-59.0767 34.1533 m
+-82.7457 -12 l
+-36 -12 l h
+</path>
+<path stroke="black" pen="0.4">
+-96 108 m
+-156 -12 l
+-36 -12 l h
+</path>
+<mark stroke="black" pos="-82.7457 -12" shape="2" size="2"/>
+<path stroke="black" pen="0.4">
+-82.7457 -12 m
+-59.0767 34.1533 l
+-59.0767 34.1533 l
+</path>
+<mark stroke="black" pos="-156 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-150.355 -0.709443" shape="2" size="2"/>
+<mark stroke="black" pos="-143.961 12.0779" shape="2" size="2"/>
+<mark stroke="black" pos="-138.48 23.0402" shape="2" size="2"/>
+<mark stroke="black" pos="-133.321 33.3587" shape="2" size="2"/>
+<mark stroke="black" pos="-127.141 45.7176" shape="2" size="2"/>
+<mark stroke="black" pos="-120.265 59.4708" shape="2" size="2"/>
+<mark stroke="black" pos="-113.225 73.5506" shape="2" size="2"/>
+<mark stroke="black" pos="-106.831 86.338" shape="2" size="2"/>
+<mark stroke="black" pos="-100.813 98.375" shape="2" size="2"/>
+<mark stroke="black" pos="-96 108" shape="2" size="2"/>
+<mark stroke="black" pos="-91.3718 98.7435" shape="2" size="2"/>
+<mark stroke="black" pos="-85.1402 86.2804" shape="2" size="2"/>
+<mark stroke="black" pos="-79.2282 74.4565" shape="2" size="2"/>
+<mark stroke="black" pos="-72.3517 60.7033" shape="2" size="2"/>
+<mark stroke="black" pos="-65.1484 46.2968" shape="2" size="2"/>
+<mark stroke="black" pos="-59.0767 34.1533" shape="2" size="2"/>
+<mark stroke="black" pos="-65.421 21.7821" shape="2" size="2"/>
+<mark stroke="black" pos="-52.7386 21.4772" shape="2" size="2"/>
+<mark stroke="black" pos="-46.9888 9.97754" shape="2" size="2"/>
+<mark stroke="black" pos="-71.2885 10.3409" shape="2" size="2"/>
+<mark stroke="black" pos="-77.1559 -1.10025" shape="2" size="2"/>
+<mark stroke="black" pos="-41.1857 -1.62862" shape="2" size="2"/>
+<mark stroke="black" pos="-72.3595 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-63.5712 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-53.1851 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-36 -12" shape="2" size="2"/>
+<mark stroke="black" pos="-44.3968 -12" shape="2" size="2"/>
+<path stroke="black" pen="0.4">
+-156 -20 m
+-36 -20 l
+</path>
+<path stroke="black" pen="0.4">
+-82.9074 -16.6734 m
+-82.9074 -23.7567 l
+</path>
+<text stroke="black" pos="-133.775 -32.3798" size="10" type="label" valign="bottom">$|T|$</text>
+<text stroke="black" pos="-66.1548 -32.3798" size="10" type="label" valign="bottom">$|L|$</text>
+</page>
+</ipe>

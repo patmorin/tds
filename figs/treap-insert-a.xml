@@ -1,0 +1,101 @@
+<ipe creator="ipe5toxml 2003/04/10" media="-381.629 -453.491 213.371 388.509">
+<page>
+<text stroke="black" pos="-88.3904 -104.288" size="10" type="label" valign="bottom">4, .15</text>
+<path stroke="black" pen="0.4">
+-96.483 -92.0802 m
+-56.4779 -92.0802 l
+-56.4779 -108.145 l
+-96.483 -108.145 l h
+</path>
+<group>
+<text stroke="black" pos="-144.476 -36.1092" size="10" type="label" valign="bottom">1, .25</text>
+<path stroke="black" pen="0.4">
+-152.569 -23.9017 m
+-112.564 -23.9017 l
+-112.564 -39.9667 l
+-152.569 -39.9667 l h
+</path>
+</group>
+<group>
+<text stroke="black" pos="-108.256 -69.4148" size="10" type="label" valign="bottom">3, .4</text>
+<path stroke="black" pen="0.4">
+-118.839 -57.2073 m
+-78.8337 -57.2073 l
+-78.8337 -73.2723 l
+-118.839 -73.2723 l h
+</path>
+</group>
+<group>
+<text stroke="black" pos="-45.1109 -69.4148" size="10" type="label" valign="bottom">6, .5</text>
+<path stroke="black" pen="0.4">
+-55.6934 -57.2073 m
+-15.6883 -57.2073 l
+-15.6883 -73.2723 l
+-55.6934 -73.2723 l h
+</path>
+</group>
+<group>
+<text stroke="black" pos="-76.0953 -36.1092" size="10" type="label" valign="bottom">5, .3</text>
+<path stroke="black" pen="0.4">
+-86.6778 -23.9017 m
+-46.6727 -23.9017 l
+-46.6727 -39.9667 l
+-86.6778 -39.9667 l h
+</path>
+</group>
+<group>
+<text stroke="black" pos="-108.648 -2.80359" size="10" type="label" valign="bottom">2, .2</text>
+<path stroke="black" pen="0.4">
+-119.231 9.40394 m
+-79.2259 9.40394 l
+-79.2259 -6.66112 l
+-119.231 -6.66112 l h
+</path>
+</group>
+<group>
+<text stroke="black" pos="-78.0493 30.9546" size="10" type="label" valign="bottom">7, .1</text>
+<path stroke="black" pen="0.4">
+-88.6318 43.1621 m
+-48.6267 43.1621 l
+-48.6267 27.0971 l
+-88.6318 27.0971 l h
+</path>
+</group>
+<mark stroke="black" pos="-68.6293 27.0971" shape="2" size="2"/>
+<mark stroke="black" pos="-99.2285 -6.66112" shape="2" size="2"/>
+<mark stroke="black" pos="-132.566 -39.9667" shape="2" size="2"/>
+<mark stroke="black" pos="-66.6753 -39.9667" shape="2" size="2"/>
+<mark stroke="black" pos="-98.8363 -73.2723" shape="2" size="2"/>
+<mark stroke="black" pos="-35.6909 -73.2723" shape="2" size="2"/>
+<mark stroke="black" pos="-76.4804 -92.0802" shape="2" size="2"/>
+<mark stroke="black" pos="-35.6909 -57.2073" shape="2" size="2"/>
+<mark stroke="black" pos="-98.8363 -57.2073" shape="2" size="2"/>
+<mark stroke="black" pos="-66.6753 -23.9017" shape="2" size="2"/>
+<mark stroke="black" pos="-132.566 -23.9017" shape="2" size="2"/>
+<mark stroke="black" pos="-99.2285 9.40394" shape="2" size="2"/>
+<path stroke="black" pen="0.4">
+-68.6293 27.0971 m
+-99.2285 9.40394 l
+</path>
+<path stroke="black" pen="0.4">
+-99.2285 -6.66112 m
+-132.566 -23.9017 l
+</path>
+<path stroke="black" pen="0.4">
+-99.2285 -6.66112 m
+-66.6753 -23.9017 l
+</path>
+<path stroke="black" pen="0.4">
+-66.6753 -39.9667 m
+-98.8363 -57.2073 l
+</path>
+<path stroke="black" pen="0.4">
+-66.6753 -39.9667 m
+-35.6909 -57.2073 l
+</path>
+<path stroke="black" pen="0.4">
+-98.8363 -73.2723 m
+-76.4804 -92.0802 l
+</path>
+</page>
+</ipe>

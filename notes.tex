@@ -1,0 +1,115 @@
+\documentclass[ccfonts,lotsofwhite,oneside]{patsbook}
+\bibliographystyle{plain}
+\usepackage{chapterbib}
+\usepackage{amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{ipe}
+
+
+\input{pat.tex}
+%\usepackage{fullpage}
+
+% math things
+\newcommand{\E}{\mathbf{E}}
+
+% binary tree things
+\newcommand{\key}{\mathrm{key}}
+\newcommand{\lft}{\mathrm{left}}
+\newcommand{\rght}{\mathrm{right}}
+\newcommand{\prnt}{\mathrm{parent}}
+\newcommand{\nil}{\mathbf{nil}}
+\newcommand{\rt}{\mathrm{root}}
+\newcommand{\path}{\mathrm{path}}
+\newcommand{\prio}{\mathrm{priority}}
+\newcommand{\rep}{\mathrm{representative}}
+\newcommand{\npl}{\mathrm{npl}}
+
+% fractional cascading/skip list things
+\newcommand{\dwn}{\mathrm{down}}
+%\newcommand{\right}{\mathrm{right}}
+\newcommand{\lvl}{\mathrm{level}}
+
+% persistence things
+\newcommand{\frst}{\mathrm{first}}
+\newcommand{\scnd}{\mathrm{second}}
+\newcommand{\tme}{\mathrm{time}}
+\newcommand{\inptr}{\mathrm{inedges}}
+
+% segment tree things
+\newcommand{\intv}{\mathrm{int}}
+\newcommand{\cat}{\mathrm{cat}}
+\newcommand{\proj}{\mathrm{proj}}
+
+% string things
+\newcommand{\md}{\mathrm{mid}}
+\newcommand{\m}{\mathrm{m}}
+\newcommand{\strng}{\mathrm{string}}
+
+% prefix tree things
+\newcommand{\sz}{\mathrm{size}}
+\newcommand{\wght}{\mathrm{weight}}
+
+% van Emde Boas things
+\newcommand{\child}{\mathrm{child}}
+\newcommand{\aux}{\mathrm{aux}}
+
+
+\title{\MakeUppercase{Topics in Data Structures} \\ (Course Notes)}
+\author{Prosenjit Bose \and Luc Devroye \and Vida Dujmovi\'c  \and Pat Morin}
+
+\begin{document}
+\begin{titlepage}
+\maketitle
+\thispagestyle{empty}
+\end{titlepage}
+
+\pagenumbering{roman}
+
+\tableofcontents
+
+% Preface
+\input{preface.tex}
+
+\input{notation.tex}
+
+\include{basics}
+
+\include{records}
+
+\include{persistence}
+
+\include{cascading}
+
+\include{entropy}
+
+\include{adjusting}
+
+\include{strings}
+
+\include{bounded}
+
+\include{hashing}
+
+\include{decomposable}
+
+\include{rangesearch}
+
+\include{spacesaving}
+
+\include{imbalance}
+
+\include{binary}
+
+\include{moreheaps}
+
+\include{trees}
+
+\include{laziness}
+
+\include{counting}
+
+\bibliography{tds}
+\bibliographystyle{plain}
+
+\end{document}

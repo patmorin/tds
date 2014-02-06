@@ -1,0 +1,162 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{More on Heaps}\chaplabel{more-heaps}
+\bibliographystyle{plain}
+
+In this chapter, we study more heaps and variants of heaps.  In
+particular, we study heaps that allow us to keep track of both the
+minimum and maximum elements as well as implementations of stacks,
+queues and deques that keep track of the minimum and maximum element.
+
+%======================================================================
+\section{Min-Max Heaps}
+
+This section will be written at a later date.
+
+%======================================================================
+\section{Heap-Ordered Stacks}
+
+Suppose that we would like to maintain a stack that allows us to push
+and pop elements and maintains the value of the smallest element.  To
+do this, we implement our stack as a linked list $L$, so that the head
+of $L$ (the first element) is the top of the stack.  In addition, each
+node $v$ in $L$ contains a pointer $\min(v)$, that points to the
+smallest element in the sublist containing $v$ and the successors of
+$v$ in $L$. See \figref{heapstack}. In this way, if $v$ is the first
+element in $L$, then $\min(v)$ points to the node containing the
+smallest element in $L$, so we can determine the smallest element on
+the stack in constant time.
+
+\begin{figure}
+\centergraphics{heapstack}
+\caption{A Heap-Ordered Stack.}\figlabel{heapstack}
+\end{figure}
+
+To push an element onto the stack, we simply make a new node $v$ and
+preprend it to $L$.  If the newly pushed element is smaller than the
+current smallest element, then we set $\min(v)$ equal to $v$,
+otherwise we set $\min(v)$ to the node containing the smallest
+element.
+
+To pop an element from the stack, we simply delete the first element.
+This doesn't affect any of the $\min$ pointers of other elements,
+since the only $min$ pointer that could point to the first element is
+that of the first element.
+
+\begin{thm}
+Heap-Ordered stacks support pushes, pops and return the smallest element
+on the stack in $O(1)$ time per operation.
+\end{thm}
+
+
+%======================================================================
+\section{Heap-Ordered Queues}
+
+To implement queue operations, we also maintain a linked list $L$,
+except that we perform insertions by appending to the list.  We also
+maintain an axilliary doubly linked list $L'$.  The first element of
+$L'$ is the smallest value stored in the queue.  The second element of
+$L'$ is the smallest element that appears after the first element of
+$L'$.  In general, the $i$th element in $L'$ is the smallest element
+in $L$ that appears after the $(i-1)$st element of $L'$. (See
+\figref{heapqueue}.)
+
+\begin{figure}
+\centergraphics{heapqueue}
+\caption{A heap-ordered queue.}\figlabel{heapqueue}
+\end{figure}
+
+Observe that the list $L'$ forms an increasing sequence and that the
+order in which elements appear in $L'$ is the same as the order in
+which they appear in $L$.  Therefore, to delete an element from the
+head of the queue, we need only delete the first element from $L$ and,
+if the element also appears in $L'$, to delete the first element of
+$L'$, so deletions can be done in constant time.
+
+The processing of inserting an element at the end of the queue is only
+slightly more complicated.  To insert an element $k$, we first append
+it to $L$.  Once this is done, we must update $L'$.  To do this, we
+scan $L'$ from back to front until we find a node $v$ whose value that
+is smaller than $k$.  We then delete all the successors of $v$ in $L'$
+and append a new node to $L'$ whose value is $k$.
+
+Note that, during insertion, we may examine and delete many nodes from
+$L'$, so insertion is not a constant time operation.  However, any
+particular node can only be deleted once from $L'$.  Therefore, if we
+give a node in $L'$ a credit when it is created, it can use this
+credit to pay for the cost of its deletion later.  Since each
+insertion only creates one new node in $L'$, the total number of
+credits we give out is equal to the number of insertions.
+
+\begin{thm}
+Heap-ordered queues support a sequence of $n$ insert, delete and
+findmin operations in $O(n)$ time.
+\end{thm}
+
+%======================================================================
+\section{Heap-Ordered Deques}
+
+A deque is a data structure that has all the properties of queues and
+stacks, so that it supports inserting and deleting at both ends.  In
+this section, we show that a deque can be implemented using two
+stacks.
+
+To represent a heap-ordered deque on $n$ elements, we build two
+heap-ordered stacks on $n/2$ elements, so that the tops of the stacks
+corresponds to the two ends of the deque.  The process of creating
+these two heap-ordered stacks can certainly be done in $O(n)$ time.
+These two heap-ordered stacks maintain the minimum and support
+insertions and deletions, so we can maintain the minimum in our deque
+and support insertions and deletions at both ends, \emph{as long as
+neither of the stacks becomes empty}.  When one of the two stacks
+does become empty, we rebuild the entire data structure again.
+
+To analyze the running time of this data structure we use another
+credit scheme.  When an element is inserted, we give it a credit.
+When an element is deleted from one of the stacks, we give a credit to
+some element of the other stack that does not already have a credit.
+If no such element exists, we don't give out any credit.  With this
+credit scheme, it follows that any time we rebuild the data structure,
+the stack that is non-empty has at most one element that does not
+contain a credit.  Therefore, the elements with credits can use these
+credits to pay for the cost of rebuilding, which is proportional to
+the size of the stack.  Since we only give out one credit per insertion
+and deletion, we obtain the following theorem.
+
+\begin{thm}\thmlabel{hodeques}
+Heap-ordered deques support a sequence of $n$ insertions, deletions,
+and reporting the minimum in $O(n)$ time.
+\end{thm}
+
+%======================================================================
+\section{Deamortization}
+
+In this section we show how heap-ordered deques can be deamortized so that
+all operations run in $O(1)$ worst-case time.  This deamortization
+illustrates a method that can be used to make many (but certainly not all)
+data amortized efficient data structures into worst-case efficient data
+structures.
+
+Consider the implementation of a heap-ordered deque used in the proof of
+\thmref{hodeques}, in which the deque is represented as two stacks $S_1$
+and $S_2$, and the entire structure is rebuilt whenever one of the stacks
+becomes empty.  To make this data structure worst-case efficient, we 
+start this rebuilding process in advance and do a small amount of the
+rebuilding work during each insertion and deletion.
+
+More precisely, we will build two heap-ordered deques $D_1$ and $D_2$,
+where $D_1$ will (eventually) contain all the elements in $S_1$ and $D_2$
+will (eventually) contain all the elements of $S_2$.  The rebuilding is
+done at such a rate that, if $S_1$ becomes empty, then $D_2$ will contain
+all of $S_2$.  Similarly, if $S_2$ becomes empty, then $D_1$ will contain
+all the elements of $S_1$.
+
+Suppose that $S_1$ and $S_2$ contain a total of $n$ elements and each of
+them contains at least $n/3$ elements at the time we start building $D_1$
+and $D_2$.
+
+%======================================================================
+\section{Discussion and References}
+
+Min-max heaps are due to Atkinson \etal\ \cite{asss89}.  Heap-ordered stacks, deeques and queues are due to So and so \cite{XX}.
+
+\bibliography{tds}

@@ -1,0 +1,225 @@
+<ipe creator="ipe5toxml 2003/04/10" media="-502.231 -410.154 92.7694 431.846">
+<page>
+<path stroke="white" pen="0.4">
+-297.557 -32.8391 m
+-297.557 48.4677 l
+-283.578 -32.8391 m
+-283.578 46.234 l
+-269.599 -32.8391 m
+-269.599 45.2768 l
+-255.621 -32.8391 m
+-255.621 47.5104 l
+-241.642 -32.8391 m
+-241.642 49.425 l
+-227.664 -32.8391 m
+-227.664 51.3395 l
+-213.685 -32.8391 m
+-213.685 51.3395 l
+-199.706 -32.8391 m
+-199.706 52.2968 l
+-185.728 -32.8391 m
+-185.728 52.6159 l
+-171.749 -32.8391 m
+-171.749 52.2968 l
+-157.771 -32.8391 m
+-157.771 53.5731 l
+-143.792 -32.8391 m
+-143.792 52.2968 l
+-129.813 -32.8391 m
+-129.813 54.5304 l
+-115.835 -32.8391 m
+-115.835 53.5731 l
+-101.856 -32.8391 m
+-101.856 53.8922 l
+-311.196 -12.4787 m
+-89.5344 -12.4787 l
+-315.987 6.98586 m
+-94.3254 6.98586 l
+-297.557 25.7507 m
+-75.8952 25.7507 l
+</path>
+<text stroke="black" pos="-333.566 28.315" size="10" type="label" valign="bottom">$A^{(1)}$</text>
+<text stroke="black" pos="-333.566 9.55011" size="10" type="label" valign="bottom">$A^{(2)}$</text>
+<text stroke="black" pos="-333.566 -9.91439" size="10" type="label" valign="bottom">$A^{(3)}$</text>
+<path stroke="black" fill="black" dash="[15 1] 0" pen="0.4">
+-311.535 6.98586 m
+-307.447 6.98586 l
+-311.535 11.0739 l h
+</path>
+<path stroke="black" fill="black" dash="[15 1] 0" pen="0.4">
+-297.557 6.98586 m
+-293.469 6.98586 l
+-297.557 11.0739 l h
+</path>
+<path stroke="black" fill="black" dash="[15 1] 0" pen="0.4">
+-255.621 6.98586 m
+-251.533 6.98586 l
+-255.621 11.0739 l h
+</path>
+<path stroke="black" fill="black" dash="[15 1] 0" pen="0.4">
+-171.749 6.98586 m
+-167.661 6.98586 l
+-171.749 11.0739 l h
+</path>
+<path stroke="black" fill="black" dash="[15 1] 0" pen="0.4">
+-115.835 6.98586 m
+-111.747 6.98586 l
+-115.835 11.0739 l h
+</path>
+<path stroke="black" fill="black" dash="[15 1] 0" pen="0.4">
+-283.577 1.49991 m
+-283.577 -2.58809 l
+-279.489 1.49991 l h
+</path>
+<path stroke="black" fill="black" dash="[15 1] 0" pen="0.4">
+-199.707 1.49991 m
+-199.707 -2.58809 l
+-195.619 1.49991 l h
+</path>
+<path stroke="black" fill="black" dash="[15 1] 0" pen="0.4">
+-185.728 1.49991 m
+-185.728 -2.58809 l
+-181.64 1.49991 l h
+</path>
+<path stroke="black" fill="black" dash="[15 1] 0" pen="0.4">
+-143.791 1.49991 m
+-143.791 -2.58809 l
+-139.703 1.49991 l h
+</path>
+<path stroke="black" fill="black" dash="[15 1] 0" pen="0.4">
+-129.814 1.49991 m
+-129.814 -2.58809 l
+-125.726 1.49991 l h
+</path>
+<path stroke="black" fill="black" dash="[15 1] 0" pen="0.4">
+-255.621 39.7293 m
+-259.709 39.7293 l
+-255.621 35.6413 l h
+</path>
+<path stroke="black" fill="black" dash="[15 1] 0" pen="0.4">
+-227.663 39.7293 m
+-231.751 39.7293 l
+-227.663 35.6413 l h
+</path>
+<path stroke="black" fill="black" dash="[15 1] 0" pen="0.4">
+-213.684 39.7293 m
+-217.772 39.7293 l
+-213.684 35.6413 l h
+</path>
+<path stroke="black" fill="black" dash="[15 1] 0" pen="0.4">
+-199.706 39.7293 m
+-203.794 39.7293 l
+-199.706 35.6413 l h
+</path>
+<path stroke="black" fill="black" dash="[15 1] 0" pen="0.4">
+-143.792 39.7293 m
+-147.88 39.7293 l
+-143.792 35.6413 l h
+</path>
+<text stroke="black" pos="-279.078 -8.69938" size="10" type="label" valign="bottom">3</text>
+<text stroke="black" pos="-195.207 -8.69938" size="10" type="label" valign="bottom">9</text>
+<text stroke="black" pos="-183.724 -8.69938" size="10" type="label" valign="bottom">10</text>
+<text stroke="black" pos="-141.787 -8.69938" size="10" type="label" valign="bottom">13</text>
+<text stroke="black" pos="-127.81 -8.69938" size="10" type="label" valign="bottom">14</text>
+<path stroke="black" pen="0.4">
+-269.599 1.49991 m
+-283.577 1.49991 l
+-283.577 -12.4787 l
+-269.599 -12.4787 l h
+</path>
+<path stroke="black" pen="0.4">
+-185.728 1.49991 m
+-199.707 1.49991 l
+-199.707 -12.4787 l
+-185.728 -12.4787 l h
+</path>
+<path stroke="black" pen="0.4">
+-171.749 1.49991 m
+-185.728 1.49991 l
+-185.728 -12.4787 l
+-171.749 -12.4787 l h
+</path>
+<path stroke="black" pen="0.4">
+-129.813 1.49991 m
+-143.791 1.49991 l
+-143.791 -12.4787 l
+-129.813 -12.4787 l h
+</path>
+<path stroke="black" pen="0.4">
+-115.835 1.49991 m
+-129.814 1.49991 l
+-129.814 -12.4787 l
+-115.835 -12.4787 l h
+</path>
+<text stroke="black" pos="-307.036 10.7651" size="10" type="label" valign="bottom">1</text>
+<text stroke="black" pos="-293.057 10.7651" size="10" type="label" valign="bottom">2</text>
+<text stroke="black" pos="-251.122 10.7651" size="10" type="label" valign="bottom">5</text>
+<text stroke="black" pos="-169.745 10.7651" size="10" type="label" valign="bottom">11</text>
+<text stroke="black" pos="-113.831 10.7651" size="10" type="label" valign="bottom">15</text>
+<path stroke="black" pen="0.4">
+-297.557 20.9644 m
+-311.535 20.9644 l
+-311.535 6.98586 l
+-297.557 6.98586 l h
+</path>
+<path stroke="black" pen="0.4">
+-283.578 20.9644 m
+-297.557 20.9644 l
+-297.557 6.98586 l
+-283.578 6.98586 l h
+</path>
+<path stroke="black" pen="0.4">
+-241.642 20.9644 m
+-255.621 20.9644 l
+-255.621 6.98586 l
+-241.642 6.98586 l h
+</path>
+<path stroke="black" pen="0.4">
+-157.771 20.9644 m
+-171.749 20.9644 l
+-171.749 6.98586 l
+-157.771 6.98586 l h
+</path>
+<path stroke="black" pen="0.4">
+-101.856 20.9644 m
+-115.835 20.9644 l
+-115.835 6.98586 l
+-101.856 6.98586 l h
+</path>
+<text stroke="black" pos="-265.1 29.53" size="10" type="label" valign="bottom">4</text>
+<text stroke="black" pos="-237.142 29.53" size="10" type="label" valign="bottom">6</text>
+<text stroke="black" pos="-223.164 29.53" size="10" type="label" valign="bottom">7</text>
+<text stroke="black" pos="-209.185 29.53" size="10" type="label" valign="bottom">8</text>
+<text stroke="black" pos="-155.767 29.53" size="10" type="label" valign="bottom">12</text>
+<path stroke="black" pen="0.4">
+-255.621 39.7293 m
+-269.599 39.7293 l
+-269.599 25.7507 l
+-255.621 25.7507 l h
+</path>
+<path stroke="black" pen="0.4">
+-227.663 39.7293 m
+-241.642 39.7293 l
+-241.642 25.7507 l
+-227.663 25.7507 l h
+</path>
+<path stroke="black" pen="0.4">
+-213.684 39.7293 m
+-227.663 39.7293 l
+-227.663 25.7507 l
+-213.684 25.7507 l h
+</path>
+<path stroke="black" pen="0.4">
+-199.706 39.7293 m
+-213.684 39.7293 l
+-213.684 25.7507 l
+-199.706 25.7507 l h
+</path>
+<path stroke="black" pen="0.4">
+-143.792 39.7293 m
+-157.771 39.7293 l
+-157.771 25.7507 l
+-143.792 25.7507 l h
+</path>
+</page>
+</ipe>
