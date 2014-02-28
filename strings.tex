@@ -25,6 +25,38 @@ comparing two strings $s_1$ and $s_2$ takes time
 $O(\min(|s_1|,|s_2|\})$, where $|s|$ denotes the length of the string
 $s$.
 
+\section{Two Basic Representations}
+
+In most programming languages, strings are built in as part of the language
+and they take one of two basic representations, both of which involve storing  the characters of the string in an array.  Both representations are illustrated in \figref{strings}.
+
+In the \emph{null-terminated representation}, strings are represented
+as (a pointer to) an array of characters that ends with the special
+null terminator $\$$.  This representation is used, for example, in the
+C and C++  programming languages.  This representation is fairly straightforward.  Any character of the string can be accessed by its index in constant time.  Computing the length, $|s|$, of a string $s$ takes $O(|s|)$ time since we have to walk through the array, one character at a time until we find the null terminator.
+
+Less common is the \emph{pointer/length representation} in which a
+string is represented as (a pointer to) an array of characters along
+with a integer that stores the length of the string.  The pointer/length
+representation is a little more flexible and more efficient for some
+operations.
+
+For example, in the pointer/length representation, determining the length
+of the string takes only constant time, since it is already stored.  More
+importantly, it is possible to extract any substring in constant time:
+If a string $s$ is represented as $(p,\ell)$ where $p$ is the starting
+location and $\ell$ is the length, then we can extract the substring
+$s_i,s_{i+1},\ldots,s_{i+m}$ by creating the pair $(p+i,m)$.  Several of
+the data structures in this chapter will use the pointer/length representation of strings.
+
+\begin{figure}
+  \begin{center}
+    \includegraphics{figs/strings}
+  \end{center}
+  \caption{The string ``grain-fed organic'' represented in both the null-terminated and the pointer/length representations.  In the pointer/length representation we can extract the string ``organ'' in constant time.}
+  \figlabel{strings}
+\end{figure}
+
 \section{Ropes}
 
 A common problem that occurs when developing, for example, a text
@@ -136,8 +168,7 @@ the characters that occur before it and the second part contains the
 remaining characters (that occur after $c_i$).  We reset $\strng(u)$
 so that it contains the first part and create a new node $w$ so that
 it $\strng(w)$ contains the second part.  Note that this split can be
-done in constant time if each string is represented as a pointer and a
-length.
+done in constant time if each string is represented using the pointer/length representation.
 
 At this point the nodes $v$ and $w$ are not yet attached to $T$.  To
 attach $v$, we find the leftmost descendant of $\rght(u)$ and attach
@@ -149,18 +180,20 @@ descendant of $\rght(v)$.  The cost of an insertion is clearly
 proportional to the length of the search paths for $v$ and $w$, which
 are $O(\log M)$ in expectation.
 
-To perform a deletion, we apply the $\textsc{Split}$ operation on
-treaps to make three trees.  The tree $T_1$ contains
-$c_1,\ldots,c_{i-1}$, the tree $T_2$ contains $c_{i},\ldots,c_{i+l-1}$
-and the treap $T_3$ that contains $c_{i+l},\ldots,c_M$.  We then use
-the $\textsc{Merge}$ operation of treaps to merge $T_1$ and $T_3$ and
-discard $T_2$. Since $\textsc{Split}$ and merge each take $O(\log M)$
+To perform a deletion, we apply the $\textsc{Split}$ operation on treaps
+to make three trees.  The tree $T_1$ contains $c_1,\ldots,c_{i-1}$,
+the tree $T_2$ contains $c_{i},\ldots,c_{i+l-1}$ and the treap $T_3$
+that contains $c_{i+l},\ldots,c_M$.  This may require splitting the two
+substrings stored in nodes of $T$ that contain the indices $i$ and $l$,
+but the details are straightforward.  We then use the $\textsc{Merge}$
+operation of treaps to merge $T_1$ and $T_3$ and discard $T_2$. Since
+$\textsc{Split}$ and \textsc{Merge} in treaps each take $O(\log M)$
 expected time, the entire delete operation takes in $O(\log M)$
 expected time.
 
 To report the string $s_i,\ldots,s_{i+l-1}$ we first search for the
 node $u$ that contains $c_i$ and then traverse $T$ starting at node
-$u$.  We can then output $c_i,\ldots,c_{i+l-1}$ in $O(l+\log M)$
+$u$.  We can then output $s_i,\ldots,s_{i+l-1}$ in $O(l+\log M)$
 expected time by doing an in-order traversal of $T$ starting at node
 $u$.  The details of this traversal and its analysis are left as an
 excercise to the reader.
@@ -180,12 +213,28 @@ spell-checker.
 
 A \emph{trie} is a rooted tree $T$ in which each node has somewhere
 between $0$ and $N+1$ children.  All edges of $T$ are assigned labels
-in $\{-1,\ldots,N-1\}$ such that all the edges leading the children of
-a particular node receive different labels.  Strings are stored as
-root-to-leaf paths in the trie so that, if the string $s$ is stored in
-$T$, then there is a leaf $v$ in $T$ such that the sequence of edge
-labels encountered on the path from the root of $T$ to $v$ is
-precisely the string $s$.
+in $\{-1,\ldots,N-1\}$ such that all the edges leading the children
+of a particular node receive different labels.  Strings are stored as
+root-to-leaf paths in the trie so that, if the null-terminated string
+$s$ is stored in $T$, then there is a leaf $v$ in $T$ such that the
+sequence of edge labels encountered on the path from the root of $T$
+to $v$ is precisely the string $s$, including the null terminator.
+An example is shown in \figref{trie}.
+
+\begin{figure}
+  \begin{center}
+    \includegraphics{figs/trie}
+  \end{center}
+  \caption{A trie containing the strings ``ape'', ``apple'', ``organ'', and ``organism''.}
+  \figlabel{trie}
+\end{figure}
+
+
+Notice that it is important that the strings stored in a trie are
+null-terminated, so that no string is the prefix of any other string.
+If this were not the case, it would be impossible to distinguish, for
+example, a trie that contained both ``organism'' and ``organ'' from a
+trie that contained just ``organism''.
 
 Implementation-wise, a trie node is represented as an array of
 pointers of size $N+1$, which point to the children of the node.  In
@@ -228,28 +277,42 @@ storage used is $O(MN)$.
 
 \section{Patricia Trees}
 
-A \emph{Patricia tree} (or a \emph{compressed trie}) is a simple
-variant on a trie in which any path whose interior vertices all have
-only one child is compressed into a single edge.  For this to make
-sense, we now label the edges of the trie with strings, so that the
-string corresponding to a leaf $v$ is the concatenation of all the
-edge labels we encounter on the path from the root of $T$ to $v$.
+A \emph{Patricia tree} (a.k.a.\ a \emph{compressed trie}) is a simple
+variant on a trie in which any path whose interior vertices all have only
+one child is compressed into a single edge.  For this to make sense,
+we now label the edges of the trie with strings, so that the string
+corresponding to a leaf $v$ is the concatenation of all the edge labels
+we encounter on the path from the root of $T$ to $v$. 
+An example is given in \figref{patricia}
 
-To implement this idea we make a copy of each string $s$ that is
-inserted into $T$.  To label an edge with some substring of $s$, we
-use two pointers to the first and last characters of the label.  Thus,
-ignoring the cost of storing the extra strings, the size of each
-edge-label is constant.
+\begin{figure}
+  \begin{center}
+    \includegraphics{figs/patricia}
+  \end{center}
+  \caption{A Patricia tree containing the strings ``ape'', ``apple'', ``organ'', and ``organism''.}
+  \figlabel{trie}
+\end{figure}
 
-Searching, insertion and deletion in a Patricia tree is exactly the
-same as for tries except for some minor modifications required for
-handling the edge labels.  The running times of these operations
-remain unchanged.
+The edge labels of a Patricia tree
+are represented using the pointer/length representation for strings.
+As with tries, and for the same reason, it is important that the strings stored in a patricia tree are null-terminated.
+
+Searching for a string $s$ in a Patricia tree is similar to searching
+in a trie, except that when the search traverses an edge it checks the
+edge label against a whole substring of $s$, not just a single character.
+If the substring matches, the edge is traversed. If there is a mismatch,
+the search fails without finding $s$.  If the search uses up all the
+characters of $s$, then it succeeds by reaching a leaf corresponding
+to $s$.  In any case, this takes $O(|s|)$ time.
+
+Inserting a string $s$ into a Patricia tree is similar to searching right up until the point where the search terminates (because $s$ is not in the tree).  If this happens in the middle of an edge, that edge is split into two new edges joined by a new node, and the remainder of the string $s$ becomes a child of this new node.  This takes $O(|s|+N)$ time, since it involves a search for $s$ followed by the creation of two new nodes, each of size $O(N)$.
+
+Removing a string $s$ from a Patricia tree is the opposite of insertion.  We first locate the leaf corresponding to $s$ and remove it from the tree.  If the parent, $u$, of this leaf is left with only one child, $w$, then we also remove the parent and replace it with a single edge, $e$, joining its $u$'s parent to $w$.  The label for $e$ is obtained in constant time by extending the edge label that was previous only the edge $uw$. How long this takes depends on how long it takes to delete two nodes of size $N$.  If we consider this deletion to be a constant time operation, then running time is $O(|s|)$.  If we consider this deletion to take $O(N)$ time, then the running time is $O(|s|+N)$.
 
 The important difference between Patricia trees and tries is that
 Patricia trees contain no nodes with only one child.  Every node is
 either a leaf or has at least two children.  This immediately implies
-that the number of internal nodes does not exceed the number of
+that the number of internal (non-leaf) nodes does not exceed the number of
 leaves.  Now, recall that each leaf corresponds to a string that is
 stored in the Patricia tree so if the Patricia tree stores $n$
 strings, the total storage used by nodes is $O(nN)$.  Of course, this
@@ -257,7 +320,7 @@ requires that we also store the strings separately at a cost of $O(M)$
 
 \begin{thm}
 Let $s$ be a string of length $m$.  Patricia trees support insertion
-or deletion of $s$ in $O(mN)$ time and searching for $s$ in $O(m)$
+or deletion of $s$ in $O(m+N)$ time and searching for $s$ in $O(m)$
 time.  If $M$ is the total length of all strings and $n$ is the number
 of all strings stored in a Patricia tree then the storage used is
 $O(nN+M)$.
@@ -276,7 +339,7 @@ we simply follow the search path for $s$ until we run into a nil
 pointer or $s$ ends, leaving the search at some vertex $v$.  In the
 former case, $s$ is not a prefix of anything in the structure.  In the
 latter case, each leaf-descendant of $v$ that is leaf represents a
-string that has $s$ as a prefix.
+string that has $s$ as a prefix.  
 
 Given a string $t$ of length $M$, we can insert each of the $M$ suffixes
 of $t$ into a Patricia tree.  We call the resulting tree the
