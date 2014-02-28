@@ -344,7 +344,7 @@ We first locate the leaf corresponding to $s$ and remove it from the
 tree.  If the parent, $u$, of this leaf is left with only one child,
 $w$, then we also remove the parent and replace it with a single edge,
 $e$, joining $u$'s parent to $w$.  The label for $e$ is obtained in
-constant time by extending the edge label that was previous only the
+constant time by extending the edge label that was previously on the
 edge $uw$. How long this takes depends on how long it takes to delete
 two nodes of size $N$.  If we consider this deletion to be a constant
 time operation, then running time is $O(|s|)$.  If we consider this
@@ -369,91 +369,159 @@ $O(nN+M)$.
 
 In addition to the operations described in the preceding theorem, Patricia trees also support \emph{prefix matches}; they can return a list of all strings that have some not-null-terminated string $s$ as a prefix.  This is done by searching for $s$ in the usual way until running out of characters in $s$.  At this point, every leaf in the subtree that the search ended at corresponds to a string that starts with $s$.  Since every internal node has at least two children, this subtree can be traversed in $O(k)$ time, where $k$ is the number of leaves in the subtree.
 
+If we are only interested in reporting one string that has $s$ as a
+prefix, we can look at the edge label of the last edge on the search
+path for $s$.  This edge label is represented using the pointer/length
+representation and the pointer points to a longer string that has
+$s$ as a prefix (consider, for example, the edge labelled ``ple\$''
+in \figref{patricia-2}, whose pointer points to the second `p' of
+``apple\$'').  This edge label can therefore be extended backwards to
+report the actual string that contains this label.
+
 \begin{thm}
-For a query string $s$, a Patricia tree can report all the strings it contains that have $s$ as a prefix and this can be done in $O(|s|+k)$ time, where $k$ is the number of strings output by the query.
+For a query string $s$, a Patricia tree can report one string that has $s$ as a prefix in $O(|s|)$ time and can report all strings that have $s$ as a prefix in $O(|s|+k)$ time, where $k$ is the number of strings that have $s$ as a prefix.
 \end{thm}
 
 \section{Suffix Trees}
 
-Suppose we have a large body of text and we would like a data
-structure that allows us to query if particular strings occurs in the
-text.  One way to do this is to observe that tries and Patricia trees
-also allow us to perform \emph{prefix searches}, i.e., given a string
-$s$ that is not terminated with a $\$$, we can determine if $s$ is the
-prefix of any string stored in the structure.  To do a prefix search
-we simply follow the search path for $s$ until we run into a nil
-pointer or $s$ ends, leaving the search at some vertex $v$.  In the
-former case, $s$ is not a prefix of anything in the structure.  In the
-latter case, each leaf-descendant of $v$ that is leaf represents a
-string that has $s$ as a prefix.  
-
-Given a string $t$ of length $M$, we can insert each of the $M$ suffixes
-of $t$ into a Patricia tree.  We call the resulting tree the
-\emph{suffix tree} for $t$.  Now, if we want to know if some string
-$s$ occurs in $t$ we need only do a prefix search for $s$ in the
-Patricia tree.  Thus, we can test if $s$ occurs in $t$ in $O(|s|)$
-time.
+Suppose we have a large body of text and we would like a data structure
+that allows us to query if particular strings occurs in the text.  Given a
+string $t$ of length $n$, we can insert each of the $n+1$ suffixes of
+$t$ into a Patricia tree.  We call the resulting tree the \emph{suffix
+tree} for $t$.  Now, if we want to know if some string $s$ occurs in $t$
+we need only do a prefix search for $s$ in the Patricia tree.  Thus,
+we can test if $s$ occurs in $t$ in $O(|s|)$ time.
 
 What is the storage required by the suffix tree for $T$?  Since we
-only insert $M$ suffixes, the storage required by tree nodes is
-$O(MN)$.  Furthermore, recall that the labels on edges of $T$ are
+only insert $n$ suffixes, the storage required by tree nodes is
+$O(nN)$.  Furthermore, recall that the labels on edges of $T$ are
 represented as pointers into the strings that were inserted into $T$.
 However, every string that is inserted into $T$ is a suffix of $t$, so
-all labels can be represented as pointers into a single copy of $t$.
-Thus, the total storage used by a suffix tree is $O(MN)$.
+all labels can be represented as pointers into a single copy of $t$, so the total spaced used to store $t$ and all its edge labels is only $O(n)$.
+Thus, the total storage used by a suffix tree is $O(nN)$.
 
 The cost of constructing the suffix tree for $t$ can be split into
-two parts.  The cost of creating and initializing new nodes, which
-is clearly $O(MN)$ because there are only $O(M)$ nodes and the
-cost of following paths, which is clearly $O(M^2)$.
+two parts:  The cost of creating and initializing new nodes, which
+is clearly $O(nN)$ because there are only $O(n)$ nodes; and the
+cost of following paths, which is clearly $O(n^2)$.
 
 \begin{thm}\thmlabel{suffix-tree-slow}
-The suffix tree for a string $t$ of length $M$ can be constructed in
-$O(MN+M^2)$ time and uses $O(MN)$ storage.  The suffix tree can be
+The suffix tree for a string $t$ of length $n$ can be constructed in
+$O(nN+n^2)$ time and uses $O(nN)$ storage.  The suffix tree can be
 used to determine if any string $s$ of length $m$ is a substring of $t$
 in $O(m)$ time.  The suffix tree can also report the locations of all
 occurrences of $s$ in $t$ in $O(m+k)$ time, where $k$ is the number of
 occurrences of $s$ in $t$.
 \end{thm}
 
-We remark that the construction time in \thmref{suffix-tree-slow} is
-non-optimal.  References to $O(n)$ time suffix tree construction
-algorithms are given in \secref{strings-discussion}.
+The construction time in \thmref{suffix-tree-slow} is non-optimal.
+References to $O(n)$ time suffix tree construction algorithms are given
+in \secref{strings-discussion}.
 
 
 \section{Suffix Arrays*}
 
-The suffix array $A_1,\ldots,A_M$ of a string $t=t_1,\ldots,t_M$ lists
+The suffix array $A_1,\ldots,A_n$ of a string $t=t_1,\ldots,t_n$ lists
 the suffixes of $t$ in lexicographically increasing order.  That is,
 $A_i$ is the index such that $t_{A_{i}},\ldots,t_m$ has rank $i$ among
-all suffixes of $A$.  Suffix arrays are a more space-efficient
-alternative to suffix trees.
+all suffixes of $A$.  
 
-Given a suffix-array $A=A_1,\ldots,A_M$ for $t$ and a query string $s$
-one can do binary search in $O(|s|\log M)$ time to determine whether
-$s$ occurs in $t$;  binary search uses $O(\log M)$ comparison and each
-comparison takes $O(|s|)$ time.  However, by being a little more
-sophisticated we can do better than this.  
+For example, consider the string ``counterrevoluationary\$'':
+\begin{center}
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
+     1&2&3&4&5&6&7&8&9&10&11&12&13&14&15&16&17&18&19&20&21\\\hline
+     c&o&u&n&t&e&r&r&e&v&o&l&u&t&i&o&n&a&r&y&\$\\\hline
+  \end{tabular}
+\end{center}
+The suffix array for $t$ is
+$A=\langle18,1,6,9,15,12,17,4,11,16,2,8,7,19,5,14,3,13,10,20,21\rangle$.  This is hard to verify, so here is a table that helps:
 
-\comment{
-Forget about suffix arrays for now and suppose we have a sorted array
-of strings $S_1,\ldots,S_n$ and we want to do binary search in this
-array for some query string $s$.  The binary search algorithm
-maintains two indices $i$ and $j$, $i\le j$, so that, if $s$ occurs in
-$S_1,\ldots,S_n$ then it occurs in $S_i,\ldots,S_j$.  Suppose $S_i$
-and $s$ agree in the first $i'$ letters and $S_j$ and $s$ agree in the
-first $j'$ letters.  Call $i'+j'$ the \emph{total agreement} and
-observe that, any string $S_m$ with $i\le m\le j$ agree with $s$ in
-the first $\min\{i',j'\}$ locations.  Now, binary search selects a
-value $i< m < j$ and compares $S_m$ to $s$.  Because of the above, we
-can begin this comparison starting at position $\min\{i',j'\}$ in the
-two strings.  Suppose this comparison takes $O(k+1)$ time, because the
-two strings agree at $k$ locations.  Then we either recursively search
-on the subarray $S_i,\ldots,S_m$ with a total agreement of
-$i'+\min\{i',j'\}+k$ or we search on the subarray $S_m,\ldots,S_j$
-with a total agreement of $\min\{i',j'\}+j'+k$.  In either case, the
-total agreement is at 
-}
+%\begin{center}
+%  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
+%18& 1& 6& 9& 15& 12& 17& 4& 11& 16& 2& 8& 7& 19& 5& 14& 3& 13& 10& 20& 21\\\hline
+%    \begin{turn}{-90}ary\$\end{turn}&
+%    \begin{turn}{-90}counterrevolutionary\$\end{turn}&
+%    \begin{turn}{-90}errevolutionary\$\end{turn}&
+%    \begin{turn}{-90}evolutionary\$\end{turn}&
+%    \begin{turn}{-90}ionary\$\end{turn}&
+%    \begin{turn}{-90}lutionary\$\end{turn}&
+%    \begin{turn}{-90}nary\$\end{turn}&
+%    \begin{turn}{-90}nterrevolutionary\$\end{turn}&
+%    \begin{turn}{-90}olutionary\$\end{turn}&
+%    \begin{turn}{-90}onary\$\end{turn}&
+%    \begin{turn}{-90}ounterrevolutionary\$\end{turn}&
+%    \begin{turn}{-90}revolutionary\$\end{turn}&
+%    \begin{turn}{-90}rrevolutionary\$\end{turn}&
+%    \begin{turn}{-90}ry\$\end{turn}&
+%    \begin{turn}{-90}terrevolutionary\$\end{turn}&
+%    \begin{turn}{-90}tionary\$\end{turn}&
+%    \begin{turn}{-90}unterrevolutionary\$\end{turn}&
+%    \begin{turn}{-90}utionary\$\end{turn}&
+%    \begin{turn}{-90}volutionary\$\end{turn}&
+%    \begin{turn}{-90}y\$\end{turn}&
+%    \begin{turn}{-90}\$\end{turn}\\\hline
+%  \end{tabular}
+%\end{center}
+
+\begin{center}
+  \begin{tabular}{|r|r|l|}\hline
+    $i$ & $A_i$ & $t_i,\ldots,t_n$ \\\hline
+1&18&ary\$\\
+2&1&counterrevolutionary\$\\
+3&6&errevolutionary\$\\
+4&9&evolutionary\$\\
+5&15&ionary\$\\
+6&12&lutionary\$\\
+7&17&nary\$\\
+8&4&nterrevolutionary\$\\
+9&11&olutionary\$\\
+10&16&onary\$\\
+11&2&ounterrevolutionary\$\\
+12&8&revolutionary\$\\
+13&7&rrevolutionary\$\\
+14&19&ry\$\\
+15&5&terrevolutionary\$\\
+16&14&tionary\$\\
+17&3&unterrevolutionary\$\\
+18&13&utionary\$\\
+19&10&volutionary\$\\
+20&20&y\$\\
+21&21&\$\\\hline
+\end{tabular}
+\end{center}
+
+
+Given a suffix-array $A=A_1,\ldots,A_n$ for $t$ and a not-null-terminated
+query string $s$ one can do binary search in $O(|s|\log n)$ time to
+determine whether $s$ occurs in $t$;  binary search uses $O(\log n)$
+comparison and each comparison takes $O(|s|)$ time.
+
+We can do searches a little faster---in $O(|s|+\log n)$ time---if,
+in addition to the suffix array, we have a little more information.
+For each $i\in\{1,\ldots,n\}$, let $s_i$ denote the suffix $t_{A_i},
+t_{A_i+1},\ldots,t_{n}$.
+
+Suppose, that we have access to a table $\ell$, where, for any
+pair of indices $(i,j)$ with $1\le i\le j\le n$, $\ell_{i,j}$ is
+the length of the longest common prefix of $s_i$ and $s_j$. In our
+running example, $\ell_{9,11}=1$, since $s_9=\text{``olutionary\$}''$
+and $s_{11}=\text{``ounterrevolutionary''}$ have the first character
+``o'' in common but differ on their second character.  Notice that
+this also implies that $s_{10}$ starts with the same letter as $s_9$
+and $s_{11}$, otherwise $s_{10}$ would not be between $s_9$ and $s_{11}$
+in sorted order.  More generally, if $\ell_{i,j}=r$, then the suffixes
+$s_i,s_{i+1},\ldots,s_{j}$ must all start with the same $r$ characters.
+
+With the extra \emph{longest common prefix} information provided by $\ell$, binary search on the suffix array can be sped up.  Suppose that the binary search has already run for a while and has concluded that a matching string---if it is exists---is among $s_i,s_{i+1},\ldots,s_j$ and we have verified that
+the first $r$ characters of $s$ match the first $r$ characters of $s_i$ and $s_j$ (and therefore everything in this set).   Now we consider the string $s_m$, where $m=\lceil(i+1)/2\rceil$.  We start matching the characters at
+indices $r+1$, $r+2$, $r+3$, and so
+
+
+We know that the first $\ell_{i,j}$ characters of every string in this set are the same, and they all match 
+
+
+\subsection{Constructing a suffix array in $O(n)$ time}
+
 
 TODO: Describe the LCP structure, the $O(|s|+\log M)$ time search algorithm,
 and K\"arkk\"ainen and Sanders $O(M+N)$ time construction algorithm.
