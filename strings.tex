@@ -283,19 +283,28 @@ one child is compressed into a single edge.  For this to make sense,
 we now label the edges of the trie with strings, so that the string
 corresponding to a leaf $v$ is the concatenation of all the edge labels
 we encounter on the path from the root of $T$ to $v$. 
-An example is given in \figref{patricia}
+An example is given in \figref{patricia}.
 
 \begin{figure}
   \begin{center}
     \includegraphics{figs/patricia}
   \end{center}
   \caption{A Patricia tree containing the strings ``ape'', ``apple'', ``organ'', and ``organism''.}
-  \figlabel{trie}
+  \figlabel{patricia}
 \end{figure}
 
-The edge labels of a Patricia tree
-are represented using the pointer/length representation for strings.
-As with tries, and for the same reason, it is important that the strings stored in a patricia tree are null-terminated.
+The edge labels of a Patricia tree are represented using the
+pointer/length representation for strings.  As with tries, and for the
+same reason, it is important that the strings stored in a patricia tree
+are null-terminated.  See \figref{patricia-2} for an example.
+
+\begin{figure}
+  \begin{center}
+    \includegraphics{figs/patricia-2}
+  \end{center}
+  \caption{The edge labels of a Patricia tree use the pointer/length representation.}
+  \figlabel{patricia-2}
+\end{figure}
 
 Searching for a string $s$ in a Patricia tree is similar to searching
 in a trie, except that when the search traverses an edge it checks the
@@ -305,11 +314,43 @@ the search fails without finding $s$.  If the search uses up all the
 characters of $s$, then it succeeds by reaching a leaf corresponding
 to $s$.  In any case, this takes $O(|s|)$ time.
 
-Inserting a string $s$ into a Patricia tree is similar to searching right up until the point where the search terminates (because $s$ is not in the tree).  If this happens in the middle of an edge, that edge is split into two new edges joined by a new node, and the remainder of the string $s$ becomes a child of this new node.  This takes $O(|s|+N)$ time, since it involves a search for $s$ followed by the creation of two new nodes, each of size $O(N)$.
+Descriptions of the insertion and deletion algorithms follow below.
+\figref{patricia-adddel} illustrates the actions of these algorithms.
+In this figure, a Patricia tree that initially stores only the string
+``orange'' has the string ``organism'' added to it and then has the string
+``orange'' deleted from it.
 
-Removing a string $s$ from a Patricia tree is the opposite of insertion.  We first locate the leaf corresponding to $s$ and remove it from the tree.  If the parent, $u$, of this leaf is left with only one child, $w$, then we also remove the parent and replace it with a single edge, $e$, joining its $u$'s parent to $w$.  The label for $e$ is obtained in constant time by extending the edge label that was previous only the edge $uw$. How long this takes depends on how long it takes to delete two nodes of size $N$.  If we consider this deletion to be a constant time operation, then running time is $O(|s|)$.  If we consider this deletion to take $O(N)$ time, then the running time is $O(|s|+N)$.
+\begin{figure}
+  \begin{center}
+    \includegraphics{figs/patricia-adddel}
+  \end{center}
+  \caption{The edge labels of a Patricia tree use the pointer/length representation.}
+  \figlabel{patricia-adddel}
+\end{figure}
 
-The important difference between Patricia trees and tries is that
+Inserting a string $s$ into a Patricia tree is similar to searching
+right up until the point where the search gets stuck because $s$ is not
+in the tree.  If the search gets stuck in the middle of an edge, $e$,
+then $e$ is split into two new edges joined by a new node, $u$, and the
+remainder of the string $s$ becomes the edge label of the edge leading
+from $u$ to a newly created leaf.  If the search gets stuck at a node,
+$u$, then the remainder of $s$ is used as an edge label for a new edge
+leading from $u$ to a newly created leaf.  This takes $O(|s|+N)$ time,
+since it involves a search for $s$ followed by the creation of two new
+nodes, each of size $O(N)$.
+
+Removing a string $s$ from a Patricia tree is the opposite of insertion.
+We first locate the leaf corresponding to $s$ and remove it from the
+tree.  If the parent, $u$, of this leaf is left with only one child,
+$w$, then we also remove the parent and replace it with a single edge,
+$e$, joining $u$'s parent to $w$.  The label for $e$ is obtained in
+constant time by extending the edge label that was previous only the
+edge $uw$. How long this takes depends on how long it takes to delete
+two nodes of size $N$.  If we consider this deletion to be a constant
+time operation, then running time is $O(|s|)$.  If we consider this
+deletion to take $O(N)$ time, then the running time is $O(|s|+N)$.
+
+An important difference between Patricia trees and tries is that
 Patricia trees contain no nodes with only one child.  Every node is
 either a leaf or has at least two children.  This immediately implies
 that the number of internal (non-leaf) nodes does not exceed the number of
@@ -326,6 +367,11 @@ of all strings stored in a Patricia tree then the storage used is
 $O(nN+M)$.
 \end{thm}
 
+In addition to the operations described in the preceding theorem, Patricia trees also support \emph{prefix matches}; they can return a list of all strings that have some not-null-terminated string $s$ as a prefix.  This is done by searching for $s$ in the usual way until running out of characters in $s$.  At this point, every leaf in the subtree that the search ended at corresponds to a string that starts with $s$.  Since every internal node has at least two children, this subtree can be traversed in $O(k)$ time, where $k$ is the number of leaves in the subtree.
+
+\begin{thm}
+For a query string $s$, a Patricia tree can report all the strings it contains that have $s$ as a prefix and this can be done in $O(|s|+k)$ time, where $k$ is the number of strings output by the query.
+\end{thm}
 
 \section{Suffix Trees}
 
@@ -364,8 +410,10 @@ cost of following paths, which is clearly $O(M^2)$.
 \begin{thm}\thmlabel{suffix-tree-slow}
 The suffix tree for a string $t$ of length $M$ can be constructed in
 $O(MN+M^2)$ time and uses $O(MN)$ storage.  The suffix tree can be
-used to determine if any string $s$ of length $m$ is a substring of
-$t$ in $O(m)$ time.
+used to determine if any string $s$ of length $m$ is a substring of $t$
+in $O(m)$ time.  The suffix tree can also report the locations of all
+occurrences of $s$ in $t$ in $O(m+k)$ time, where $k$ is the number of
+occurrences of $s$ in $t$.
 \end{thm}
 
 We remark that the construction time in \thmref{suffix-tree-slow} is
@@ -407,14 +455,13 @@ with a total agreement of $\min\{i',j'\}+j'+k$.  In either case, the
 total agreement is at 
 }
 
-[Eventually we will describe the $O(|s|+\log M)$ time search algorithm
-and K\"arkk\"ainen and Sanders $O(M+N)$ time construction algorithm.]
+TODO: Describe the LCP structure, the $O(|s|+\log M)$ time search algorithm,
+and K\"arkk\"ainen and Sanders $O(M+N)$ time construction algorithm.
 
 \begin{thm}
 The suffix array for a string $t$ of length $M$ can be constructed in
-$O(M+N)$ time and uses $O(M)$ storage.  The suffix array can be
-used to determine if any string $s$ is a substring of
-$t$ in $O(|s|+\log M)$ time.
+$O(M+N)$ time and uses $O(M)$ storage.  The suffix array can be used to
+determine if any string $s$ is a substring of $t$ in $O(|s|+\log M)$ time.
 \end{thm}
 
 
@@ -491,7 +538,7 @@ After sorting the input strings, a ternary trie can be constructed in
 $O(M)$ time and can search for a string $s$ in $O(|s|+\log n)$ time.
 \end{thm}
 
-[Show how to make suffix trees dynamic, using randomization.]
+TODO: Show how to make suffix trees dynamic, using randomization.
 
 \section{Quad-Trees}
 
@@ -539,18 +586,19 @@ the total size of (the binary expansion of) all points stored in the
 quadtree.  
 
 \section{Discussion and References}
+\seclabel{strings-discussion}
 
 Prefix-trees seem be part of the computer science folklore, though
 they are not always implemented using treaps. The first documented use
 of a prefix-tree is unclear.
 
-Ropes (sometimes called cords) are described by Boehm \etal\
-\cite{bap95} as an alternative to strings represented as arrays.  They
-are so useful that they are now part of the C++ Standard Template
-Library \cite{x}.
+Ropes (sometimes called cords) are described by Boehm \etal\ \cite{bap95}
+as an alternative to strings represented as arrays.  They are so useful
+that they have made it into the SGI implementation of the C++ Standard
+Template Library \cite{x}.
 
 Tries, also known as digital search trees, have a very long history.
-Knuth \cite{k73c} is a good resource to help unravel some of history
+Knuth \cite{k73c} is a good resource to help unravel some of their
 history.  Patricia trees were described and given their name by
 Morrison \cite{m68}.  PATRICIA is an acronym for Practical Algorithm
 To Retrieve Information Coded In Alphanumeric.
