@@ -548,6 +548,11 @@ values.  In the next two sections we will show how the suffix array and the long
 
 \subsection{Constructing a suffix array in $O(n)$ time}
 
+Recall the \emph{radix-sort} algorithm that allows us to sort an array of $n$ integers whose values are in the set $\{0,\ldots,n^c-1\}$ in $O(cn)$ time.  This algorithm will be used to efficiently construct a suffix array.
+
+The algorithm that we present here is recursive.  It constructs the suffix array of a string $s$ whose length $n$, which is terminated with \emph{two} null characters and whose characters come from the alphabet $\{0,\ldots n\}$.
+For each $r\in\{0,1,2\}$.
+
 The longest common prefix array information.
 
 
