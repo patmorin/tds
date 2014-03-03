@@ -421,7 +421,7 @@ in \secref{strings-discussion}.
 
 \section{Suffix Arrays*}
 
-The suffix array $A_1,\ldots,A_n$ of a string $t=t_1,\ldots,t_n$ lists
+The \emph{suffix array} $A_1,\ldots,A_n$ of a string $t=t_1,\ldots,t_n$ lists
 the suffixes of $t$ in lexicographically increasing order.  That is,
 $A_i$ is the index such that $t_{A_{i}},\ldots,t_m$ has rank $i$ among
 all suffixes of $A$.  
@@ -490,7 +490,6 @@ $A=\langle18,1,6,9,15,12,17,4,11,16,2,8,7,19,5,14,3,13,10,20,21\rangle$.  This i
 \end{tabular}
 \end{center}
 
-
 Given a suffix-array $A=A_1,\ldots,A_n$ for $t$ and a not-null-terminated
 query string $s$ one can do binary search in $O(|s|\log n)$ time to
 determine whether $s$ occurs in $t$;  binary search uses $O(\log n)$
@@ -498,8 +497,8 @@ comparison and each comparison takes $O(|s|)$ time.
 
 We can do searches a little faster---in $O(|s|+\log n)$ time---if,
 in addition to the suffix array, we have a little more information.
-For each $i\in\{1,\ldots,n\}$, let $s_i$ denote the suffix $t_{A_i},
-t_{A_i+1},\ldots,t_{n}$.
+Let $s_i=t_{A_i}, t_{A_i+1},\ldots,t_{n}$, i.e., $s_i$ is the string in
+the $i$th row of the preceding table.
 
 Suppose, that we have access to a table $\ell$, where, for any
 pair of indices $(i,j)$ with $1\le i\le j\le n$, $\ell_{i,j}$ is
@@ -510,10 +509,15 @@ and $s_{11}=\text{``ounterrevolutionary''}$ have the first character
 this also implies that $s_{10}$ starts with the same letter as $s_9$
 and $s_{11}$, otherwise $s_{10}$ would not be between $s_9$ and $s_{11}$
 in sorted order.  More generally, if $\ell_{i,j}=r$, then the suffixes
-$s_i,s_{i+1},\ldots,s_{j}$ must all start with the same $r$ characters.
+$s_i,s_{i+1},\ldots,s_{j}$ all start with the same $r$ characters.
 
 With the extra \emph{longest common prefix} information provided by $\ell$, binary search on the suffix array can be sped up.  Suppose that the binary search has already run for a while and has concluded that a matching string---if it is exists---is among $s_i,s_{i+1},\ldots,s_j$ and we have verified that
-the first $r$ characters of $s$ match the first $r$ characters of $s_i$ and $s_j$ (and therefore everything in this set).   Now we consider the string $s_m$, where $m=\lceil(i+1)/2\rceil$.  We start matching the characters at
+the first $r_i$ characters of $s$ match the first $r_i$ characters of $s_i$ and the first $r_j$ characters of $s$ match the first $r_j$ characters of $s_j$.
+
+Suppose, without loss of generality, that $r_i \ge r_j$; that is, $s$ matches at least as many characters in $s_i$ as in $s_j$.  Now, consider 
+
+
+   Now we consider the string $s_m$, where $m=\lceil(i+1)/2\rceil$.  We start matching the characters at
 indices $r+1$, $r+2$, $r+3$, and so
 
 
