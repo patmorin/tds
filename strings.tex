@@ -511,13 +511,14 @@ and $s_{11}$, otherwise $s_{10}$ would not be between $s_9$ and $s_{11}$
 in sorted order.  More generally, if $\ell_{i,j}=r$, then the suffixes
 $s_i,s_{i+1},\ldots,s_{j}$ all start with the same $r$ characters.
 
-With the extra \emph{longest common prefix} information provided by $\ell$, binary search on the suffix array can be sped up.
-
-The sped-up binary search routine maintains four integer values $i$, $j$,
-$a$ and $b$.  At all times, the search has deduced that a matching
-string---if it is exists---is among $s_i,s_{i+1},\ldots,s_j$ and that 
-the longest prefixes of $s_i$ and $s_j$ that match $s$
-have length $a$ and $b$ respectively.
+With the extra \emph{longest common prefix} information provided by
+$\ell$, binary search on the suffix array can be sped up.  The sped-up
+binary search routine maintains four integer values $i$, $j$, $a$ and $b$.
+At all times, the search has deduced that a matching string---if it is
+exists---is among $s_i,s_{i+1},\ldots,s_j$ (because $s_i < s < s_j$) and
+that the longest prefixes of $s_i$ and $s_j$ that match $s$ have length
+$a$ and $b$ respectively. The algorithm starts with $(i=1,j=n,a,b=0)$
+where the value of $a$ is obtained by comparing $s$ with $s_1$.
 
 Suppose, without loss of generality, that $a \ge b$ (the case where $b>a$ is symmetric).  Now, consider the entry $\ell_{i,m}$ which tells us how many characters of $s_m$ match $s_i$.  There are three cases to consider:
 \begin{enumerate}
@@ -526,7 +527,10 @@ $\ell_{i,m}+1$ in $s_m$ is greater than the corresponding character in $s_i$ and
 
 Therefore, our search can now be restricted to $s_i,\ldots,s_{m}$.  Furthermore, we know that the longest prefix of $s_m$ that matches $s$ has length $b'=\ell_{i,m}$.  Therefore, we can recursively search $s_i,\ldots,s_{m}$ using the values $a'=a$ and $b'=\ell_{i,m}$. That is, we recurse with the values $(i,m,a,\ell_{i,m})$
 
-\item If $\ell_{i,m}\ge r_i$, then we can begin comparing $s_m$ and $s$ starting at the $(a+1)$th character position. After matching $k\ge0$ additional characters of $s$ and $s_m$ this will eventually result in one of three possible outcomes:
+\item If $\ell_{i,m} > a$, then we can immediately conclude that $s_m < s$, for the same reason that $s_i < s$; namely $s_i$ and $S_m$ differ in character $a+1$ and this character is greater than $s$ than it is in $s_i$/$s_m$.
+In this case, we recurse with the values $(m,j,a, b)$.
+
+\item If $\ell_{i,m}= r_i$, then we can begin comparing $s_m$ and $s$ starting at the $(a+1)$th character position. After matching $k\ge0$ additional characters of $s$ and $s_m$ this will eventually result in one of three possible outcomes:
 \begin{enumerate}
   \item If $s < s_m$, then the search can recursive on the set $s_i,\ldots s_m$ using the values $(i,m,a,a+k)$
 
@@ -551,20 +555,90 @@ values.  In the next two sections we will show how the suffix array and the long
 Recall the \emph{radix-sort} algorithm that allows us to sort an array of $n$ integers whose values are in the set $\{0,\ldots,n^c-1\}$ in $O(cn)$ time.  This algorithm will be used to efficiently construct a suffix array.
 
 The algorithm that we present here is recursive.  It constructs the suffix array of a string $s$ whose length $n$, which is terminated with \emph{two} null characters and whose characters come from the alphabet $\{0,\ldots n\}$.
-For each $r\in\{0,1,2\}$.
 
-The longest common prefix array information.
+Let $S$ denote the set of all suffixes of $t$, and let $S_r$, for $r\in\{0,1,2\}$ denote the set of suffixes $t_i,t_{i+1},\ldots,t_n$ where $i\equiv r\pmod 3$.  That is, we partition the sets of suffixes into three sets, each having roughly $n/3$ suffixes in them.  The outline of the algorithm is as follows:
 
+\begin{enumerate}
+  \item Recursively sort the suffixes in $S_1\cup S_2$.
+  \item Use radix-sort to sort the suffixes in $S_0$
+  \item Merge the two sorted sets resulting from steps 1 and 2 to obtain    the      sorted order of the suffixes in $S_0\cup S_1\cup S_2=S$.
+\end{enumerate}
+If the overall running time of the algorithm is denoted by $T(n)$, then the first step takes $T(2n/3)$ time and we will show, shortly, that steps 2 and 3 each take $O(n)$ time.  Thus, the total running time of the algorithm is given by the recurrence
+\[
+    T(n) \le cn + T(2n/3) \le cn(\sum_{i=0}^\infty (2/3)^i \le 3cn \enspace .
+\]
+Next we describe how to implement each of the three steps efficiently.
 
-TODO: Describe the LCP structure, the $O(|s|+\log M)$ time search algorithm,
-and K\"arkk\"ainen and Sanders $O(M+N)$ time construction algorithm.
+\paragraph{Step 1.}
+Assume $|t|=3k+1$ for some integer $k$. If not, then append at most two additional $\$$ characters to the end $t$ to make it so.
+To implement Step 1, we transform the string $t$ into the sequence of triples:
+\[
+   t'= \underbrace{(t_1,t_2,t_3),(t_4,t_5,t_6),\ldots,(t_{n-3},t_{n-2},t_{n-1})}_\text{suffixes in $S_1$},
+   \underbrace{(t_2,t_3,t_4),(t_5,t_6,t_7),\ldots,(t_{n-2},t_{n-1},t_{n})}_\text{suffixes in $S_2$}
+\]
+Observe that each suffix in $S_1\cup S_2$ is represented somewhere in this this sequence.  That, is, for any $t_i,t_{i+1},\ldots,t_n$ with $i\not\equiv 0\pmod 3$, the suffix 
+\[
+   (t_i,t_{i+1},t_{i+2}),(t_{i+3},t_{i+4},t_{i+5}),\ldots,
+       (t_{i+3\lceil(n-i)/3\rceil},t_{i+3\lceil(n-i)/3\rceil+1},
+       t_{i+3\lceil(n-i)/3\rceil+2})
+\]
+appears in our transformed string. Therefore, if we can sort the suffixes
+of the transformed string, we will have sorted all the suffixes in
+$S_1\cup S_2$.  The string $t'$ contains about $2n/3$ characters, as
+required, but each character is a triple of characters in the range
+$(1,\ldots,n)$, so we cannot immediately recurse on $t'$.  Instead,
+we first apply radix sort to relabel each triple with an integer in
+the range $1,\ldots,2n/3$.  We can now recursively sort the relabelled
+transformed string---which contains $2n/3$ characters in the range
+$1,\ldots,2n/3$---and undo the relabelling to obtain the sorted order
+of $S_1\cup S_2$.  All of this takes only $O(n)$ time.
+
+\paragraph{Step 2.}
+To implement Step~2, we observe that every suffix in $S_0$ starts with
+a single character and is the followed by a suffix in $S_1$.  That is,
+each suffix $t_i,\ldots,t_n$ with $i\equiv 0\pmod 3$ can be represented
+as a pair $(t_i,\ell)$ where $\ell\in\{1,\ldots,2n/3)$ is the rank of
+the suffix $t_{i+1},\ldots,t_n$ obtained during Step 1.  Applying radix
+sort to all of these pairs allows us to sort $S_0$ in $O(n)$ time.
+
+\paragraph{Step 3.}
+To implement Step~3, we have to merge two sorted lists, one of length $2n/3$ and one of length $n/3$ in $O(n)$ time.  Merging two sorted lists uses $O(n)$ comparisons is straightforward. Therefore, the only trick here is to ensure that we can compare two elements---one from the first list and one from the second list---in constant time.  
+
+To see why this is possible, suppose we are comparing $t_i,\ldots,t_n\in S_0$ with $t_j,\ldots,t_n\in S_1$.  Then we can write these as comparing
+\[
+   t_i,\underbrace{t_{i+1},\ldots,t_n}_{\text{a suffix in $S_1$}}
+\]
+and 
+\[
+   t_j,\underbrace{t_{j+1},\ldots,t_n}_{\text{a suffix in $S_2$}}
+    \enspace .
+\]
+Now this can certainly be done in constant time, by comparing $t_i$ and $t_j$ and, in case of a tie, comparing two suffixes whose relative order was already determined in Step 1.
+
+Similarly, if we are comparing 
+$t_i,\ldots,t_n\in S_0$ with $t_j,\ldots,t_n\in S_2$, then we can treat this as comparing
+\[
+   t_i,t_{i+1},\underbrace{t_{i+2},\ldots,t_n}_{\text{a suffix in $S_2$}}
+\]
+and 
+\[
+   t_j,t_{j+1},\underbrace{t_{j+2},\ldots,t_n}_{\text{a suffix in $S_1$}}
+    \enspace .
+\]
+This can also be done in constant time, by comparing at most two
+characters of $t$ and, if necessary an suffix in $S_1$ with a suffix
+in $S_2$.
+
+This completes the description of all the steps required to construct a suffix array in $O(n)$ time.
 
 \begin{thm}
-The suffix array for a string $t$ of length $M$ can be constructed in
-$O(M+N)$ time and uses $O(M)$ storage.  The suffix array can be used to
-determine if any string $s$ is a substring of $t$ in $O(|s|+\log M)$ time.
+  Given a string $t=t_1,\ldots,t_n$ over the alphabet $\{1,\ldots,n\}$,
+  there exists an $O(n)$ time algorithm that can construct the suffix
+  array for $t$.
 \end{thm}
 
+
+Of course, the preceding theorem can be generalized to larger alphabets. In particular, if the alphabet has size $n^c$, then it can be preprocessed in $O(cn)$ time using radix sort.
 
 \section{Ternary Tries}
 
