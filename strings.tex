@@ -495,6 +495,8 @@ query string $s$ one can do binary search in $O(|s|\log n)$ time to
 determine whether $s$ occurs in $t$;  binary search uses $O(\log n)$
 comparison and each comparison takes $O(|s|)$ time.
 
+\subsection{Faster Searching with an $\ell$ Matrix}
+
 We can do searches a little faster---in $O(|s|+\log n)$ time---if,
 in addition to the suffix array, we have a little more information.
 Let $s_i=t_{A_i}, t_{A_i+1},\ldots,t_{n}$, i.e., $s_i$ is the string in
@@ -544,13 +546,13 @@ The search can proceed in this manner, until $j \le i+1$, in which case it the s
 
 To see that this search runs in $O(|s|+\log n)$ time, notice that each stage of the search reduces $j-i$ by roughly a factor of 2, so there are only $O(\log n)$ stages.  Now, the time spent during a phase is proportional to $k$, the number of additional characters of $s_m$ that match $s$.  Observe that, at the end of the phase $\max\{a,b\}$ is increased by at least $k$.  Since $a$ and $b$ are indices into $s$, $a\le|s|$ and $b\le|s|$. Therefore, the total sum of all $k$ values during all phases is at most $|s|$.  Thus, the total time spent searching for $s$ is $O(|s|+\log n)$.
 
-The assumption that we have an access to a longest common prefix matrix $\ell_{\cdot,\cdot}$ is unrealistic and impractical, since this matrix has $\binom{n}{2}$ entries.  Note, however, that we do not need to store $\ell_{i,j}$ for every value $i,j\in\{1,\ldots,n\}$.  More precisely, if we implement our binary search carefully, we only need to know $\ell_{i,j}$ for values in which $j=2^{p}$ and $i=q2^p$, which $p\in\{1,\ldots,\lfloor \log n\rfloor\}$ and $q\in\{1,\ldots,\lfloor n/2^p\rfloor\}$. This means that the longest common prefix information stored in $\ell$ consists of no more than
+The assumption that we have an access to a longest common prefix matrix $\ell_{\cdot,\cdot}$ is unrealistic and impractical, since this matrix has $\binom{n}{2}$ entries.  Note, however, that we do not need to store $\ell_{i,j}$ for every value $i,j\in\{1,\ldots,n\}$.  More precisely, if we implement our binary search carefully, we only need to know $\ell_{i,j}$ for values in which $i=q2^p$ and $j=i+2^{p}$, with $p\in\{1,\ldots,\lfloor \log n\rfloor\}$ and $q\in\{1,\ldots,\lfloor n/2^p\rfloor\}$. This means that the longest common prefix information stored in $\ell$ consists of no more than
 \[
   \sum_{i=1}^{\lfloor\log n\rfloor} n/2^i < n
 \]
 values.  In the next two sections we will show how the suffix array and the longest common prefix information can be computed efficiently given the string $t$.
 
-\subsection{Constructing a suffix array in $O(n)$ time}
+\subsection{Constructing the Suffix Array in Linear Time}
 
 Recall the \emph{radix-sort} algorithm that allows us to sort an array of $n$ integers whose values are in the set $\{0,\ldots,n^c-1\}$ in $O(cn)$ time.  This algorithm will be used to efficiently construct a suffix array.
 
@@ -639,6 +641,48 @@ This completes the description of all the steps required to construct a suffix a
 
 
 Of course, the preceding theorem can be generalized to larger alphabets. In particular, if the alphabet has size $n^c$, then it can be preprocessed in $O(cn)$ time using radix sort.
+
+\subsection{Constructing the Longest-Common-Prefix Array in Linear Time}
+
+As we have seen, $O(|s|+\log n)$ time searches in suffix arrays require the use of an auxilliary data structure that makes it possible to determine the length of the longest common prefix between two suffixes $s_i$ and $s_j$.
+
+The \emph{longest common prefix array} of a suffix array $A=A_1,\ldots,A_n$ is an array $L=L_1,\ldots,L_{n-1}$ where $L_i$ is the length of the longest common prefix between $s_i=t_{A_i},\ldots,t_n$ and $s_{i+1}=t_{A_{i+1}},\ldots,t_n$.  That is, $L$ contains information about lexicographically consecutive suffixes of the string $t$.  In terms of the notation in the previous section, $L_i=\ell_{i,i+1}$.
+
+Before showing how to construct the longest common prefix array, we recall that, in order to implement efficient prefix searches in a suffix array, we actually need to know the values $\ell_{i,j}$ for all pairs $i,j$ of form 
+$i=q2^p$ and $j=i+2^{p}$, with $p\in\{1,\ldots,\lfloor \log n\rfloor\}$ and $q\in\{1,\ldots,\lfloor n/2^p\rfloor\}$.
+
+To see that these can be efficiently obtained from the longest common prefix array, $L$, we first note that $\ell_{i,j}=\min\{L_i,L_{i+1},\ldots,L_{j-1}\}$.
+Next, we observe that, the pairs $(i,j)$ needed by the binary search algorithm form a binary tree structure in which $\ell_{i,j}$ can be computed as the minimum of two smaller values.  Specifically,
+\[
+    \ell_{q2^p,2^{p}} = \min\{\ell_{2q 2^{p-1},2^{p-1}}, \ell_{(2q+1) 2^{p-1},2^{p-1}}\} \enspace .
+\]
+That is, the values can be constructed bottom-up starting with $p=1$ (which is directly available from the LCP array, $L$) and working up to $p=\lfloor\log n\rfloor$.  Each value can be computed in constant time and there are only $O(n)$ values to compute, so converting the LCP array, $L$ into a structure useable for binary search can be done in $O(n)$ time.  By doing this carefully, all the values needed to implement the $O(|s|+\log n)$ time search algorithm can be packed into a single array of length $n$.
+
+All that remains is to show how to compute the LCP array $L=L_1,\ldots,L_{n-1}$\ldots
+
+\section{Linear Time Suffix Tree Construction}
+
+Although a suffix array, in combination with an LCP array, is a viable substitute for a suffix tree, there are still times when one wants a suffix tree.  In this section, we show that, given the suffix array, $A$, and the LCP array, $L$, for the string $t$, it is possible to compute the suffix tree, $T$, for $t$ in $O(nN)$ time.  Indeed, the tree structure can be constructed in $O(n)$ time, the factor of $N$ comes only from creating an array of length $N$ at each of the nodes in the suffix tree.
+
+The key observation in this algorithm is that the suffix array and LCP array allow us to to perform an in-order traversal of the suffix tree---creating nodes as we go.  To see how this works, recall that the first node traversed in an in-order traversal is lexicographically smallest.  This node corresponds to the first suffix $s_1$ corresponding to the index, $A_1$ in the suffix array.  We join this node, $u_1$, to a sibling, $u_2$ that corresponds to $s_2$.  The sibling leaves $u_1$ and $u_2$ are joined to a common parent, $x$, and the labels on the edges $xu_1$ and $xu_2$ are suffixes of $s_1$ and $s_2$, respectively.  The lengths of these labels can be computed by the length of the longest common prefix between $s_1$ and $s_2$, which is given by the value $L_1$.  And now we can continue this way using $s_3$ and $L_2$ to determine how the leaf, $u_3$, corresponding to $s_3$ fits into the picture.  The length of $s_2$ and the value of $L_2$ tells us whether 
+\begin{enumerate}
+  \item The parent of $u_3$ should subdivide the edge $xu_2$; or
+  \item The parent of $u_3$ should be $x$; or
+  \item The parent of $u_3$ should be a parent of $x$.
+\end{enumerate}
+In general, when we process the suffix $s_i$, the length of $s_{i-1}$ and $L_{i-1}$ are used to determine how the new leaf, $u_i$ should be attached to the partial tree constructed so far.  Specifically, these values allow the algorithm to walk upward from $u_{i-1}$ to find an appropriate location to attach $u_i$.  This will either result in 
+\begin{enumerate}
+  \item A new parent for $u_3$ being created by splitting an existing edge;
+  \item Attaching $u_3$ as the child of an existing node; or
+  \item A new parent for $u_3$ being created and becoming the root of the current tree.
+\end{enumerate}
+Processing $u_i$ may require walking up many, say $k$, steps from $u_{i-1}$, 
+which takes $O(k)$ time. However, when this process walks past a node, this node is never visited again by the algorithm. Since the final result is a suffix tree that has at most $2n-1$ nodes, the total running time is therefore $O(n)$.
+
+\begin{thm}
+  Given a suffix array and LCP array for a string $t$, the structure of the suffix tree, $T$, for $t$ can be constructed in $O(n)$ time.  If one wants to also allocate and populate the arrays associated with the nodes of $T$ then this can be done in an additional takes $O(nN)$ time.
+\end{thm}
+
 
 \section{Ternary Tries}
 
