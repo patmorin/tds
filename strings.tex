@@ -423,10 +423,10 @@ in \secref{strings-discussion}.
 
 The \emph{suffix array} $A_1,\ldots,A_n$ of a string $t=t_1,\ldots,t_n$ lists
 the suffixes of $t$ in lexicographically increasing order.  That is,
-$A_i$ is the index such that $t_{A_{i}},\ldots,t_m$ has rank $i$ among
+$A_i$ is the index such that $t_{A_{i}},\ldots,t_n$ has rank $i$ among
 all suffixes of $A$.  
 
-For example, consider the string ``counterrevoluationary\$'':
+For example, consider the string $t=\text{``counterrevoluationary\$}$'':
 \begin{center}
   \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
      1&2&3&4&5&6&7&8&9&10&11&12&13&14&15&16&17&18&19&20&21\\\hline
@@ -466,27 +466,27 @@ $A=\langle18,1,6,9,15,12,17,4,11,16,2,8,7,19,5,14,3,13,10,20,21\rangle$.  This i
 \begin{center}
   \begin{tabular}{|r|r|l|}\hline
     $i$ & $A_i$ & $t_i,\ldots,t_n$ \\\hline
-1&18&ary\$\\
-2&1&counterrevolutionary\$\\
-3&6&errevolutionary\$\\
-4&9&evolutionary\$\\
-5&15&ionary\$\\
-6&12&lutionary\$\\
-7&17&nary\$\\
-8&4&nterrevolutionary\$\\
-9&11&olutionary\$\\
-10&16&onary\$\\
-11&2&ounterrevolutionary\$\\
-12&8&revolutionary\$\\
-13&7&rrevolutionary\$\\
-14&19&ry\$\\
-15&5&terrevolutionary\$\\
-16&14&tionary\$\\
-17&3&unterrevolutionary\$\\
-18&13&utionary\$\\
-19&10&volutionary\$\\
-20&20&y\$\\
-21&21&\$\\\hline
+1&18&$s_{1}=\text{``ary\$''}$\\
+2&1&$s_{2}=\text{``counterrevolutionary\$''}$\\
+3&6&$s_{3}=\text{``errevolutionary\$''}$\\
+4&9&$s_{4}=\text{``evolutionary\$''}$\\
+5&15&$s_{4}=\text{``ionary\$''}$\\
+6&12&$s_{5}=\text{``lutionary\$''}$\\
+7&17&$s_{7}=\text{``nary\$''}$\\
+8&4&$s_{8}=\text{``nterrevolutionary\$''}$\\
+9&11&$s_{9}=\text{``olutionary\$''}$\\
+10&16&$s_{10}=\text{``onary\$''}$\\
+11&2&$s_{11}=\text{``ounterrevolutionary\$''}$\\
+12&8&$s_{12}=\text{``revolutionary\$''}$\\
+13&7&$s_{13}=\text{``rrevolutionary\$''}$\\
+14&19&$s_{14}=\text{``ry\$''}$\\
+15&5&$s_{15}=\text{``terrevolutionary\$''}$\\
+16&14&$s_{16}=\text{``tionary\$''}$\\
+17&3&$s_{17}=\text{``unterrevolutionary\$''}$\\
+18&13&$s_{18}=\text{``utionary\$''}$\\
+19&10&$s_{19}=\text{``volutionary\$''}$\\
+20&20&$s_{20}=\text{``y\$''}$\\
+21&21&$s_{21}=\text{``\$''}$\\\hline
 \end{tabular}
 \end{center}
 
@@ -522,48 +522,89 @@ that the longest prefixes of $s_i$ and $s_j$ that match $s$ have length
 $a$ and $b$ respectively. The algorithm starts with $(i=1,j=n,a,b=0)$
 where the value of $a$ is obtained by comparing $s$ with $s_1$.
 
-Suppose, without loss of generality, that $a \ge b$ (the case where $b>a$ is symmetric).  Now, consider the entry $\ell_{i,m}$ which tells us how many characters of $s_m$ match $s_i$.  There are three cases to consider:
+Suppose, without loss of generality, that $a \ge b$ (the case where $b>a$ is symmetric).  Now, consider the entry $\ell_{i,m}$ which tells us how many characters of $s_m$ match $s_i$. 
+As an example, suppose we are searching for the string $s=\text{``programmer''}$, and we have reached a state where $s_i=\text{``\uline{programm}able\ldots\$''}$, $s_j=\text{``\uline{pro}tectionism''}$, so $a=8$ and $b=3$.: \\[\parskip]
+  \begin{eqnarray*}
+     s_i & = & \text{``\uline{programm}able\ldots\$''} \\
+     \vdots & \\
+     s_m & = & \text{``pro\ldots\$''} \\
+     \vdots & \\
+     s_j & = & \text{``\uline{pro}tectionism\ldots\$''} \\
+  \end{eqnarray*} \\[\parskip]
+Since $s_i$ and $s_j$ share the common prefix ``pro'' of length $\min\{a,b\}=3$, we are certain that $s_m$ must also have ``pro'' as a prefix.
+There are now three cases to consider:
+
 \begin{enumerate}
 \item If $\ell_{i,m}< a$, then we can immediately conclude that $s_m > s$. This is because $s_m > s_i$, so the character at position 
-$\ell_{i,m}+1$ in $s_m$ is greater than the corresponding character in $s_i$ and $s$.
+$\ell_{i,m}+1$ in $s_m$ is greater than the corresponding character in $s_i$ and $s$.  An example of this occurs when $s_m=\text{``\uline{progr}ess\ldots\$''}$, so that $\ell_{i,m}=5$.
 
 Therefore, our search can now be restricted to $s_i,\ldots,s_{m}$.  Furthermore, we know that the longest prefix of $s_m$ that matches $s$ has length $b'=\ell_{i,m}$.  Therefore, we can recursively search $s_i,\ldots,s_{m}$ using the values $a'=a$ and $b'=\ell_{i,m}$. That is, we recurse with the values $(i,m,a,\ell_{i,m})$
 
-\item If $\ell_{i,m} > a$, then we can immediately conclude that $s_m < s$, for the same reason that $s_i < s$; namely $s_i$ and $S_m$ differ in character $a+1$ and this character is greater than $s$ than it is in $s_i$/$s_m$.
+\item If $\ell_{i,m} > a$, then we can immediately conclude that $s_m < s$, for the same reason that $s_i < s$; namely $s_i$ and $s$ differ in character $a+1$ and this character is greater in $s$ than it is in $s_i$ and $s_m$.
 In this case, we recurse with the values $(m,j,a, b)$.
+An example of this occurs when $s_m=\text{``\uline{programma}tically\ldots\$''}$, so that $\ell_{i,m}=9$.
 
-\item If $\ell_{i,m}= r_i$, then we can begin comparing $s_m$ and $s$ starting at the $(a+1)$th character position. After matching $k\ge0$ additional characters of $s$ and $s_m$ this will eventually result in one of three possible outcomes:
+\item If $\ell_{i,m}= a$, then we can begin comparing $s_m$ and $s$ starting at the $(a+1)$th character position. After matching $k\ge0$ additional characters of $s$ and $s_m$ this will eventually result in one of three possible outcomes:
 \begin{enumerate}
-  \item If $s < s_m$, then the search can recursive on the set $s_i,\ldots s_m$ using the values $(i,m,a,a+k)$
+  \item If $s < s_m$, then the search can recursive on the set $s_i,\ldots s_m$ using the values $(i,m,a,a+k)$.  An example of this occurs when $s_m=\text{``\uline{programme}s\ldots\$''}$, so $k=1$ and we recurse on $(i,m,8,9)$.
 
-  \item If $s > s_m$, then the search can recurse on the set $s_m,\ldots,s_j$ using the values $(m,j,a+k, b)$
+  \item If $s > s_m$, then the search can recurse on the set $s_m,\ldots,s_j$ using the values $(m,j,a+k, b)$.  An example of this occurs when $s_m=\text{``\uline{programme}d\ldots\$''}$, so $k=1$ and we recurse on $(m,j,9,3)$.
 
   \item If all characters of $s$ match the first $|s|$ characters of $s_m$, then $s_m$ represents an occurrence of $s$ in the text.
+  An example of this occurs when $s_m=\text{``\uline{programmer}s\ldots\$''}$.
 \end{enumerate}
 \end{enumerate}
 
-The search can proceed in this manner, until $j \le i+1$, in which case it the search can just check if $s_i$ and $s_j$ match.
+The search can proceed in this manner, until the string is found at some
+$s_m$ or until $j = i+1$. In the latter case, the algorithm concludes
+that $s$ does not occur as a substring of $t$ since $s_{i} <s <s_{i+1}$.
 
 To see that this search runs in $O(|s|+\log n)$ time, notice that each stage of the search reduces $j-i$ by roughly a factor of 2, so there are only $O(\log n)$ stages.  Now, the time spent during a phase is proportional to $k$, the number of additional characters of $s_m$ that match $s$.  Observe that, at the end of the phase $\max\{a,b\}$ is increased by at least $k$.  Since $a$ and $b$ are indices into $s$, $a\le|s|$ and $b\le|s|$. Therefore, the total sum of all $k$ values during all phases is at most $|s|$.  Thus, the total time spent searching for $s$ is $O(|s|+\log n)$.
 
-The assumption that we have an access to a longest common prefix matrix $\ell_{\cdot,\cdot}$ is unrealistic and impractical, since this matrix has $\binom{n}{2}$ entries.  Note, however, that we do not need to store $\ell_{i,j}$ for every value $i,j\in\{1,\ldots,n\}$.  More precisely, if we implement our binary search carefully, we only need to know $\ell_{i,j}$ for values in which $i=q2^p$ and $j=i+2^{p}$, with $p\in\{1,\ldots,\lfloor \log n\rfloor\}$ and $q\in\{1,\ldots,\lfloor n/2^p\rfloor\}$. This means that the longest common prefix information stored in $\ell$ consists of no more than
+In case the search is sucessful, it is even possible to find all
+occurences of $s$ in time proportional to the number of occurrences.
+This is done by the finding the maximal integers $x$ and $y$
+such that $\ell_{m-x,m+y} \ge |s|$.  In this case all strings
+$s_{m-x},\ldots,s_{m+y}$ have $s$ as a prefix.
+
+The assumption that we have an access to a longest common prefix
+matrix $\ell_{\cdot,\cdot}$ is unrealistic and impractical, since
+this matrix has $\binom{n}{2}$ entries.  Note, however, that we do
+not need to store $\ell_{i,j}$ for every value $i,j\in\{1,\ldots,n\}$.
+More precisely, if we implement our binary search carefully, we only
+need to know $\ell_{i,j}$ for values in which $i=q2^p$ and $j=i+2^{p}$,
+with $p\in\{0,\ldots,\lfloor \log n\rfloor\}$ and $q\in\{1,\ldots,\lfloor
+n/2^p\rfloor\}$. This means that the longest common prefix information
+stored in $\ell$ consists of no more than
 \[
-  \sum_{i=1}^{\lfloor\log n\rfloor} n/2^i < n
+  \sum_{i=0}^{\lfloor\log n\rfloor} n/2^i < 2n
 \]
 values.  In the next two sections we will show how the suffix array and the longest common prefix information can be computed efficiently given the string $t$.
 
 \subsection{Constructing the Suffix Array in Linear Time}
 
-Recall the \emph{radix-sort} algorithm that allows us to sort an array of $n$ integers whose values are in the set $\{0,\ldots,n^c-1\}$ in $O(cn)$ time.  This algorithm will be used to efficiently construct a suffix array.
+Next, we show that a suffix array can be constructed in linear time
+from the input string, $t$.  The algorithm we present makes use of the
+\emph{radix-sort} algorithm, which allows us to sort an array of $n$
+integers whose values are in the set $\{0,\ldots,n^c-1\}$ in $O(cn)$
+time. In addition to being a sorting algorithm, we can also think of
+radix-sort as a compression algorithm.  It can be used to convert
+a sequence, $X$, of $n$ integers in the range $\{0,\ldots,n^c-1\}$
+into a sequence, $Y$, of $n$ integers in the range $\{0,\ldots,n-1\}$.
+The resulting sequence, $Y$, preserves the ordering of $X$, so that
+$Y_i<Y_j$ if and only if $X_i<X_j$ for all $i,j\in\{1,\ldots,n\}$.
 
-The algorithm that we present here is recursive.  It constructs the suffix array of a string $s$ whose length $n$, which is terminated with \emph{two} null characters and whose characters come from the alphabet $\{0,\ldots n\}$.
+The suffix-array construction algorithm that is recursive.  It takes as
+input a string $s$ whose length $n$, which is terminated with \emph{two}
+null characters and whose characters come from the alphabet $\{0,\ldots n\}$.
 
 Let $S$ denote the set of all suffixes of $t$, and let $S_r$, for $r\in\{0,1,2\}$ denote the set of suffixes $t_i,t_{i+1},\ldots,t_n$ where $i\equiv r\pmod 3$.  That is, we partition the sets of suffixes into three sets, each having roughly $n/3$ suffixes in them.  The outline of the algorithm is as follows:
 
 \begin{enumerate}
   \item Recursively sort the suffixes in $S_1\cup S_2$.
   \item Use radix-sort to sort the suffixes in $S_0$
-  \item Merge the two sorted sets resulting from steps 1 and 2 to obtain    the      sorted order of the suffixes in $S_0\cup S_1\cup S_2=S$.
+  \item Merge the two sorted sets resulting from steps 1 and 2 to obtain
+     the sorted order of the suffixes in $S_0\cup S_1\cup S_2=S$.
 \end{enumerate}
 If the overall running time of the algorithm is denoted by $T(n)$, then the first step takes $T(2n/3)$ time and we will show, shortly, that steps 2 and 3 each take $O(n)$ time.  Thus, the total running time of the algorithm is given by the recurrence
 \[
@@ -572,13 +613,13 @@ If the overall running time of the algorithm is denoted by $T(n)$, then the firs
 Next we describe how to implement each of the three steps efficiently.
 
 \paragraph{Step 1.}
-Assume $|t|=3k+1$ for some integer $k$. If not, then append at most two additional $\$$ characters to the end $t$ to make it so.
+Assume $|t|=3k+1$ for some integer $k$. If not, then append at most two additional $\$$ characters to the end of $t$ to make it so.
 To implement Step 1, we transform the string $t$ into the sequence of triples:
 \[
    t'= \underbrace{(t_1,t_2,t_3),(t_4,t_5,t_6),\ldots,(t_{n-3},t_{n-2},t_{n-1})}_\text{suffixes in $S_1$},
    \underbrace{(t_2,t_3,t_4),(t_5,t_6,t_7),\ldots,(t_{n-2},t_{n-1},t_{n})}_\text{suffixes in $S_2$}
 \]
-Observe that each suffix in $S_1\cup S_2$ is represented somewhere in this this sequence.  That, is, for any $t_i,t_{i+1},\ldots,t_n$ with $i\not\equiv 0\pmod 3$, the suffix 
+Observe that each suffix in $S_1\cup S_2$ is represented somewhere in this sequence.  That, is, for any $t_i,t_{i+1},\ldots,t_n$ with $i\not\equiv 0\pmod 3$, the suffix 
 \[
    (t_i,t_{i+1},t_{i+2}),(t_{i+3},t_{i+4},t_{i+5}),\ldots,
        (t_{i+3\lceil(n-i)/3\rceil},t_{i+3\lceil(n-i)/3\rceil+1},
@@ -639,26 +680,92 @@ This completes the description of all the steps required to construct a suffix a
   array for $t$.
 \end{thm}
 
-
-Of course, the preceding theorem can be generalized to larger alphabets. In particular, if the alphabet has size $n^c$, then it can be preprocessed in $O(cn)$ time using radix sort.
+Of course, the preceding theorem can be generalized to larger
+alphabets. In particular, if the alphabet has size $n^c$, then the string
+$t$ can be preprocessed in $O(cn)$ time using radix sort to reduce the
+alphabet size to $n$.
 
 \subsection{Constructing the Longest-Common-Prefix Array in Linear Time}
 
-As we have seen, $O(|s|+\log n)$ time searches in suffix arrays require the use of an auxilliary data structure that makes it possible to determine the length of the longest common prefix between two suffixes $s_i$ and $s_j$.
+As we have seen, $O(|s|+\log n)$ time searches in suffix arrays make use
+of an auxiliary data structure that makes it possible to determine the
+length of the longest common prefix between two suffixes $s_i$ and $s_j$.
 
-The \emph{longest common prefix array} of a suffix array $A=A_1,\ldots,A_n$ is an array $L=L_1,\ldots,L_{n-1}$ where $L_i$ is the length of the longest common prefix between $s_i=t_{A_i},\ldots,t_n$ and $s_{i+1}=t_{A_{i+1}},\ldots,t_n$.  That is, $L$ contains information about lexicographically consecutive suffixes of the string $t$.  In terms of the notation in the previous section, $L_i=\ell_{i,i+1}$.
+The \emph{longest common prefix array} (\emph{LCP array}) of a suffix
+array $A=A_1,\ldots,A_n$ is an array $L=L_1,\ldots,L_{n-1}$ where $L_i$ is
+the length of the longest common prefix between $s_i=t_{A_i},\ldots,t_n$
+and $s_{i+1}=t_{A_{i+1}},\ldots,t_n$.  That is, $L$ contains information
+about lexicographically consecutive suffixes of the string $t$.  In terms
+of the notation in the previous section, $L_i=\ell_{i,i+1}$.
 
-Before showing how to construct the longest common prefix array, we recall that, in order to implement efficient prefix searches in a suffix array, we actually need to know the values $\ell_{i,j}$ for all pairs $i,j$ of form 
-$i=q2^p$ and $j=i+2^{p}$, with $p\in\{1,\ldots,\lfloor \log n\rfloor\}$ and $q\in\{1,\ldots,\lfloor n/2^p\rfloor\}$.
+Before showing how to construct the LCP array, we recall that, in order
+to implement efficient prefix searches in a suffix array, we need more
+than an LCP array.  The binary search algorithm needs to know the values
+$\ell_{i,j}$ for all pairs $i,j$ of form $i=q2^p$ and $j=i+2^{p}$, with
+$p\in\{1,\ldots,\lfloor \log n\rfloor\}$ and $q\in\{1,\ldots,\lfloor
+n/2^p\rfloor\}$.
 
-To see that these can be efficiently obtained from the longest common prefix array, $L$, we first note that $\ell_{i,j}=\min\{L_i,L_{i+1},\ldots,L_{j-1}\}$.
-Next, we observe that, the pairs $(i,j)$ needed by the binary search algorithm form a binary tree structure in which $\ell_{i,j}$ can be computed as the minimum of two smaller values.  Specifically,
+To see that these can be efficiently obtained from the longest common
+prefix array, $L$, we first note that, for any $1\le i\le j\le n$,
+$\ell_{i,j}=\min\{L_i,L_{i+1},\ldots,L_{j-1}\}$.  Next, we observe that,
+the pairs $(i,j)$ needed by the binary search algorithm are nicely nested
+so that $\ell_{i,j}$ can be computed as the minimum of two smaller values.
+Specifically,
 \[
     \ell_{q2^p,2^{p}} = \min\{\ell_{2q 2^{p-1},2^{p-1}}, \ell_{(2q+1) 2^{p-1},2^{p-1}}\} \enspace .
 \]
-That is, the values can be constructed bottom-up starting with $p=1$ (which is directly available from the LCP array, $L$) and working up to $p=\lfloor\log n\rfloor$.  Each value can be computed in constant time and there are only $O(n)$ values to compute, so converting the LCP array, $L$ into a structure useable for binary search can be done in $O(n)$ time.  By doing this carefully, all the values needed to implement the $O(|s|+\log n)$ time search algorithm can be packed into a single array of length $n$.
+This allows for an easy algorithm that constructs the required values in
+a bottom up fashion, starting with $p=1$ (which is directly available
+from the LCP array, $L$) and working up to $p=\lfloor\log n\rfloor$.
+Each value can be computed in constant time and there are only $O(n)$
+values to compute, so converting the LCP array, $L$ into a structure
+useable for binary search can be done in $O(n)$ time.  By doing this
+carefully, all the values needed to implement the $O(|s|+\log n)$
+time search algorithm can be packed into a single array of length less
+than $2n$.
 
-All that remains is to show how to compute the LCP array $L=L_1,\ldots,L_{n-1}$\ldots
+All that remains is to show how to compute the LCP array $L=L_1,\ldots,L_{n-1}$.  This uses an auxilliary array, $R$, which is the inverse of the suffix array, $A$, so that $R_{A_i} = i$ for all $i\in\{1,\ldots,n\}$.  Another way to think of this is that $R_i$ gives the location of $A_i$.
+
+The algorithm processes the suffixes in order of their occurrence in $t$.
+That is, $t_1,\ldots,t_n$ is processed first.  This is suffix $s_{R_1}$
+and we want to compare it to the suffix $s_{R_1-1}$ in order to determine
+the value of $L_{R_1-1}$.  We can do this and determine that the length
+of the longest common prefix of $s_{R_1-1}$ and $s_{R_1}$ is $h$.
+
+Things start to get interesting when we move onto the string $s_{R_2}=t_2,\ldots,t_n$ and we want to compare it to $s_{R_2-1}$. Notice that the strings $s_{R_1}=t_1,\ldots,t_n$ that we just considered and the string $s_{R_2}=t_2,\ldots,t_n$ that we are now considering have a lot in common.  In particular, if $h>0$, then we can be guaranteed that $s_{R_2}$ matches the first $h-1$ characters of $s_{R_2-1}$.  Stop now and think about why this is so, with the help of the following pictograms:\\[\parskip]
+$s_{R_1}=t_1,t_2,\ldots,t_h,\ldots,t_n$ \\
+$s_{R_1-1}=t_i,t_{i+1},\ldots,t_{i+h},\ldots,t_n$ \\[\parskip]
+$s_{R_2}=t_2,\ldots,t_{h-1},\ldots,t_n$\\
+$s_{R_1-1}=t_j,t_{j+1},\ldots,t_{j+h-1},\ldots,t_n$ 
+
+We don't know that $j=i+1$, but we do know that $t_j=t_{i+1}$,
+$t_{j+1}=t_{j+2}$,\ldots, and $t_{j+h-1}=t_h$.  We know this because
+$s_{R_1-1}$ is a proof that $t$ contains some suffix that matches
+$s_{R_2}$ in the first $h-1$ characters.  Therefore, the suffix
+$s_{R_2-1}$ that comes immediately before $s_{R_2}$ in sorted order must
+match at least this many characters.
+
+In general, this implies that, if we 
+
+\noindent
+\textsc{BuildLCP$(A,t)$}
+\begin{algorithmic}
+  \FOR{$i\gets 1,\ldots,n$}
+     \STATE{$R_{A_i}\gets i$}
+  \ENDFOR
+  \STATE{$h\gets 0$}
+  \FOR{$i\gets 1,\ldots,n$}
+    \IF{$R_i > 1$}
+        \STATE{$k\gets A_{R_i-1}$}  
+        \WHILE{$t_{A_{i+h}} = t_{A_{k+h}}$}
+           \STATE{$h\gets h+1$}
+        \ENDWHILE
+        \STATE{$L_{R_i-1} \gets h$}
+        \STATE{$h\gets\max\{h-1, 0\}$}
+    \ENDIF
+  \ENDFOR
+\end{algorithmic}
+
 
 \section{Linear Time Suffix Tree Construction}
 
