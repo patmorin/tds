@@ -811,10 +811,24 @@ In general, when we process the suffix $s_i$, the length of $s_{i-1}$ and $L_{i-
   \item A new parent for $u_3$ being created and becoming the root of the current tree.
 \end{enumerate}
 Processing $u_i$ may require walking up many, say $k$, steps from $u_{i-1}$, 
-which takes $O(k)$ time. However, when this process walks past a node, this node is never visited again by the algorithm. Since the final result is a suffix tree that has at most $2n-1$ nodes, the total running time is therefore $O(n)$.
+which takes $O(k)$ time. However, when this process walks past a node, this node is never visited again by the algorithm. Since the final result is a suffix tree that has at most $2n-1$ nodes, the total running time is therefore $O(n)$. The first few steps of running this algorithm on the suffix array for ``counterrevolutionary\$'' are illustrated in \figref{linear-suffix-array}.
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=.85]{figs/suffix-tree-1} \\[1em]
+\includegraphics[scale=.85]{figs/suffix-tree-2} \\[1em]
+\includegraphics[scale=.85]{figs/suffix-tree-3} \\[1em]
+\includegraphics[scale=.85]{figs/suffix-tree-4} \\[1em]
+\end{center}
+\caption{Building a suffix tree for ``counterrevoluationary\$'' in a bottom-up fashion starting with the suffixes ``ary\$'', ``counterrevoluationary\$'', ``errevoluationary\$'', and ``evoluationary\$''.}
+\figlabel{linear-suffix-array}
+\end{figure}
 
 \begin{thm}
-  Given a suffix array and LCP array for a string $t$, the structure of the suffix tree, $T$, for $t$ can be constructed in $O(n)$ time.  If one wants to also allocate and populate the arrays associated with the nodes of $T$ then this can be done in an additional takes $O(nN)$ time.
+  Given a suffix array and LCP array for a string $t$, the structure of
+  the suffix tree, $T$, for $t$ can be constructed in $O(n)$ time.  If one
+  wants to also allocate and populate the arrays associated with the
+  nodes of $T$ then this can be done in an additional takes $O(nN)$ time.
 \end{thm}
 
 
@@ -891,7 +905,7 @@ After sorting the input strings, a ternary trie can be constructed in
 $O(M)$ time and can search for a string $s$ in $O(|s|+\log n)$ time.
 \end{thm}
 
-TODO: Show how to make suffix trees dynamic, using randomization.
+TODO: Show how to make ternary tries dynamic, using randomization.
 
 \section{Quad-Trees}
 
