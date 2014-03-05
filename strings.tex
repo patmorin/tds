@@ -724,28 +724,28 @@ carefully, all the values needed to implement the $O(|s|+\log n)$
 time search algorithm can be packed into a single array of length less
 than $2n$.
 
-All that remains is to show how to compute the LCP array $L=L_1,\ldots,L_{n-1}$.  This uses an auxilliary array, $R$, which is the inverse of the suffix array, $A$, so that $R_{A_i} = i$ for all $i\in\{1,\ldots,n\}$.  Another way to think of this is that $R_i$ gives the location of $A_i$.
+All that remains is to show how to compute the LCP array $L=L_1,\ldots,L_{n-1}$.  The algorithm to do this uses an auxilliary array, $R$, which is the inverse of the suffix array, $A$, so that $R_{A_i} = i$ for all $i\in\{1,\ldots,n\}$.  Another way to think of this is that $R_i$ gives the location of $A_i$.
 
 The algorithm processes the suffixes in order of their occurrence in $t$.
-That is, $t_1,\ldots,t_n$ is processed first.  This is suffix $s_{R_1}$
-and we want to compare it to the suffix $s_{R_1-1}$ in order to determine
-the value of $L_{R_1-1}$.  We can do this and determine that the length
-of the longest common prefix of $s_{R_1-1}$ and $s_{R_1}$ is $h$.
+That is, $t_1,\ldots,t_n$ is processed first.  In our notation, this is suffix $s_{R_1}$ and we want to compare it to the suffix $s_{R_1-1}$ in order to determine the value of $L_{R_1-1}$.  We can do this by comparing letter by letter to determine that the length of the longest common prefix of $s_{R_1-1}$ and $s_{R_1}$ is $h$.
 
-Things start to get interesting when we move onto the string $s_{R_2}=t_2,\ldots,t_n$ and we want to compare it to $s_{R_2-1}$. Notice that the strings $s_{R_1}=t_1,\ldots,t_n$ that we just considered and the string $s_{R_2}=t_2,\ldots,t_n$ that we are now considering have a lot in common.  In particular, if $h>0$, then we can be guaranteed that $s_{R_2}$ matches the first $h-1$ characters of $s_{R_2-1}$.  Stop now and think about why this is so, with the help of the following pictograms:\\[\parskip]
-$s_{R_1}=t_1,t_2,\ldots,t_h,\ldots,t_n$ \\
-$s_{R_1-1}=t_i,t_{i+1},\ldots,t_{i+h},\ldots,t_n$ \\[\parskip]
-$s_{R_2}=t_2,\ldots,t_{h-1},\ldots,t_n$\\
-$s_{R_1-1}=t_j,t_{j+1},\ldots,t_{j+h-1},\ldots,t_n$ 
+Things get more interesting when we move onto the string $s_{R_2}=t_2,\ldots,t_n$ and we want to compare it to $s_{R_2-1}$. Notice that the strings $s_{R_1}=t_1,\ldots,t_n$ that we just considered and the string $s_{R_2}=t_2,\ldots,t_n$ that we are now considering have a lot in common.  In particular, if $h>0$, then we can be guaranteed that $s_{R_2}$ matches the first $h-1$ characters of $s_{R_2-1}$.  Stop now and think about why this is so, with the help of the following pictogram:\\[\parskip]
+\newcommand{\veq}{\begin{turn}{90}=\end{turn}}
+\[
+\begin{array}{r@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}}
+s_{R_1}&=&t_1&,&t_2&,&t_3&,&\ldots&,&t_h&,&\ldots \\
+       & &\veq&&\veq&&\veq&&\ldots&&\veq&&\ldots \\
+s_{R_1-1}&=&t_i&,&t_{i+1}&,&t_{i+2}&,&\ldots&,&t_{i+h-1}&,&\ldots \\
+       & & &&\veq&&\veq&&\ldots&&\veq&&\ldots \\
+s_{R_2}&=& &,&t_2&,&t_{3}&,&\ldots&,&t_{h}&,&\ldots \\
+\end{array}
+\]
 
-We don't know that $j=i+1$, but we do know that $t_j=t_{i+1}$,
-$t_{j+1}=t_{j+2}$,\ldots, and $t_{j+h-1}=t_h$.  We know this because
-$s_{R_1-1}$ is a proof that $t$ contains some suffix that matches
-$s_{R_2}$ in the first $h-1$ characters.  Therefore, the suffix
-$s_{R_2-1}$ that comes immediately before $s_{R_2}$ in sorted order must
-match at least this many characters.
+The string $s_{R_1-1}$ is a proof that $t$ has some suffix that comes
+before $s_{R_2}$ in sorted order and matches the first $h-1$ characters of
+$s_{R_2}$.  Therefore, the suffix $s_{R_2-1}$ that immediately precedes $s_{R_2}$ in sorted order must match at least the first $h-1$ characters of $s_{R_2}$.  This means that the comparison between $s_{R_2}$ and $s_{R_2-1}$ can start at the $h$th character position.
 
-In general, this implies that, if we 
+More generally, if the longest common prefix of $s_{R_i}$ and $s_{R_i-1}$ has length $h$, then the longest common prefix of $S_{R_{i+1}}$ and $s_{R_{i+1}-1}$ has length at least $h-1$.  This gives the following very slick algorithm for computing the LCP array, $L$.
 
 \noindent
 \textsc{BuildLCP$(A,t)$}
@@ -764,12 +764,39 @@ In general, this implies that, if we
         \STATE{$h\gets\max\{h-1, 0\}$}
     \ENDIF
   \ENDFOR
+  \STATE{\textbf{return} $L$}
 \end{algorithmic}
 
+The correctness of $\textsc{BuildLCP}(A,t)$ follows from the preceding
+discussion. To bound the running time, we note that, with the exception of
+code inside the while loop, the algorithm clearly runs in $O(n)$ time. To
+bound the total time spent in the while loop, we notice that the value of
+$h$ is initially 0, never exceeds $n$, and is incremented each time the
+body of the while loop executes, and is decremented at most $n$ times.
+It follows that the body of the while loop can not execute more than $2n$
+times during the entire execution of the algorithm.
+
+\begin{thm}
+  Given a suffix array $A$ for a string $t$ of length $n$, the LCP array, 
+  $L$, can be constructed in $O(n)$ time.
+\end{thm}
+
+To summarize everything we know about suffix arrays:  Given a string $t$,
+the suffix array, $A$ for $t$ can be constructed in $O(n)$ time. From
+$A$ and $t$, the LCP array, $L$ can be constructed in $O(n)$ time.
+From the LCP array, $L$, an additional array $L'$ of length $2n$ can be
+constructed that, in combination with $A$ and $t$ makes it possible to
+locate any string $s$ in $t$ in $O(|s|+\log n)$ time.
+
+In addition to storing the original text, $t$, this data structure needs
+the suffix array $A$, of length $n$ and the auxiliary array $L'$ of length
+$2n$. The values in $A$ and $L'$ are integers in the range $1,\ldots,n$,
+so they can be represented using $\lceil\log_2 n\rceil$ words.  Thus,
+the entire structure for indexing $t$ requires only $3n$ words of space.
 
 \section{Linear Time Suffix Tree Construction}
 
-Although a suffix array, in combination with an LCP array, is a viable substitute for a suffix tree, there are still times when one wants a suffix tree.  In this section, we show that, given the suffix array, $A$, and the LCP array, $L$, for the string $t$, it is possible to compute the suffix tree, $T$, for $t$ in $O(nN)$ time.  Indeed, the tree structure can be constructed in $O(n)$ time, the factor of $N$ comes only from creating an array of length $N$ at each of the nodes in the suffix tree.
+Although a suffix array, in combination with an LCP array, is a viable substitute for a suffix tree in many applications, there are still times when one wants a suffix tree.  In this section, we show that, given the suffix array, $A$, and the LCP array, $L$, for the string $t$, it is possible to compute the suffix tree, $T$, for $t$ in $O(nN)$ time.  Indeed, the tree structure can be constructed in $O(n)$ time, the factor of $N$ comes only from creating an array of length $N$ at each of the nodes in the suffix tree.
 
 The key observation in this algorithm is that the suffix array and LCP array allow us to to perform an in-order traversal of the suffix tree---creating nodes as we go.  To see how this works, recall that the first node traversed in an in-order traversal is lexicographically smallest.  This node corresponds to the first suffix $s_1$ corresponding to the index, $A_1$ in the suffix array.  We join this node, $u_1$, to a sibling, $u_2$ that corresponds to $s_2$.  The sibling leaves $u_1$ and $u_2$ are joined to a common parent, $x$, and the labels on the edges $xu_1$ and $xu_2$ are suffixes of $s_1$ and $s_2$, respectively.  The lengths of these labels can be computed by the length of the longest common prefix between $s_1$ and $s_2$, which is given by the value $L_1$.  And now we can continue this way using $s_3$ and $L_2$ to determine how the leaf, $u_3$, corresponding to $s_3$ fits into the picture.  The length of $s_2$ and the value of $L_2$ tells us whether 
 \begin{enumerate}
