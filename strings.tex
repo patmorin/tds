@@ -7,23 +7,22 @@ sequences of characters taken from some alphabet.  Data structures for
 strings are an important part of any system that does text processing,
 whether it be a text-editor, word-processor, or Perl interpreter.
 
-Formally, we study data structures for storing sequences of symbols
-over the alphabet $\{-1,\ldots,N-1\}$.  We assume that all strings are
-terminated with the special character $\$=-1$ and that $\$$ only
-appears as the last character of any string.  In real applications,
-strings are not usually over the alphabet $\{-1,\ldots,N-1\}$.
-Normally they would be ASCII or Unicode strings.  However, the ASCII
-and Unicode alphabets can easily be translated into an alphabet of 
-the form $\{-1,\ldots,N-1\}$.
+Formally, we study data structures for storing sequences of symbols over
+the alphabet $\Sigma=\{0,\ldots,|\Sigma|-1\}$.  We assume that all strings
+are terminated with the special character $\$=|\Sigma|-1$ and that $\$$
+only appears as the last character of any string.  In real applications,
+$\Sigma$ might be the ASCII alphabet ($|\Sigma|=128$); extended ASCII or
+ANSI ($|\Sigma|=256$), or even Unicode ($|\Sigma|=95,221$ as of Version
+3.2 of the Unicode standard).
 
-Storing strings of this kind is very different from storing other
-types of comparable data.  On the one hand, we have the advantage
-that, because the characters are integers, we can use them as indices
-into arrays. On the other hand, because strings have variable length,
-comparison of two strings is not a constant time operations.  In fact,
-comparing two strings $s_1$ and $s_2$ takes time
-$O(\min(|s_1|,|s_2|\})$, where $|s|$ denotes the length of the string
-$s$.
+Storing strings of this kind is very different from storing other types
+of comparable data.  On the one hand, we have the advantage that, because
+the characters are integers, we can use them as indices into arrays. On
+the other hand, because strings have variable length, comparison of
+two strings is not a constant time operations.  In fact, the only
+\emph{a priori} upper bound on the cost of comparing two strings $s_1$
+and $s_2$ is $O(\min(|s_1|,|s_2|\})$, where $|s|$ denotes the length of
+the string $s$.
 
 \section{Two Basic Representations}
 
@@ -42,12 +41,13 @@ representation is a little more flexible and more efficient for some
 operations.
 
 For example, in the pointer/length representation, determining the length
-of the string takes only constant time, since it is already stored.  More
-importantly, it is possible to extract any substring in constant time:
-If a string $s$ is represented as $(p,\ell)$ where $p$ is the starting
-location and $\ell$ is the length, then we can extract the substring
-$s_i,s_{i+1},\ldots,s_{i+m}$ by creating the pair $(p+i,m)$.  Several of
-the data structures in this chapter will use the pointer/length representation of strings.
+of the string takes only constant time, since it is already stored.
+More importantly, it is possible to extract any substring in constant
+time: If a string $s$ is represented as $(p,\ell)$ where $p$ is the
+starting location and $\ell$ is the length, then we can extract the
+substring $s_i,s_{i+1},\ldots,s_{i+m}$ by creating the pair $(p+i,m)$. For
+this reason several of the data structures in this chapter will use the
+pointer/length representation of strings.
 
 \begin{figure}
   \begin{center}
@@ -107,24 +107,26 @@ search at the root of $T$.  When the search reaches some node $u$,
 there are three cases
 
 \begin{enumerate}
-\item $x < \wght(\lft(u))$.  In this case, we continue the search in
+\item $x < \wght(\lft(u))$.  In this case, we continue the search for $x$ in
   $\lft(u)$.
 
 \item $\wght(\lft(u)) \le x < \wght(\lft(u)) + \wght(u)$.  In this
   case, $u$ is the node we are searching for, so we report it.
 
 \item $\wght(\lft(u)) + \wght(u) \le x$.  In this case, we search
-  for the value $x - \wght(\lft(u)) + \wght(u)$ in $\rght(u)$.
+  for the value 
+  \[ x'=x - \sz(\lft(u)) - \wght(u) \]
+  in the subtree rooted at $\rght(u)$.
 \end{enumerate}
 
 Since each step of this search only takes constant time, the overall
 search time is proportional to the length of the path we follow.
 Therefore, if $T$ is rebalanced as a treap then the expected search
-time is $O(\log M)$.
+time is $O(\log n)$.
 
 Furthermore, we can support \textsc{Split} and \textsc{Join}
 operations in $O(\log n)$ time using prefix trees.  Given a value $x$,
-we can a prefix tree into two trees, where one tree contains all nodes
+we can split a prefix tree into two trees, where one tree contains all nodes
 $u_i$ such that
 \[ \sum_{j=1}^i\wght(u_i) \le x
 \]
@@ -135,21 +137,21 @@ whose nodes in left-to-right order are
 $u_1,\ldots,u_n,v_1,\ldots,v_n$.
 
 Next, consider how we could use a prefix-tree to store a very long
-string $s=c_1,\ldots, c_M$ so that it supports the following
+string $t=t_1,\ldots, t_n$ so that it supports the following
 operations.
 
 \begin{enumerate}
-\item $\textsc{Insert}(i, s')$. Insert the string $s'$ beginning at
-position $s_i$ in the string $S$, to form a new string
-$c_1,\ldots,c_i\circ s'\circ c_{i+1},\ldots,c_M$.\footnote{Here, and
+\item $\textsc{Insert}(i, s)$. Insert the string $s$ beginning at
+position $t_i$ in the string $t$, to form a new string
+$t_1,\ldots,t_{i-1}\circ s\circ t_{i+1},\ldots,t_n$.\footnote{Here, and
 throughout, $s_1\circ s_2$ denotes the concatenation of strings $s_1$
 and $s_2$.}
 
 \item $\textsc{Delete}(i, l)$.  Delete the substring
-$c_i,\ldots,c_{i+l-1}$ from $S$ to form a new string
-$c_1,\ldots,c_{i-1},c_{i+l},\ldots,c_M$.
+$t_i,\ldots,t_{i+l-1}$ from $S$ to form a new string
+$t_1,\ldots,t_{i-1},t_{i+l},\ldots,t_n$.
 
-\item $\textsc{Report}(i, l)$.  Output the string $c_i,\ldots,c_{i+l-1}$.
+\item $\textsc{Report}(i, l)$.  Output the string $t_i,\ldots,t_{i+l-1}$.
 \end{enumerate}
 
 To implement these operations, we use a prefix-tree in which each node
@@ -159,13 +161,13 @@ reconstruct the string $S$ by concatenating $\strng(u_1)\circ
 \strng(u_2)\circ\cdots\circ\strng(u_n)$.  From this it follows that we
 can find the character at position $i$ in $S$ by searching for the
 value $i$ in the prefix tree, which will give us the node $u$ that
-contains the character $c_i$.
+contains the character $t_i$.
 
 To perform an insertion we first create a new node $v$ and set
-$\strng(v)=s'$.  We then find the node $u$ that contains $c_i$ and we
-split $\strng(u)$ into two parts at $c_i$; one part contains $c_i$ and
+$\strng(v)=s'$.  We then find the node $u$ that contains $t_i$ and we
+split $\strng(u)$ into two parts at $t_i$; one part contains $t_i$ and
 the characters that occur before it and the second part contains the
-remaining characters (that occur after $c_i$).  We reset $\strng(u)$
+remaining characters (that occur after $t_i$).  We reset $\strng(u)$
 so that it contains the first part and create a new node $w$ so that
 it $\strng(w)$ contains the second part.  Note that this split can be
 done in constant time if each string is represented using the pointer/length representation.
@@ -178,30 +180,30 @@ $T$ according to the treap rebalancing scheme.  Once $v$ is inserted,
 we insert $w$ in the same way, i.e., by finding the leftmost
 descendant of $\rght(v)$.  The cost of an insertion is clearly
 proportional to the length of the search paths for $v$ and $w$, which
-are $O(\log M)$ in expectation.
+are $O(\log n)$ in expectation.
 
 To perform a deletion, we apply the $\textsc{Split}$ operation on treaps
-to make three trees.  The tree $T_1$ contains $c_1,\ldots,c_{i-1}$,
-the tree $T_2$ contains $c_{i},\ldots,c_{i+l-1}$ and the treap $T_3$
-that contains $c_{i+l},\ldots,c_M$.  This may require splitting the two
+to make three trees.  The tree $T_1$ contains $t_1,\ldots,t_{i-1}$,
+the tree $T_2$ contains $t_{i},\ldots,t_{i+l-1}$ and the treap $T_3$
+that contains $t_{i+l},\ldots,t_n$.  This may require splitting the two
 substrings stored in nodes of $T$ that contain the indices $i$ and $l$,
 but the details are straightforward.  We then use the $\textsc{Merge}$
 operation of treaps to merge $T_1$ and $T_3$ and discard $T_2$. Since
-$\textsc{Split}$ and \textsc{Merge} in treaps each take $O(\log M)$
-expected time, the entire delete operation takes in $O(\log M)$
+$\textsc{Split}$ and \textsc{Merge} in treaps each take $O(\log n)$
+expected time, the entire delete operation takes in $O(\log n)$
 expected time.
 
-To report the string $s_i,\ldots,s_{i+l-1}$ we first search for the
-node $u$ that contains $c_i$ and then traverse $T$ starting at node
-$u$.  We can then output $s_i,\ldots,s_{i+l-1}$ in $O(l+\log M)$
+To report the string $t_i,\ldots,t_{i+l-1}$ we first search for the
+node $u$ that contains $t_i$ and then traverse $T$ starting at node
+$u$.  We can then output $t_i,\ldots,t_{i+l-1}$ in $O(l+\log n)$
 expected time by doing an in-order traversal of $T$ starting at node
 $u$.  The details of this traversal and its analysis are left as an
-excercise to the reader.
+exercise to the reader.
 
 \begin{thm}
 Ropes support the operations $\textsc{Insert}$ and $\textsc{Delete}$
-on a string of length $M$ in $O(\log M)$ expected time and
-$\textsc{Report}$ in $O(l+\log M)$ expected time.
+on a string of length $n$ in $O(\log n)$ expected time and
+$\textsc{Report}$ in $O(l+\log n)$ expected time.
 \end{thm}
 
 \section{Tries}
@@ -212,8 +214,8 @@ most obvious application of such a data structure is in a
 spell-checker.
 
 A \emph{trie} is a rooted tree $T$ in which each node has somewhere
-between $0$ and $N+1$ children.  All edges of $T$ are assigned labels
-in $\{-1,\ldots,N-1\}$ such that all the edges leading the children
+between $0$ and $|\Sigma|$ children.  All edges of $T$ are assigned labels
+in $\Sigma$ such that all the edges leading to the children
 of a particular node receive different labels.  Strings are stored as
 root-to-leaf paths in the trie so that, if the null-terminated string
 $s$ is stored in $T$, then there is a leaf $v$ in $T$ such that the
@@ -236,42 +238,42 @@ If this were not the case, it would be impossible to distinguish, for
 example, a trie that contained both ``organism'' and ``organ'' from a
 trie that contained just ``organism''.
 
-Implementation-wise, a trie node is represented as an array of
-pointers of size $N+1$, which point to the children of the node.  In
-this way, the labelling of edges is implicit, since the $i$th element
-of the array can represent the edge with label $i-1$.  When we create
-a new node, we initialize all of its $N+1$ pointers to nil.
+Implementation-wise, a trie node is represented as an array of pointers of
+size $|\Sigma|$, which point to the children of the node.  In this way,
+the labelling of edges is implicit, since the $i$th element of the array
+can represent the edge with label $i-1$.  When we create a new node,
+we initialize all of its $|\Sigma|$ pointers to nil.
 
-Searching for the string $s$ of length $m$ in a trie $T$ is a simple
-operation.  We examine each of the characters of $s$ in turn and
-follow the appropriate pointers in the tree.  If at any time we
-attempt to follow a pointer that is nil we conclude that $s$ is not
-stored in $T$.  Otherwise we reach a leaf $v$ that represents $s$ and
-we conclude that $s$ is stored in $T$.  Since the edges at each vertex
-are stored in an array and the individual characters of $s$ are
-integers, we can follow each pointer in constant time.  Thus, the cost
-of searching for $s$ is $O(m)$.
+Searching for the string $s$ in a trie, $T$, is a simple operation.  We
+examine each of the characters of $s$ in turn and follow the appropriate
+pointers in the tree.  If at any time we attempt to follow a pointer
+that is nil we conclude that $s$ is not stored in $T$.  Otherwise we
+reach a leaf $v$ that represents $s$ and we conclude that $s$ is stored
+in $T$.  Since the edges at each vertex are stored in an array and the
+individual characters of $s$ are integers, we can follow each pointer
+in constant time.  Thus, the cost of searching for $s$ is $O(|s|)$.
 
-Insertion into a trie is not any more difficult.  We simply the follow
-the search path for $s$, and any time we encounter a nil pointer we
-create a new node.  Since a trie node has size $O(N)$, this insertion
-procedure runs in $O(mN)$ time.
+Insertion into a trie is not any more difficult.  We simply the follow the
+search path for $s$, and any time we encounter a nil pointer we create
+a new node.  Since a trie node has size $O(|\Sigma|)$, this insertion
+procedure runs in $O(|s|\cdot|\Sigma|)$ time.
 
 Deletion from a trie is again very similar. We search for the leaf $v$
-that represents $s$.  Once we have found it, we delete all nodes on
-the path from $s$ to the root of $T$ until we reach a node with more
-than 1 child.  This algorithm is easily seen to run in $O(mN)$ time.
+that represents $s$.  Once we have found it, we delete all nodes on the
+path from $s$ to the root of $T$ until we reach a node with more than
+1 child.  This algorithm is easily seen to run in $O(|s|\cdot|\Sigma|)$
+time.
 
-If a trie holds a set of strings $S$ which have a total length of $M$
-then the total size of the trie is $O(MN)$.  This follows from the
-fact that each character of each string results in the creation of at
-most 1 trie node.
+If a trie holds a set of $n$ strings, $S$, which have a total length of
+$N$ then the total size of the trie is $O(N\cdot|\Sigma|)$.  This follows
+from the fact that each character of each string results in the creation
+of at most 1 trie node.
 
 \begin{thm}
-Let $s$ be a string of length $m$.  Tries support insertion or
-deletion of $s$ in $O(mN)$ time and searching for $s$ in $O(m)$ time.
-If $M$ is the total length of all strings stored in a trie then the
-storage used is $O(MN)$.
+Tries support insertion or
+deletion of a string $s$ in $O(|s|\cdot|\Sigma|)$ time and searching for $s$ in $O(|s|)$ time.
+If $N$ is the total length of all strings stored in a trie then the
+storage used by the trie is $O(N\cdot|\Sigma|)$.
 \end{thm}
 
 
@@ -280,10 +282,10 @@ storage used is $O(MN)$.
 A \emph{Patricia tree} (a.k.a.\ a \emph{compressed trie}) is a simple
 variant on a trie in which any path whose interior vertices all have only
 one child is compressed into a single edge.  For this to make sense,
-we now label the edges of the trie with strings, so that the string
-corresponding to a leaf $v$ is the concatenation of all the edge labels
-we encounter on the path from the root of $T$ to $v$. 
-An example is given in \figref{patricia}.
+we now label the edges with strings, so that the string corresponding
+to a leaf $v$ is the concatenation of all the edge labels we encounter
+on the path from the root of $T$ to $v$.  An example is given in
+\figref{patricia}.
 
 \begin{figure}
   \begin{center}
@@ -296,7 +298,10 @@ An example is given in \figref{patricia}.
 The edge labels of a Patricia tree are represented using the
 pointer/length representation for strings.  As with tries, and for the
 same reason, it is important that the strings stored in a patricia tree
-are null-terminated.  See \figref{patricia-2} for an example.
+are null-terminated.  Implementation-wise, it makes sense to store the
+edge label of an edge $uw$ directed from a parent $u$ to it's child $w$
+in the node the $w$ (since nodes can have many children, but at most
+one parent).  See \figref{patricia-2} for an example.
 
 \begin{figure}
   \begin{center}
@@ -324,50 +329,57 @@ In this figure, a Patricia tree that initially stores only the string
   \begin{center}
     \includegraphics{figs/patricia-adddel}
   \end{center}
-  \caption{The edge labels of a Patricia tree use the pointer/length representation.}
+  \caption{The evolution of a Patricia tree containing ``orange\$'' as the string ``organism\$'' is inserted and the string ``orange\$'' is deleted.}
   \figlabel{patricia-adddel}
 \end{figure}
 
 Inserting a string $s$ into a Patricia tree is similar to searching
-right up until the point where the search gets stuck because $s$ is not
-in the tree.  If the search gets stuck in the middle of an edge, $e$,
-then $e$ is split into two new edges joined by a new node, $u$, and the
-remainder of the string $s$ becomes the edge label of the edge leading
-from $u$ to a newly created leaf.  If the search gets stuck at a node,
-$u$, then the remainder of $s$ is used as an edge label for a new edge
-leading from $u$ to a newly created leaf.  This takes $O(|s|+N)$ time,
-since it involves a search for $s$ followed by the creation of two new
-nodes, each of size $O(N)$.
+right up until the point where the search gets stuck because $s$ is
+not in the tree.  If the search gets stuck in the middle of an edge,
+$e$, then $e$ is split into two new edges joined by a new node, $u$,
+and the remainder of the string $s$ becomes the edge label of the edge
+leading from $u$ to a newly created leaf.  If the search gets stuck at
+a node, $u$, then the remainder of $s$ is used as an edge label for a
+new edge leading from $u$ to a newly created leaf.  Either case takes
+$O(|s|+|\Sigma|)$ time, since they each involve a search for $s$ followed
+by the creation of at most two new nodes, each of size $O(|\Sigma|)$.
 
 Removing a string $s$ from a Patricia tree is the opposite of insertion.
 We first locate the leaf corresponding to $s$ and remove it from the
 tree.  If the parent, $u$, of this leaf is left with only one child,
-$w$, then we also remove the parent and replace it with a single edge,
+$w$, then we also remove $u$ and replace it with a single edge,
 $e$, joining $u$'s parent to $w$.  The label for $e$ is obtained in
 constant time by extending the edge label that was previously on the
 edge $uw$. How long this takes depends on how long it takes to delete
-two nodes of size $N$.  If we consider this deletion to be a constant
+two nodes of size $|\Sigma|$.  If we consider this deletion to be a constant
 time operation, then running time is $O(|s|)$.  If we consider this
 deletion to take $O(N)$ time, then the running time is $O(|s|+N)$.
 
-An important difference between Patricia trees and tries is that
-Patricia trees contain no nodes with only one child.  Every node is
-either a leaf or has at least two children.  This immediately implies
-that the number of internal (non-leaf) nodes does not exceed the number of
-leaves.  Now, recall that each leaf corresponds to a string that is
-stored in the Patricia tree so if the Patricia tree stores $n$
-strings, the total storage used by nodes is $O(nN)$.  Of course, this
-requires that we also store the strings separately at a cost of $O(M)$
+An important difference between Patricia trees and tries is that Patricia
+trees contain no nodes with only one child.  Every node is either a leaf
+or has at least two children.  This immediately implies that the number
+of internal (non-leaf) nodes does not exceed the number of leaves.
+Now, recall that each leaf corresponds to a string that is stored in
+the Patricia tree so if the Patricia tree stores $n$ strings, the total
+storage used by nodes is $O(n\cdot|\Sigma|)$.  Of course, this requires
+that we also store the strings separately at a cost of $O(N)$. (As before,
+$N$ is the total length of all strings stored in the Patricia tree.)
 
 \begin{thm}
-Let $s$ be a string of length $m$.  Patricia trees support insertion
-or deletion of $s$ in $O(m+N)$ time and searching for $s$ in $O(m)$
-time.  If $M$ is the total length of all strings and $n$ is the number
-of all strings stored in a Patricia tree then the storage used is
-$O(nN+M)$.
+Patricia trees support insertion or deletion of any string $s$ in
+$O(|s|+|\Sigma|)$ time and searching for $s$ in $O(|s|)$ time.  If $N$
+is the total length of all strings and $n$ is the number of all strings
+stored in a Patricia tree then the storage used is $O(n\cdot|\Sigma|+N)$.
 \end{thm}
 
-In addition to the operations described in the preceding theorem, Patricia trees also support \emph{prefix matches}; they can return a list of all strings that have some not-null-terminated string $s$ as a prefix.  This is done by searching for $s$ in the usual way until running out of characters in $s$.  At this point, every leaf in the subtree that the search ended at corresponds to a string that starts with $s$.  Since every internal node has at least two children, this subtree can be traversed in $O(k)$ time, where $k$ is the number of leaves in the subtree.
+In addition to the operations described in the preceding theorem, Patricia
+trees also support \emph{prefix matches}; they can return a list of
+all strings that have some not-null-terminated string $s$ as a prefix.
+This is done by searching for $s$ in the usual way until running out of
+characters in $s$.  At this point, every leaf in the subtree that the
+search ended at corresponds to a string that starts with $s$.  Since every
+internal node has at least two children, this subtree can be traversed
+in $O(k)$ time, where $k$ is the number of leaves in the subtree.
 
 If we are only interested in reporting one string that has $s$ as a
 prefix, we can look at the edge label of the last edge on the search
@@ -385,38 +397,43 @@ For a query string $s$, a Patricia tree can report one string that has $s$ as a 
 \section{Suffix Trees}
 
 Suppose we have a large body of text and we would like a data structure
-that allows us to query if particular strings occurs in the text.  Given a
-string $t$ of length $n$, we can insert each of the $n+1$ suffixes of
-$t$ into a Patricia tree.  We call the resulting tree the \emph{suffix
-tree} for $t$.  Now, if we want to know if some string $s$ occurs in $t$
+that allows us to query if particular strings occur in the text.  Given a
+string $t$ of length $n$, we can insert each of the $n$ suffixes of $t$
+into a Patricia tree.  We call the resulting tree the \emph{suffix tree}
+for $t$.  Now, if we want to know if some string $s$ occurs in $t$
 we need only do a prefix search for $s$ in the Patricia tree.  Thus,
-we can test if $s$ occurs in $t$ in $O(|s|)$ time.
+we can test if $s$ occurs in $t$ in $O(|s|)$ time.  In the same amount
+of time, we can locate some occurrence of $s$ in $t$ and in $O(|s|+k)$
+time we can locate all occurrences of $s$ in $t$, where $k$ is the number
+of occurrences.
 
 What is the storage required by the suffix tree for $T$?  Since we
 only insert $n$ suffixes, the storage required by tree nodes is
-$O(nN)$.  Furthermore, recall that the labels on edges of $T$ are
-represented as pointers into the strings that were inserted into $T$.
+$O(n\cdot|\Sigma|)$.  Furthermore, recall that the labels on edges of $T$
+are represented as pointers into the strings that were inserted into $T$.
 However, every string that is inserted into $T$ is a suffix of $t$, so
-all labels can be represented as pointers into a single copy of $t$, so the total spaced used to store $t$ and all its edge labels is only $O(n)$.
-Thus, the total storage used by a suffix tree is $O(nN)$.
+all labels can be represented as pointers into a single copy of $t$, so
+the total spaced used to store $t$ and all its edge labels is only $O(n)$.
+Thus, the total storage used by a suffix tree is $O(n\cdot|\Sigma|)$.
 
-The cost of constructing the suffix tree for $t$ can be split into
-two parts:  The cost of creating and initializing new nodes, which
-is clearly $O(nN)$ because there are only $O(n)$ nodes; and the
-cost of following paths, which is clearly $O(n^2)$.
+The cost of constructing the suffix tree for $t$ can be split into two
+parts:  The cost of creating and initializing new nodes, which is clearly
+$O(n\cdot|\Sigma|)$ because there are only $O(n)$ nodes; and the cost
+of following paths, which is clearly $O(n^2)$.
 
 \begin{thm}\thmlabel{suffix-tree-slow}
-The suffix tree for a string $t$ of length $n$ can be constructed in
-$O(nN+n^2)$ time and uses $O(nN)$ storage.  The suffix tree can be
-used to determine if any string $s$ of length $m$ is a substring of $t$
-in $O(m)$ time.  The suffix tree can also report the locations of all
-occurrences of $s$ in $t$ in $O(m+k)$ time, where $k$ is the number of
-occurrences of $s$ in $t$.
+The suffix tree for a string $t$ of length $n$ can be constructed
+in $O(n\cdot|\Sigma|+n^2)$ time and uses $O(n\cdot|\Sigma|)$ storage.
+The suffix tree can be used to determine if any string $s$ is a substring
+of $t$ in $O(|s|)$ time.  The suffix tree can also report the locations
+of all occurrences of $s$ in $t$ in $O(m+k)$ time, where $k$ is the
+number of occurrences of $s$ in $t$.
 \end{thm}
 
 The construction time in \thmref{suffix-tree-slow} is non-optimal.
-References to $O(n)$ time suffix tree construction algorithms are given
-in \secref{strings-discussion}.
+In particular, the $O(n^2)$ term is unnecessary. In the next few section
+we will develop the tools needed to construct a suffix tree in 
+$O(n\cdot|\Sigma|)$ time.
 
 
 \section{Suffix Arrays}
@@ -465,7 +482,7 @@ $A=\langle18,1,6,9,15,12,17,4,11,16,2,8,7,19,5,14,3,13,10,20,21\rangle$.  This i
 
 \begin{center}
   \begin{tabular}{|r|r|l|}\hline
-    $i$ & $A_i$ & $t_i,\ldots,t_n$ \\\hline
+    $i$ & $A_i$ & $t_{A_i},\ldots,t_n$ \\\hline
 1&18&$s_{1}=\text{``ary\$''}$\\
 2&1&$s_{2}=\text{``counterrevolutionary\$''}$\\
 3&6&$s_{3}=\text{``errevolutionary\$''}$\\
@@ -499,28 +516,33 @@ comparison and each comparison takes $O(|s|)$ time.
 
 We can do searches a little faster---in $O(|s|+\log n)$ time---if,
 in addition to the suffix array, we have a little more information.
-Let $s_i=t_{A_i}, t_{A_i+1},\ldots,t_{n}$, i.e., $s_i$ is the string in
-the $i$th row of the preceding table.
+Let $s_i=t_{A_i}, t_{A_i+1},\ldots,t_{n}$. In other words, $s_i$ is the
+string in the $i$th row of the preceding table. In other other words
+the string $s_i$ is the $i$th suffix of $t$ when all suffixes of $t$
+are sorted in lexicographic order.
 
 Suppose, that we have access to a table $\ell$, where, for any
 pair of indices $(i,j)$ with $1\le i\le j\le n$, $\ell_{i,j}$ is
 the length of the longest common prefix of $s_i$ and $s_j$. In our
 running example, $\ell_{9,11}=1$, since $s_9=\text{``olutionary\$}''$
 and $s_{11}=\text{``ounterrevolutionary''}$ have the first character
-``o'' in common but differ on their second character.  Notice that
+``o'' in common but differ on their second character. Notice that
 this also implies that $s_{10}$ starts with the same letter as $s_9$
 and $s_{11}$, otherwise $s_{10}$ would not be between $s_9$ and $s_{11}$
 in sorted order.  More generally, if $\ell_{i,j}=r$, then the suffixes
 $s_i,s_{i+1},\ldots,s_{j}$ all start with the same $r$ characters.
 
-With the extra \emph{longest common prefix} information provided by
-$\ell$, binary search on the suffix array can be sped up.  The sped-up
-binary search routine maintains four integer values $i$, $j$, $a$ and $b$.
-At all times, the search has deduced that a matching string---if it is
-exists---is among $s_i,s_{i+1},\ldots,s_j$ (because $s_i < s < s_j$) and
-that the longest prefixes of $s_i$ and $s_j$ that match $s$ have length
-$a$ and $b$ respectively. The algorithm starts with $(i=1,j=n,a,b=0)$
-where the value of $a$ is obtained by comparing $s$ with $s_1$.
+The value $\ell_{i,j}$ is called the \emph{longest common prefix (LCP)}
+of $s_i$ and $s_j$ since it is the length of the longest string $s'$
+that is a prefix of both $s_i$ and $s_j$.  With the extra LCP information
+provided by $\ell$, binary search on the suffix array can be sped up.
+The sped-up binary search routine maintains four integer values $i$,
+$j$, $a$ and $b$.  At all times, the search has deduced that a matching
+string---if it is exists---is among $s_i,s_{i+1},\ldots,s_j$ (because
+$s_i < s < s_j$) and that the longest prefixes of $s_i$ and $s_j$ that
+match $s$ have length $a$ and $b$ respectively. The algorithm starts with
+$(i=1,j=n,a,b=0)$ where the value of $a$ is obtained by comparing $s$
+with $s_1$.
 
 Suppose, without loss of generality, that $a \ge b$ (the case where $b>a$ is symmetric).  Now, consider the entry $\ell_{i,m}$ which tells us how many characters of $s_m$ match $s_i$. 
 As an example, suppose we are searching for the string $s=\text{``programmer''}$, and we have reached a state where $s_i=\text{``\uline{programm}able\ldots\$''}$, $s_j=\text{``\uline{pro}tectionism''}$, so $a=8$ and $b=3$.: \\[\parskip]
@@ -536,13 +558,13 @@ There are now three cases to consider:
 
 \begin{enumerate}
 \item If $\ell_{i,m}< a$, then we can immediately conclude that $s_m > s$. This is because $s_m > s_i$, so the character at position 
-$\ell_{i,m}+1$ in $s_m$ is greater than the corresponding character in $s_i$ and $s$.  An example of this occurs when $s_m=\text{``\uline{progr}ess\ldots\$''}$, so that $\ell_{i,m}=5$.
+$\ell_{i,m}+1$ in $s_m$ is greater than the corresponding character in $s_i$ and $s$.  An example of this occurs when $s_m=\text{``\uline{progr}ess\ldots\$''}$, so that $\ell_{i,m}=5$ and character at position 6 in $s_m$ (an `e') is greater than the character at position 6 in $s_i$ and $s$ (an `a').
 
 Therefore, our search can now be restricted to $s_i,\ldots,s_{m}$.  Furthermore, we know that the longest prefix of $s_m$ that matches $s$ has length $b'=\ell_{i,m}$.  Therefore, we can recursively search $s_i,\ldots,s_{m}$ using the values $a'=a$ and $b'=\ell_{i,m}$. That is, we recurse with the values $(i,m,a,\ell_{i,m})$
 
 \item If $\ell_{i,m} > a$, then we can immediately conclude that $s_m < s$, for the same reason that $s_i < s$; namely $s_i$ and $s$ differ in character $a+1$ and this character is greater in $s$ than it is in $s_i$ and $s_m$.
 In this case, we recurse with the values $(m,j,a, b)$.
-An example of this occurs when $s_m=\text{``\uline{programma}tically\ldots\$''}$, so that $\ell_{i,m}=9$.
+An example of this occurs when $s_m=\text{``\uline{programma}tically\ldots\$''}$, so that $\ell_{i,m}=9$. In this case $s_i$ and $s_m$ both have a `a' at position $a+1=9$ while $s$ has an `e'.
 
 \item If $\ell_{i,m}= a$, then we can begin comparing $s_m$ and $s$ starting at the $(a+1)$th character position. After matching $k\ge0$ additional characters of $s$ and $s_m$ this will eventually result in one of three possible outcomes:
 \begin{enumerate}
@@ -559,21 +581,24 @@ The search can proceed in this manner, until the string is found at some
 $s_m$ or until $j = i+1$. In the latter case, the algorithm concludes
 that $s$ does not occur as a substring of $t$ since $s_{i} <s <s_{i+1}$.
 
-To see that this search runs in $O(|s|+\log n)$ time, notice that each stage of the search reduces $j-i$ by roughly a factor of 2, so there are only $O(\log n)$ stages.  Now, the time spent during a phase is proportional to $k$, the number of additional characters of $s_m$ that match $s$.  Observe that, at the end of the phase $\max\{a,b\}$ is increased by at least $k$.  Since $a$ and $b$ are indices into $s$, $a\le|s|$ and $b\le|s|$. Therefore, the total sum of all $k$ values during all phases is at most $|s|$.  Thus, the total time spent searching for $s$ is $O(|s|+\log n)$.
+To see that this search runs in $O(|s|+\log n)$ time, notice that each stage of the search reduces $j-i$ by roughly a factor of 2, so there are only $O(\log n)$ stages.  Now, the time spent during a stage is proportional to $k$, the number of additional characters of $s_m$ that match $s$.  Observe that, at the end of the phase $\max\{a,b\}$ is increased by at least $k$.  Since $a$ and $b$ are indices into $s$, $a\le|s|$ and $b\le|s|$. Therefore, the total sum of all $k$ values during all phases is at most $|s|$.  Thus, the total time spent searching for $s$ is $O(|s|+\log n)$.
 
-In case the search is sucessful, it is even possible to find all
+In case the search is successful, it is even possible to find all
 occurences of $s$ in time proportional to the number of occurrences.
 This is done by the finding the maximal integers $x$ and $y$
-such that $\ell_{m-x,m+y} \ge |s|$.  In this case all strings
-$s_{m-x},\ldots,s_{m+y}$ have $s$ as a prefix.
+such that $\ell_{m-x,m+y} \ge |s|$.  Finding $x$ is easily done
+by trying $x=1,2,3,\ldots$ until finding a value, $x+1$, such that
+$\ell_{m-(x+1),m}$ is less than $|s|$.  Finding $y$ is done in the
+same way.  When this happens, all strings $s_{m-x},\ldots,s_{m+y}$
+have $s$ as a prefix.
 
-The assumption that we have an access to a longest common prefix
-matrix $\ell_{\cdot,\cdot}$ is unrealistic and impractical, since
-this matrix has $\binom{n}{2}$ entries.  Note, however, that we do
+Unfortunately, the assumption that we have an access to a longest common
+prefix matrix $\ell_{\cdot,\cdot}$ is unrealistic and impractical,
+since this matrix has $\binom{n}{2}$ entries.  Note, however, that we do
 not need to store $\ell_{i,j}$ for every value $i,j\in\{1,\ldots,n\}$.
-More precisely, if we implement our binary search carefully, we only
-need to know $\ell_{i,j}$ for values in which $i=q2^p$ and $j=i+2^{p}$,
-with $p\in\{0,\ldots,\lfloor \log n\rfloor\}$ and $q\in\{1,\ldots,\lfloor
+For example, when $n$ is one more than a power of 2, then we only need
+to know $\ell_{i,j}$ for values in which $i=1+q2^p$ and $j=i+2^{p}$, with
+$p\in\{0,\ldots,\lfloor \log n\rfloor\}$ and $q\in\{0,\ldots,\lfloor
 n/2^p\rfloor\}$. This means that the longest common prefix information
 stored in $\ell$ consists of no more than
 \[
@@ -594,26 +619,27 @@ into a sequence, $Y$, of $n$ integers in the range $\{0,\ldots,n-1\}$.
 The resulting sequence, $Y$, preserves the ordering of $X$, so that
 $Y_i<Y_j$ if and only if $X_i<X_j$ for all $i,j\in\{1,\ldots,n\}$.
 
-The suffix-array construction algorithm that is recursive.  It takes as
-input a string $s$ whose length $n$, which is terminated with \emph{two}
-null characters and whose characters come from the alphabet $\{0,\ldots n\}$.
+The suffix-array construction algorithm, which is called the \emph{skew
+algorithm} is recursive.  It takes as input a string $s$ whose length
+is $n$, which is terminated with \emph{two} \$ characters, and whose
+characters come from the alphabet $\{0,\ldots n\}$.
 
 Let $S$ denote the set of all suffixes of $t$, and let $S_r$, for $r\in\{0,1,2\}$ denote the set of suffixes $t_i,t_{i+1},\ldots,t_n$ where $i\equiv r\pmod 3$.  That is, we partition the sets of suffixes into three sets, each having roughly $n/3$ suffixes in them.  The outline of the algorithm is as follows:
 
 \begin{enumerate}
   \item Recursively sort the suffixes in $S_1\cup S_2$.
-  \item Use radix-sort to sort the suffixes in $S_0$
+  \item Use radix-sort to sort the suffixes in $S_0$.
   \item Merge the two sorted sets resulting from steps 1 and 2 to obtain
      the sorted order of the suffixes in $S_0\cup S_1\cup S_2=S$.
 \end{enumerate}
 If the overall running time of the algorithm is denoted by $T(n)$, then the first step takes $T(2n/3)$ time and we will show, shortly, that steps 2 and 3 each take $O(n)$ time.  Thus, the total running time of the algorithm is given by the recurrence
 \[
-    T(n) \le cn + T(2n/3) \le cn(\sum_{i=0}^\infty (2/3)^i \le 3cn \enspace .
+    T(n) \le cn + T(2n/3) \le cn\sum_{i=0}^\infty (2/3)^i \le 3cn \enspace .
 \]
 Next we describe how to implement each of the three steps efficiently.
 
 \paragraph{Step 1.}
-Assume $|t|=3k+1$ for some integer $k$. If not, then append at most two additional $\$$ characters to the end of $t$ to make it so.
+Assume $n=3k+1$ for some integer $k$. If not, then append at most two additional $\$$ characters to the end of $t$ to make it so.
 To implement Step 1, we transform the string $t$ into the sequence of triples:
 \[
    t'= \underbrace{(t_1,t_2,t_3),(t_4,t_5,t_6),\ldots,(t_{n-3},t_{n-2},t_{n-1})}_\text{suffixes in $S_1$},
@@ -634,7 +660,14 @@ we first apply radix sort to relabel each triple with an integer in
 the range $1,\ldots,2n/3$.  We can now recursively sort the relabelled
 transformed string---which contains $2n/3$ characters in the range
 $1,\ldots,2n/3$---and undo the relabelling to obtain the sorted order
-of $S_1\cup S_2$.  All of this takes only $O(n)$ time.
+of $S_1\cup S_2$.
+Aside from the recursive call, which takes $T(2n/3)$ time, all of the sorting and relabelling takes only $O(n)$ time.
+
+When Step 1 is done, we know, for each index $i\not\equiv 0\pmod 3$,
+the rank of the suffix $t_i,\ldots,t_n$ in the set $S_1\cup S_2$.
+This means that for any pair of indices $i,j\not\equiv 0\pmod 3$, we
+can determine---in constant time, by comparing ranks---if the suffix
+$t_i,\ldots,t_n$ comes before or after the suffix $t_j,\ldots,t_n$.
 
 \paragraph{Step 2.}
 To implement Step~2, we observe that every suffix in $S_0$ starts with
@@ -645,7 +678,7 @@ the suffix $t_{i+1},\ldots,t_n$ obtained during Step 1.  Applying radix
 sort to all of these pairs allows us to sort $S_0$ in $O(n)$ time.
 
 \paragraph{Step 3.}
-To implement Step~3, we have to merge two sorted lists, one of length $2n/3$ and one of length $n/3$ in $O(n)$ time.  Merging two sorted lists uses $O(n)$ comparisons is straightforward. Therefore, the only trick here is to ensure that we can compare two elements---one from the first list and one from the second list---in constant time.  
+To implement Step~3, we have to merge two sorted lists, one of length $2n/3$ and one of length $n/3$ in $O(n)$ time.  Merging two sorted lists using $O(n)$ comparisons is straightforward. Therefore, the only trick here is to ensure that we can compare two elements---one from the first list and one from the second list---in constant time.  
 
 To see why this is possible, suppose we are comparing $t_i,\ldots,t_n\in S_0$ with $t_j,\ldots,t_n\in S_1$.  Then we can write these as comparing
 \[
@@ -669,8 +702,8 @@ and
     \enspace .
 \]
 This can also be done in constant time, by comparing at most two
-characters of $t$ and, if necessary an suffix in $S_1$ with a suffix
-in $S_2$.
+pairs of characters in $t$ and, if necessary an suffix in $S_1$ with a suffix
+in $S_2$.  The relative order of the suffixes in $S_1$ and $S_2$ were determined in Step 1 of the algorithm.
 
 This completes the description of all the steps required to construct a suffix array in $O(n)$ time.
 
@@ -683,13 +716,13 @@ This completes the description of all the steps required to construct a suffix a
 Of course, the preceding theorem can be generalized to larger
 alphabets. In particular, if the alphabet has size $n^c$, then the string
 $t$ can be preprocessed in $O(cn)$ time using radix sort to reduce the
-alphabet size to $n$.
+alphabet size to $n$.  The suffix array of the preprocessed string is then also a suffix array for the original string.
 
 \subsection{Constructing the Longest-Common-Prefix Array in Linear Time}
 
 As we have seen, $O(|s|+\log n)$ time searches in suffix arrays make use
-of an auxiliary data structure that makes it possible to determine the
-length of the longest common prefix between two suffixes $s_i$ and $s_j$.
+of an auxiliary data structure to determine the length of the longest
+common prefix between two suffixes $s_i$ and $s_j$.
 
 The \emph{longest common prefix array} (\emph{LCP array}) of a suffix
 array $A=A_1,\ldots,A_n$ is an array $L=L_1,\ldots,L_{n-1}$ where $L_i$ is
@@ -700,10 +733,18 @@ of the notation in the previous section, $L_i=\ell_{i,i+1}$.
 
 Before showing how to construct the LCP array, we recall that, in order
 to implement efficient prefix searches in a suffix array, we need more
-than an LCP array.  The binary search algorithm needs to know the values
-$\ell_{i,j}$ for all pairs $i,j$ of form $i=q2^p$ and $j=i+2^{p}$, with
-$p\in\{1,\ldots,\lfloor \log n\rfloor\}$ and $q\in\{1,\ldots,\lfloor
-n/2^p\rfloor\}$.
+than an LCP array.  When $n$ is a power of two, the binary search
+algorithm needs to know the values $\ell_{i,j}$ for all pairs $i,j$
+of form $i=1+q2^p$ and $j=\min\{n,i+2^{p}\}$, with $p\in\{1,\ldots,\lceil \log
+n\rceil-1\}$ and $q\in\{0,\ldots,\lceil n/2^p\rceil\}$.  See \figref{lcp-search} for an illustration. 
+
+\begin{figure}
+  \begin{center}
+    \includegraphics{figs/lcp-search}
+  \end{center}
+  \caption{To implement binary search using a suffix array, only $O(n)$ LCP values are needed.}
+  \figlabel{lcp-search}
+\end{figure}
 
 To see that these can be efficiently obtained from the longest common
 prefix array, $L$, we first note that, for any $1\le i\le j\le n$,
@@ -712,8 +753,9 @@ the pairs $(i,j)$ needed by the binary search algorithm are nicely nested
 so that $\ell_{i,j}$ can be computed as the minimum of two smaller values.
 Specifically,
 \[
-    \ell_{q2^p,2^{p}} = \min\{\ell_{2q 2^{p-1},2^{p-1}}, \ell_{(2q+1) 2^{p-1},2^{p-1}}\} \enspace .
+    \ell_{q2^p,q2^p+2^{p}} = \min\{\ell_{2q 2^{p-1},2q 2^{p-1}+2^{p-1}}, \ell_{(2q+1) 2^{p-1},(2q+1) 2^{p-1}+2^{p-1}}\} \enspace .
 \]
+(This is really easier to understand by looking at \figref{lcp-search} which shows that, for example, $\ell_{9,13}$ can be obtained as $\ell_{9,13}=\min\{\ell_{9,11},\ell_{11,13}\}$.)
 This allows for an easy algorithm that constructs the required values in
 a bottom up fashion, starting with $p=1$ (which is directly available
 from the LCP array, $L$) and working up to $p=\lfloor\log n\rfloor$.
@@ -724,12 +766,29 @@ carefully, all the values needed to implement the $O(|s|+\log n)$
 time search algorithm can be packed into a single array of length less
 than $2n$.
 
-All that remains is to show how to compute the LCP array $L=L_1,\ldots,L_{n-1}$.  The algorithm to do this uses an auxilliary array, $R$, which is the inverse of the suffix array, $A$, so that $R_{A_i} = i$ for all $i\in\{1,\ldots,n\}$.  Another way to think of this is that $R_i$ gives the location of $A_i$.
+All that remains is to show how to compute the LCP array
+$L=L_1,\ldots,L_{n-1}$.  The algorithm to do this uses an auxilliary
+array, $R$, which is the inverse of the suffix array, $A$, so that
+$R_{A_i} = i$ for all $i\in\{1,\ldots,n\}$.  Another way to think of this
+is that $R_i$ gives the location of $A_i$.  Yet another way to think
+of this is that $R_i$ is the rank of the suffix $t_{A_i},\ldots,t_n$
+in the lexicographically sorted list of all suffixes of $t$.
 
 The algorithm processes the suffixes in order of their occurrence in $t$.
-That is, $t_1,\ldots,t_n$ is processed first.  In our notation, this is suffix $s_{R_1}$ and we want to compare it to the suffix $s_{R_1-1}$ in order to determine the value of $L_{R_1-1}$.  We can do this by comparing letter by letter to determine that the length of the longest common prefix of $s_{R_1-1}$ and $s_{R_1}$ is $h$.
+That is, $t_1,\ldots,t_n$ is processed first.  In our notation, this is
+suffix $s_{R_1}$ and we want to compare it to the suffix $s_{R_1-1}$
+in order to determine the value of $L_{R_1-1}$.  We can do this by
+comparing letter by letter to determine that the length of the longest
+common prefix of $s_{R_1-1}$ and $s_{R_1}$ is $h$.
 
-Things get more interesting when we move onto the string $s_{R_2}=t_2,\ldots,t_n$ and we want to compare it to $s_{R_2-1}$. Notice that the strings $s_{R_1}=t_1,\ldots,t_n$ that we just considered and the string $s_{R_2}=t_2,\ldots,t_n$ that we are now considering have a lot in common.  In particular, if $h>0$, then we can be guaranteed that $s_{R_2}$ matches the first $h-1$ characters of $s_{R_2-1}$.  Stop now and think about why this is so, with the help of the following pictogram:\\[\parskip]
+Things get more interesting when we move onto the string
+$s_{R_2}=t_2,\ldots,t_n$ and we want to compare it to $s_{R_2-1}$. Notice
+that the strings $s_{R_1}=t_1,\ldots,t_n$ that we just considered and
+the string $s_{R_2}=t_2,\ldots,t_n$ that we are now considering have
+a lot in common.  In particular, if $h>0$, then we can be guaranteed
+that $s_{R_2}$ matches the first $h-1$ characters of $s_{R_2-1}$.
+Stop now and think about why this is so, with the help of the following
+pictogram:\\[\parskip]
 \newcommand{\veq}{\begin{turn}{90}=\end{turn}}
 \[
 \begin{array}{r@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}}
@@ -741,7 +800,7 @@ s_{R_2}&=& &,&t_2&,&t_{3}&,&\ldots&,&t_{h}&,&\ldots \\
 \end{array}
 \]
 
-The string $s_{R_1-1}$ is a proof that $t$ has some suffix that comes
+The string $s_{R_1-1}$ is a proof that $t$ has some suffix---namely $t_{i+1},\ldots,t_n$---that comes
 before $s_{R_2}$ in sorted order and matches the first $h-1$ characters of
 $s_{R_2}$.  Therefore, the suffix $s_{R_2-1}$ that immediately precedes $s_{R_2}$ in sorted order must match at least the first $h-1$ characters of $s_{R_2}$.  This means that the comparison between $s_{R_2}$ and $s_{R_2-1}$ can start at the $h$th character position.
 
@@ -757,7 +816,7 @@ More generally, if the longest common prefix of $s_{R_i}$ and $s_{R_i-1}$ has le
   \FOR{$i\gets 1,\ldots,n$}
     \IF{$R_i > 1$}
         \STATE{$k\gets A_{R_i-1}$}  
-        \WHILE{$t_{A_{i+h}} = t_{A_{k+h}}$}
+        \WHILE{$t_{i+h} = t_{A_{k+h}}$}
            \STATE{$h\gets h+1$}
         \ENDWHILE
         \STATE{$L_{R_i-1} \gets h$}
@@ -770,8 +829,8 @@ More generally, if the longest common prefix of $s_{R_i}$ and $s_{R_i-1}$ has le
 The correctness of $\textsc{BuildLCP}(A,t)$ follows from the preceding
 discussion. To bound the running time, we note that, with the exception of
 code inside the while loop, the algorithm clearly runs in $O(n)$ time. To
-bound the total time spent in the while loop, we notice that the value of
-$h$ is initially 0, never exceeds $n$, and is incremented each time the
+bound the total time spent in the while loop, we notice that the value
+of $h$ is initially 0, never exceeds $n$, is incremented each time the
 body of the while loop executes, and is decremented at most $n$ times.
 It follows that the body of the while loop can not execute more than $2n$
 times during the entire execution of the algorithm.
@@ -786,7 +845,8 @@ the suffix array, $A$ for $t$ can be constructed in $O(n)$ time. From
 $A$ and $t$, the LCP array, $L$ can be constructed in $O(n)$ time.
 From the LCP array, $L$, an additional array $L'$ of length $2n$ can be
 constructed that, in combination with $A$ and $t$ makes it possible to
-locate any string $s$ in $t$ in $O(|s|+\log n)$ time.
+locate any string $s$ in $t$ in $O(|s|+\log n)$ time or report all $k$
+occurrences of $s$ in $t$ in $O(|s|+\log n+ k)$ time..
 
 In addition to storing the original text, $t$, this data structure needs
 the suffix array $A$, of length $n$ and the auxiliary array $L'$ of length
@@ -796,9 +856,9 @@ the entire structure for indexing $t$ requires only $3n$ words of space.
 
 \section{Linear Time Suffix Tree Construction}
 
-Although a suffix array, in combination with an LCP array, is a viable substitute for a suffix tree in many applications, there are still times when one wants a suffix tree.  In this section, we show that, given the suffix array, $A$, and the LCP array, $L$, for the string $t$, it is possible to compute the suffix tree, $T$, for $t$ in $O(nN)$ time.  Indeed, the tree structure can be constructed in $O(n)$ time, the factor of $N$ comes only from creating an array of length $N$ at each of the nodes in the suffix tree.
+Although a suffix array, in combination with an LCP array, is a viable substitute for a suffix tree in many applications, there are still times when one wants a suffix tree.  In this section, we show that, given the suffix array, $A$, and the LCP array, $L$, for the string $t$, it is possible to compute the suffix tree, $T$, for $t$ in $O(n\cdot|\Sigma|)$ time.  Indeed, the tree structure can be constructed in $O(n)$ time, the factor of $|\Sigma|$ comes only from creating an array of length $|\Sigma|$ at each of the nodes in the suffix tree.
 
-The key observation in this algorithm is that the suffix array and LCP array allow us to to perform an in-order traversal of the suffix tree---creating nodes as we go.  To see how this works, recall that the first node traversed in an in-order traversal is lexicographically smallest.  This node corresponds to the first suffix $s_1$ corresponding to the index, $A_1$ in the suffix array.  We join this node, $u_1$, to a sibling, $u_2$ that corresponds to $s_2$.  The sibling leaves $u_1$ and $u_2$ are joined to a common parent, $x$, and the labels on the edges $xu_1$ and $xu_2$ are suffixes of $s_1$ and $s_2$, respectively.  The lengths of these labels can be computed by the length of the longest common prefix between $s_1$ and $s_2$, which is given by the value $L_1$.  And now we can continue this way using $s_3$ and $L_2$ to determine how the leaf, $u_3$, corresponding to $s_3$ fits into the picture.  The length of $s_2$ and the value of $L_2$ tells us whether 
+The key observation in this algorithm is that the suffix array and LCP array allow us to perform a traversal of the suffix tree---creating nodes as we go.  To see how this works, recall that the first node traversed in an in-order traversal is lexicographically smallest.  This node corresponds to the first suffix $s_1$ corresponding to the index, $A_1$ in the suffix array.  We join this node, $u_1$, to a sibling, $u_2$ that corresponds to $s_2$.  The sibling leaves $u_1$ and $u_2$ are joined to a common parent, $x$, and the labels on the edges $xu_1$ and $xu_2$ are suffixes of $s_1$ and $s_2$, respectively.  The lengths of these labels can be computed by the length of the longest common prefix between $s_1$ and $s_2$, which is given by the value $L_1$.  And now we can continue this way using $s_3$ and $L_2$ to determine how the leaf, $u_3$, corresponding to $s_3$ fits into the picture.  The length of $s_2$ and the value of $L_2$ tells us whether 
 \begin{enumerate}
   \item The parent of $u_3$ should subdivide the edge $xu_2$; or
   \item The parent of $u_3$ should be $x$; or
@@ -828,7 +888,7 @@ which takes $O(k)$ time. However, when this process walks past a node, this node
   Given a suffix array and LCP array for a string $t$, the structure of
   the suffix tree, $T$, for $t$ can be constructed in $O(n)$ time.  If one
   wants to also allocate and populate the arrays associated with the
-  nodes of $T$ then this can be done in an additional takes $O(nN)$ time.
+  nodes of $T$ then this can be done in an additional
 \end{thm}
 
 
@@ -842,26 +902,25 @@ of Shakespeare in a suffix tree, it is possible to test if the word
 ``warble'' appears anywhere in the text by following 7 pointers.
 
 This result is possible because the individual characters of strings
-are used as indices into arrays.  Unfortunately, this approach has
-two drawbacks: The first is that it requires that the characters be
-integers.  The second is that $N$, the size of the alphabet becomes a
-factor in the storage and running time.
+are used as indices into arrays.  Unfortunately, this approach has two
+drawbacks: The first is that it requires that the characters be integers.
+The second is that $|\Sigma|$, the size of the alphabet becomes a factor
+in the storage and running time.
 
-To avoid having $N$ play a role in the running time, we can restrict
-ourselves to algorithms that only perform comparisons between
-characters.  One way to do this would be to simply store our strings
-in a binary search tree, in lexicographic order.  Then a search for
-the string $s$ could be done with $O(\log n)$ string comparison, each
-of which takes $O(|s|)$ time, for a total of $O(|s|\log n)$.
+To avoid having $|\Sigma|$ play a role in the running time, we can
+restrict ourselves to algorithms that only perform comparisons between
+characters.  One way to do this would be to simply store our strings in
+a binary search tree, in lexicographic order.  Then a search for the
+string $s$ could be done with $O(\log n)$ string comparison, each of
+which takes $O(|s|)$ time, for a total of $O(|s|\log n)$.
 
-Another way to reduce the dependence on $N$ is to store child pointers
-in a binary search tree.  A \emph{ternary} trie is a trie in which
-pointers to the children of each of node $v$ are stored in a binary
-search tree.  If we use a balanced binary search trees for this, then it
-is clear that the insertion, deletion and search times for the string
-$s$ are $O(|s|\log N)$.  If $N$ is large, we can do significantly
-better than this, by using a different method of balancing our search
-trees.
+Another way to reduce the dependence on $|\Sigma|$ is to store child
+pointers in a binary search tree.  A \emph{ternary} trie is a trie in
+which pointers to the children of each of node $v$ are stored in a binary
+search tree.  If we use a balanced binary search trees for this, then
+it is clear that the insertion, deletion and search times for the string
+$s$ are $O(|s|\log|\Sigma|$.  If $N$ is large, we can do significantly better
+than this, by using a different method of balancing our search trees.
 
 Note that a ternary trie can be viewed as a single tree in which each
 node has up to 3 children (hence the name).  Each node $v$ has a left
@@ -898,14 +957,17 @@ can easily be implemented to run in $O(n')$ time, where $n'$ is the
 number of strings beginning with $m$.  However, during this operation,
 we strip off $n'$ characters from strings and never have to look at
 these again.  Therefore the total running time, including recursive
-calls, is not more than $O(M)$.
+calls, is not more than $O(M)$, where $M$ is the total length of all strings stored in the ternary trie.
 
 \begin{thm}
 After sorting the input strings, a ternary trie can be constructed in
 $O(M)$ time and can search for a string $s$ in $O(|s|+\log n)$ time.
 \end{thm}
 
-TODO: Show how to make ternary tries dynamic, using randomization.
+TODO: Talk about how ternary quicksort can build a ternary search tree
+in $O(M+n\log n)$.
+
+TODO: Talk about how to make ternary tries dynamic using treaps, splaying, weight-balancing, or partial rebuilding. 
 
 \section{Quad-Trees}
 
@@ -972,10 +1034,22 @@ To Retrieve Information Coded In Alphanumeric.
 
 Suffix trees were introduced by Weiner \cite{w73}, who also showed
 that, if $N$, the size of the alphabet, is constant then there is an
-$O(M)$ time algorithm for their construction.  Since then, several
-other simplified $O(M)$ time construction algorithms for suffix trees
-have been presented \cite{cs85,m76}.  Recently, Farach \cite{f97} gave
-an $O(M)$ time algorithm for the case where $N$ is as large as $M$,
+$O(n)$ time algorithm for their construction.  Since then, several
+other simplified $O(n)$ time construction algorithms for suffix trees
+have been presented \cite{cs85,m76,f97}.
+
+Suffix arrays were introduced by Manber and Myers \cite{S}, who gave an
+$O(n\log n)$ time algorithm for their construction.  The $O(n)$ time
+suffix array construction algorithm given here is due to Karkainnen
+and Sanders \cite{x}, though several other $O(n)$ time construction
+algorithms are known \cite{S}.  The LCP array construction algorithm
+given here is due to Kasai \etal\ \cite{kS}.
+
+Karwere viewed as an way of compressing suffix trees \cite{S}
+
+
+  Recently, Farach \cite{f97} gave
+an $O(n)$ time algorithm for the case where $N$ is as large as $n$,
 the length of the string.
 
 Ternary tries also have a long history, dating back at least until

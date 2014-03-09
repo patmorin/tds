@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70005" creator="Ipe 7.1.1">
-<info created="D:20140227144254" modified="D:20140227212107"/>
+<info created="D:20140227144254" modified="D:20140305120516"/>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
 <path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
@@ -366,28 +366,7 @@ h
 h
 </path>
 <text matrix="1 0 0 1 200 -138.144" transformations="translations" pos="32 640" stroke="black" type="label" width="4.981" height="7.475" depth="0.55" halign="center" valign="baseline">\$</text>
-<text matrix="1 0 0 1 38.4852 -64.5678" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="43.753" height="7.479" depth="1.93" halign="center" valign="baseline">``orange\$&apos;&apos;</text>
-<path matrix="1 0 0 1 80 -32" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<path matrix="1 0 0 1 80 -48" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<text matrix="1 0 0 1 88 -42.144" transformations="translations" pos="32 640" stroke="black" type="label" width="4.981" height="6.42" depth="0" halign="center" valign="baseline">7</text>
-<use matrix="1 0 0 1 8 -152" name="mark/disk(sx)" pos="112 768" size="normal" stroke="black"/>
-<path stroke="black" arrow="normal/small">
-120 616 m
-137.982 615.77
-136.214 512 s
-</path>
+<text matrix="1 0 0 1 -0.155457 -107.443" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="43.753" height="7.479" depth="1.93" halign="center" valign="baseline">``orange\$&apos;&apos;</text>
 <group matrix="1 0 0 1 96 -160">
 <use matrix="1 0 0 1 8 -8" name="mark/disk(sx)" pos="128 800" size="normal" stroke="white"/>
 <path stroke="black" fill="pink">
@@ -400,23 +379,7 @@ h
 8 0 0 8 136 792 e
 </path>
 </group>
-<text matrix="1 0 0 1 166.485 -64.5678" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="23.827" height="7.475" depth="0.55" halign="center" valign="baseline">``or\$&apos;&apos;</text>
-<path matrix="1 0 0 1 208 -32" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<path matrix="1 0 0 1 208 -48" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<text matrix="1 0 0 1 216 -42.144" transformations="translations" pos="32 640" stroke="black" type="label" width="4.981" height="6.42" depth="0" halign="center" valign="baseline">2</text>
-<use matrix="1 0 0 1 136 -152" name="mark/disk(sx)" pos="112 768" size="normal" stroke="black"/>
+<text matrix="1 0 0 1 163.055 -89.1979" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="23.827" height="7.475" depth="0.55" halign="center" valign="baseline">``or\$&apos;&apos;</text>
 <path matrix="1 0 0 1 128 48" stroke="darkgreen" pen="fat">
 104 576 m
 104 544 l
@@ -442,57 +405,8 @@ h
 234.53 576.411 m
 245.47 543.589 l
 </path>
-<text matrix="1 0 0 1 182.485 -112.568" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="45.441" height="7.479" depth="1.93" halign="center" valign="baseline">``ganism\$&apos;&apos;</text>
-<path matrix="1 0 0 1 224 -80" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<path matrix="1 0 0 1 224 -96" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<text matrix="1 0 0 1 232 -90.144" transformations="translations" pos="32 640" stroke="black" type="label" width="4.981" height="6.42" depth="0" halign="center" valign="baseline">7</text>
-<use matrix="1 0 0 1 152 -200" name="mark/disk(sx)" pos="112 768" size="normal" stroke="black"/>
-<text matrix="1 0 0 1 118.485 -112.568" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="34.869" height="7.479" depth="1.93" halign="center" valign="baseline">``ange\$&apos;&apos;</text>
-<path matrix="1 0 0 1 160 -80" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<path matrix="1 0 0 1 160 -96" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<text matrix="1 0 0 1 168 -90.144" transformations="translations" pos="32 640" stroke="black" type="label" width="4.981" height="6.42" depth="0" halign="center" valign="baseline">5</text>
-<use matrix="1 0 0 1 88 -200" name="mark/disk(sx)" pos="112 768" size="normal" stroke="black"/>
-<path stroke="black" arrow="normal/small">
-200 568 m
-168.474 568.044
-167.59 512 s
-</path>
-<path stroke="black" arrow="normal/small">
-264 568 m
-264 568
-295.302 568.485
-295.302 512 s
-</path>
-<path stroke="black">
-248 616 m
-153.007 615.328
-136.214 512
-136.214 512 s
-</path>
+<text matrix="1 0 0 1 182.372 -137.51" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="45.441" height="7.479" depth="1.93" halign="center" valign="baseline">``ganism\$&apos;&apos;</text>
+<text matrix="1 0 0 1 122.512 -137.51" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="34.869" height="7.479" depth="1.93" halign="center" valign="baseline">``ange\$&apos;&apos;</text>
 <group matrix="1 0 0 1 224 -160">
 <use matrix="1 0 0 1 8 -8" name="mark/disk(sx)" pos="128 800" size="normal" stroke="white"/>
 <path stroke="black" fill="pink">
@@ -506,22 +420,6 @@ h
 </path>
 </group>
 <text matrix="1 0 0 1 310.485 -112.568" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="54.324" height="7.479" depth="1.93" halign="center" valign="baseline">``organism\$&apos;&apos;</text>
-<path matrix="1 0 0 1 352 -80" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<path matrix="1 0 0 1 352 -96" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<text matrix="1 0 0 1 360 -90.144" transformations="translations" pos="32 640" stroke="black" type="label" width="4.981" height="6.42" depth="0" halign="center" valign="baseline">9</text>
-<use matrix="1 0 0 1 280 -200" name="mark/disk(sx)" pos="112 768" size="normal" stroke="black"/>
 <path stroke="darkorange" pen="fat">
 360 624 m
 360 624
@@ -542,10 +440,41 @@ h
 </path>
 <text matrix="1 0 0 1 11.9316 -13.2572" transformations="translations" pos="114.561 656.868" stroke="black" type="label" width="88.584" height="7.473" depth="2.49" valign="baseline">\textsc{Insert}(``organism&apos;&apos;)</text>
 <text matrix="1 0 0 1 148.041 -13.2576" transformations="translations" pos="114.561 656.868" stroke="black" type="label" width="82.455" height="7.473" depth="2.49" valign="baseline">\textsc{Delete}(``orange&apos;&apos;)</text>
+<use name="mark/disk(sx)" pos="88 536" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="216 536" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="248 536" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="376 536" size="normal" stroke="black"/>
+<text matrix="1 0 0 1 -3.7336 -143.817" transformations="translations" pos="100.976 676.607" stroke="black" type="label" width="4.981" height="6.42" depth="0" valign="baseline">$7$</text>
 <path stroke="black" arrow="normal/small">
-392 568 m
-291.734 568.057
-263.768 512 s
+88 536 m
+88 503.689
+128 503.689 s
+</path>
+<use name="mark/disk(sx)" pos="232 584" size="normal" stroke="black"/>
+<path stroke="black" arrow="normal/small">
+216 536 m
+167.238 536
+167.238 512 s
+</path>
+<path stroke="black" arrow="normal/small">
+232 584 m
+135.125 584
+135.125 512 s
+</path>
+<path stroke="black" arrow="normal/small">
+376 536 m
+263.887 536
+263.887 512.239 s
+</path>
+<text matrix="1 0 0 1 124.266 -143.817" transformations="translations" pos="100.976 676.607" stroke="black" type="label" width="4.981" height="6.42" depth="0" valign="baseline">$5$</text>
+<text matrix="1 0 0 1 284.266 -143.817" transformations="translations" pos="100.976 676.607" stroke="black" type="label" width="4.981" height="6.42" depth="0" valign="baseline">$9$</text>
+<text matrix="1 0 0 1 140.266 -95.817" transformations="translations" pos="100.976 676.607" stroke="black" type="label" width="4.981" height="6.42" depth="0" valign="baseline">$2$</text>
+<text matrix="1 0 0 1 156.266 -143.817" transformations="translations" pos="100.976 676.607" stroke="black" type="label" width="4.981" height="6.42" depth="0" valign="baseline">$7$</text>
+<path stroke="black" arrow="normal/small">
+248 536 m
+248 528
+295.688 528
+295.688 512 s
 </path>
 </page>
 </ipe>

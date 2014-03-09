@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70005" creator="Ipe 7.1.1">
-<info created="D:20140227144254" modified="D:20140227203511"/>
+<info created="D:20140227144254" modified="D:20140305115651"/>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
 <path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
@@ -296,7 +296,7 @@ h
 138.879 769.854 m
 109.121 734.146 l
 </path>
-<text matrix="1 0 0 1 30.2959 79.4322" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="20.479" height="6.926" depth="1.93" halign="center" valign="baseline">``ap&apos;&apos;</text>
+<text matrix="1 0 0 1 33.0338 58.2304" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="20.479" height="6.926" depth="1.93" halign="center" valign="baseline">``ap&apos;&apos;</text>
 <path matrix="-1 0 0 1 288 0.00022976" stroke="black">
 138.879 769.854 m
 109.121 734.146 l
@@ -501,146 +501,58 @@ h
 h
 </path>
 <text matrix="1 0 0 1 344 85.8555" transformations="translations" pos="32 640" stroke="black" type="label" width="4.981" height="7.475" depth="0.55" halign="center" valign="baseline">\$</text>
-<path matrix="1 0 0 1 71.8107 112" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<path matrix="1 0 0 1 71.8107 96" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<text matrix="1 0 0 1 79.8107 101.856" transformations="translations" pos="32 640" stroke="black" type="label" width="4.981" height="6.42" depth="0" halign="center" valign="baseline">2</text>
-<use matrix="1 0 0 1 -0.189349 -8" name="mark/disk(sx)" pos="112 768" size="normal" stroke="black"/>
+<text matrix="1 0 0 1 98.1232 58.2304" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="34.344" height="6.926" depth="1.93" halign="center" valign="baseline">``organ&apos;&apos;</text>
+<text matrix="1 0 0 1 125.42 8.02509" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="29.943" height="7.475" depth="0.55" halign="center" valign="baseline">``ism\$&apos;&apos;</text>
+<text matrix="1 0 0 1 45.5725 8.71309" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="27.674" height="7.479" depth="1.93" halign="center" valign="baseline">``ple\$&apos;&apos;</text>
+<text matrix="1 0 0 1 86.2746 8.02509" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="14.944" height="7.475" depth="0.55" halign="center" valign="baseline">``\$&apos;&apos;</text>
+<text matrix="1 0 0 1 4.77568 8.02509" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="19.372" height="7.475" depth="0.55" halign="center" valign="baseline">``e\$&apos;&apos;</text>
+<use name="mark/disk(sx)" pos="88 680" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="120 680" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="168 680" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="200 680" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="184 728" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="104 728" size="normal" stroke="black"/>
 <path stroke="black" arrow="normal/small">
-111.811 760 m
-37.8563 759.684
-39.6332 656 s
-</path>
-<text matrix="1 0 0 1 95.3853 79.4322" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="34.344" height="6.926" depth="1.93" halign="center" valign="baseline">``organ&apos;&apos;</text>
-<path matrix="1 0 0 1 136.9 112" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<path matrix="1 0 0 1 136.9 96" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<text matrix="1 0 0 1 144.9 101.856" transformations="translations" pos="32 640" stroke="black" type="label" width="4.981" height="6.42" depth="0" halign="center" valign="baseline">5</text>
-<use matrix="1 0 0 1 64.9001 -8" name="mark/disk(sx)" pos="112 768" size="normal" stroke="black"/>
-<path stroke="black" arrow="normal/small">
-176.9 760 m
-245.755 760.039
-247.532 736 s
-</path>
-<text matrix="1 0 0 1 129.154 31.4322" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="29.943" height="7.475" depth="0.55" halign="center" valign="baseline">``ism\$&apos;&apos;</text>
-<path matrix="1 0 0 1 170.669 64" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<path matrix="1 0 0 1 170.669 48" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<text matrix="1 0 0 1 178.669 53.856" transformations="translations" pos="32 640" stroke="black" type="label" width="4.981" height="6.42" depth="0" halign="center" valign="baseline">4</text>
-<use matrix="1 0 0 1 98.6693 -56" name="mark/disk(sx)" pos="112 768" size="normal" stroke="black"/>
-<path stroke="black" arrow="normal/small">
-210.669 712 m
-264.235 711.352
-287.335 688.252
-326.783 688.963
-328.204 720 s
-</path>
-<text matrix="1 0 0 1 48.2041 31.4322" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="27.674" height="7.479" depth="1.93" halign="center" valign="baseline">``ple\$&apos;&apos;</text>
-<path matrix="1 0 0 1 89.7189 64" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<path matrix="1 0 0 1 89.7189 48" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<text matrix="1 0 0 1 97.7189 53.856" transformations="translations" pos="32 640" stroke="black" type="label" width="4.981" height="6.42" depth="0" halign="center" valign="baseline">4</text>
-<use matrix="1 0 0 1 17.7189 -56" name="mark/disk(sx)" pos="112 768" size="normal" stroke="black"/>
-<text matrix="1 0 0 1 76.8163 31.4322" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="14.944" height="7.475" depth="0.55" halign="center" valign="baseline">``\$&apos;&apos;</text>
-<path matrix="1 0 0 1 118.331 64" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<path matrix="1 0 0 1 118.331 48" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<text matrix="1 0 0 1 126.331 53.856" transformations="translations" pos="32 640" stroke="black" type="label" width="4.981" height="6.42" depth="0" halign="center" valign="baseline">1</text>
-<use matrix="1 0 0 1 46.3311 -56" name="mark/disk(sx)" pos="112 768" size="normal" stroke="black"/>
-<text matrix="1 0 0 1 -2.76253 31.4322" transformations="translations" pos="81.5148 692.477" stroke="black" type="label" width="19.372" height="7.475" depth="0.55" halign="center" valign="baseline">``e\$&apos;&apos;</text>
-<path matrix="1 0 0 1 38.7523 64" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<path matrix="1 0 0 1 38.7523 48" stroke="black">
-32 656 m
-32 640 l
-48 640 l
-48 656 l
-h
-</path>
-<text matrix="1 0 0 1 46.7523 53.856" transformations="translations" pos="32 640" stroke="black" type="label" width="4.981" height="6.42" depth="0" halign="center" valign="baseline">2</text>
-<use matrix="1 0 0 1 -33.2477 -56" name="mark/disk(sx)" pos="112 768" size="normal" stroke="black"/>
-<path stroke="black" arrow="normal/small">
-78.7523 712 m
-53.4931 711.707
-55.6254 676.169
-71.2623 670.483
+88 680 m
+71.8541 680.341
 71.2623 656 s
 </path>
+<text matrix="1 0 0 1 -3.73356 0.182669" transformations="translations" pos="100.976 676.607" stroke="black" type="label" width="4.981" height="6.42" depth="0" valign="baseline">$2$</text>
 <path stroke="black" arrow="normal/small">
-129.719 712 m
-143.76 707.443
-144.116 669.061
-152.645 658.755
-152.645 640 s
+168 680 m
+168 661.424
+216.467 661.424
+216.467 680.092
+312.544 680.092
+312.544 656 s
 </path>
 <path stroke="black" arrow="normal/small">
-158.331 712 m
-183.208 687.541
-184.985 660.532
-221.589 663.731
-238.292 680.078
-310.79 677.946
-311.146 656 s
+184 728 m
+184 752
+248.825 752
+248.825 736 s
+</path>
+<path stroke="black" arrow="normal/small">
+104 728 m
+39.7455 728
+39.7455 656 s
+</path>
+<text matrix="1 0 0 1 28.2664 0.182669" transformations="translations" pos="100.976 676.607" stroke="black" type="label" width="4.981" height="6.42" depth="0" valign="baseline">$4$</text>
+<text matrix="1 0 0 1 76.2664 0.182669" transformations="translations" pos="100.976 676.607" stroke="black" type="label" width="4.981" height="6.42" depth="0" valign="baseline">$1$</text>
+<text matrix="1 0 0 1 108.266 0.182669" transformations="translations" pos="100.976 676.607" stroke="black" type="label" width="4.981" height="6.42" depth="0" valign="baseline">$4$</text>
+<text matrix="1 0 0 1 92.2664 48.1827" transformations="translations" pos="100.976 676.607" stroke="black" type="label" width="4.981" height="6.42" depth="0" valign="baseline">$5$</text>
+<text matrix="1 0 0 1 12.2664 48.1827" transformations="translations" pos="100.976 676.607" stroke="black" type="label" width="4.981" height="6.42" depth="0" valign="baseline">$2$</text>
+<path stroke="black" arrow="normal/small">
+200 680 m
+200 696.022
+327.976 696.022
+327.976 720 s
+</path>
+<path stroke="black" arrow="normal/small">
+120 680 m
+120 663.415
+152.748 663.415
+152.748 640 s
 </path>
 </page>
 </ipe>
