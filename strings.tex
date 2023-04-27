@@ -97,7 +97,7 @@ sorted order, a prefix tree implicitly represents a sequence of
 weights that are the weights of nodes we encounter while travering $T$
 using an in-order (left-to-right) traversal.  Let $u_1,\ldots,u_n$ be
 the nodes of $T$ in left-to-right order.  We can use prefix-trees to
-perform searches on the set 
+perform searches on the set
 \[
 W = \left\{ w_i : w_i = \sum_{j=1}^i \wght(u_i) \right\} \enspace .
 \]
@@ -114,7 +114,7 @@ there are three cases
   case, $u$ is the node we are searching for, so we report it.
 
 \item $\wght(\lft(u)) + \wght(u) \le x$.  In this case, we search
-  for the value 
+  for the value
   \[ x'=x - \sz(\lft(u)) - \wght(u) \]
   in the subtree rooted at $\rght(u)$.
 \end{enumerate}
@@ -432,7 +432,7 @@ number of occurrences of $s$ in $t$.
 
 The construction time in \thmref{suffix-tree-slow} is non-optimal.
 In particular, the $O(n^2)$ term is unnecessary. In the next few section
-we will develop the tools needed to construct a suffix tree in 
+we will develop the tools needed to construct a suffix tree in
 $O(n\cdot|\Sigma|)$ time.
 
 
@@ -441,7 +441,7 @@ $O(n\cdot|\Sigma|)$ time.
 The \emph{suffix array} $A_1,\ldots,A_n$ of a string $t=t_1,\ldots,t_n$ lists
 the suffixes of $t$ in lexicographically increasing order.  That is,
 $A_i$ is the index such that $t_{A_{i}},\ldots,t_n$ has rank $i$ among
-all suffixes of $A$.  
+all suffixes of $A$.
 
 For example, consider the string $t=\text{``counterrevoluationary\$}$'':
 \begin{center}
@@ -544,7 +544,7 @@ match $s$ have length $a$ and $b$ respectively. The algorithm starts with
 $(i=1,j=n,a,b=0)$ where the value of $a$ is obtained by comparing $s$
 with $s_1$.
 
-Suppose, without loss of generality, that $a \ge b$ (the case where $b>a$ is symmetric).  Now, consider the entry $\ell_{i,m}$ which tells us how many characters of $s_m$ match $s_i$. 
+Suppose, without loss of generality, that $a \ge b$ (the case where $b>a$ is symmetric).  Now, consider the entry $\ell_{i,m}$ which tells us how many characters of $s_m$ match $s_i$.
 As an example, suppose we are searching for the string $s=\text{``programmer''}$, and we have reached a state where $s_i=\text{``\uline{programm}able\ldots\$''}$, $s_j=\text{``\uline{pro}tectionism''}$, so $a=8$ and $b=3$.: \\[\parskip]
   \begin{eqnarray*}
      s_i & = & \text{``\uline{programm}able\ldots\$''} \\
@@ -557,7 +557,7 @@ Since $s_i$ and $s_j$ share the common prefix ``pro'' of length $\min\{a,b\}=3$,
 There are now three cases to consider:
 
 \begin{enumerate}
-\item If $\ell_{i,m}< a$, then we can immediately conclude that $s_m > s$. This is because $s_m > s_i$, so the character at position 
+\item If $\ell_{i,m}< a$, then we can immediately conclude that $s_m > s$. This is because $s_m > s_i$, so the character at position
 $\ell_{i,m}+1$ in $s_m$ is greater than the corresponding character in $s_i$ and $s$.  An example of this occurs when $s_m=\text{``\uline{progr}ess\ldots\$''}$, so that $\ell_{i,m}=5$ and character at position 6 in $s_m$ (an `e') is greater than the character at position 6 in $s_i$ and $s$ (an `a').
 
 Therefore, our search can now be restricted to $s_i,\ldots,s_{m}$.  Furthermore, we know that the longest prefix of $s_m$ that matches $s$ has length $b'=\ell_{i,m}$.  Therefore, we can recursively search $s_i,\ldots,s_{m}$ using the values $a'=a$ and $b'=\ell_{i,m}$. That is, we recurse with the values $(i,m,a,\ell_{i,m})$
@@ -645,7 +645,7 @@ To implement Step 1, we transform the string $t$ into the sequence of triples:
    t'= \underbrace{(t_1,t_2,t_3),(t_4,t_5,t_6),\ldots,(t_{n-3},t_{n-2},t_{n-1})}_\text{suffixes in $S_1$},
    \underbrace{(t_2,t_3,t_4),(t_5,t_6,t_7),\ldots,(t_{n-2},t_{n-1},t_{n})}_\text{suffixes in $S_2$}
 \]
-Observe that each suffix in $S_1\cup S_2$ is represented somewhere in this sequence.  That, is, for any $t_i,t_{i+1},\ldots,t_n$ with $i\not\equiv 0\pmod 3$, the suffix 
+Observe that each suffix in $S_1\cup S_2$ is represented somewhere in this sequence.  That, is, for any $t_i,t_{i+1},\ldots,t_n$ with $i\not\equiv 0\pmod 3$, the suffix
 \[
    (t_i,t_{i+1},t_{i+2}),(t_{i+3},t_{i+4},t_{i+5}),\ldots,
        (t_{i+3\lceil(n-i)/3\rceil},t_{i+3\lceil(n-i)/3\rceil+1},
@@ -678,25 +678,25 @@ the suffix $t_{i+1},\ldots,t_n$ obtained during Step 1.  Applying radix
 sort to all of these pairs allows us to sort $S_0$ in $O(n)$ time.
 
 \paragraph{Step 3.}
-To implement Step~3, we have to merge two sorted lists, one of length $2n/3$ and one of length $n/3$ in $O(n)$ time.  Merging two sorted lists using $O(n)$ comparisons is straightforward. Therefore, the only trick here is to ensure that we can compare two elements---one from the first list and one from the second list---in constant time.  
+To implement Step~3, we have to merge two sorted lists, one of length $2n/3$ and one of length $n/3$ in $O(n)$ time.  Merging two sorted lists using $O(n)$ comparisons is straightforward. Therefore, the only trick here is to ensure that we can compare two elements---one from the first list and one from the second list---in constant time.
 
 To see why this is possible, suppose we are comparing $t_i,\ldots,t_n\in S_0$ with $t_j,\ldots,t_n\in S_1$.  Then we can write these as comparing
 \[
    t_i,\underbrace{t_{i+1},\ldots,t_n}_{\text{a suffix in $S_1$}}
 \]
-and 
+and
 \[
    t_j,\underbrace{t_{j+1},\ldots,t_n}_{\text{a suffix in $S_2$}}
     \enspace .
 \]
 Now this can certainly be done in constant time, by comparing $t_i$ and $t_j$ and, in case of a tie, comparing two suffixes whose relative order was already determined in Step 1.
 
-Similarly, if we are comparing 
+Similarly, if we are comparing
 $t_i,\ldots,t_n\in S_0$ with $t_j,\ldots,t_n\in S_2$, then we can treat this as comparing
 \[
    t_i,t_{i+1},\underbrace{t_{i+2},\ldots,t_n}_{\text{a suffix in $S_2$}}
 \]
-and 
+and
 \[
    t_j,t_{j+1},\underbrace{t_{j+2},\ldots,t_n}_{\text{a suffix in $S_1$}}
     \enspace .
@@ -736,7 +736,7 @@ to implement efficient prefix searches in a suffix array, we need more
 than an LCP array.  When $n$ is a power of two, the binary search
 algorithm needs to know the values $\ell_{i,j}$ for all pairs $i,j$
 of form $i=1+q2^p$ and $j=\min\{n,i+2^{p}\}$, with $p\in\{1,\ldots,\lceil \log
-n\rceil-1\}$ and $q\in\{0,\ldots,\lceil n/2^p\rceil\}$.  See \figref{lcp-search} for an illustration. 
+n\rceil-1\}$ and $q\in\{0,\ldots,\lceil n/2^p\rceil\}$.  See \figref{lcp-search} for an illustration.
 
 \begin{figure}
   \begin{center}
@@ -815,7 +815,7 @@ More generally, if the longest common prefix of $s_{R_i}$ and $s_{R_i-1}$ has le
   \STATE{$h\gets 0$}
   \FOR{$i\gets 1,\ldots,n$}
     \IF{$R_i > 1$}
-        \STATE{$k\gets A_{R_i-1}$}  
+        \STATE{$k\gets A_{R_i-1}$}
         \WHILE{$t_{i+h} = t_{A_{k+h}}$}
            \STATE{$h\gets h+1$}
         \ENDWHILE
@@ -836,7 +836,7 @@ It follows that the body of the while loop can not execute more than $2n$
 times during the entire execution of the algorithm.
 
 \begin{thm}
-  Given a suffix array $A$ for a string $t$ of length $n$, the LCP array, 
+  Given a suffix array $A$ for a string $t$ of length $n$, the LCP array,
   $L$, can be constructed in $O(n)$ time.
 \end{thm}
 
@@ -858,27 +858,27 @@ the entire structure for indexing $t$ requires only $3n$ words of space.
 
 Although a suffix array, in combination with an LCP array, is a viable substitute for a suffix tree in many applications, there are still times when one wants a suffix tree.  In this section, we show that, given the suffix array, $A$, and the LCP array, $L$, for the string $t$, it is possible to compute the suffix tree, $T$, for $t$ in $O(n\cdot|\Sigma|)$ time.  Indeed, the tree structure can be constructed in $O(n)$ time, the factor of $|\Sigma|$ comes only from creating an array of length $|\Sigma|$ at each of the nodes in the suffix tree.
 
-The key observation in this algorithm is that the suffix array and LCP array allow us to perform a traversal of the suffix tree---creating nodes as we go.  To see how this works, recall that the first node traversed in an in-order traversal is lexicographically smallest.  This node corresponds to the first suffix $s_1$ corresponding to the index, $A_1$ in the suffix array.  We join this node, $u_1$, to a sibling, $u_2$ that corresponds to $s_2$.  The sibling leaves $u_1$ and $u_2$ are joined to a common parent, $x$, and the labels on the edges $xu_1$ and $xu_2$ are suffixes of $s_1$ and $s_2$, respectively.  The lengths of these labels can be computed by the length of the longest common prefix between $s_1$ and $s_2$, which is given by the value $L_1$.  And now we can continue this way using $s_3$ and $L_2$ to determine how the leaf, $u_3$, corresponding to $s_3$ fits into the picture.  The length of $s_2$ and the value of $L_2$ tells us whether 
+The key observation in this algorithm is that the suffix array and LCP array allow us to perform a traversal of the suffix tree---creating nodes as we go.  To see how this works, recall that the first node traversed in an in-order traversal is lexicographically smallest.  This node corresponds to the first suffix $s_1$ corresponding to the index, $A_1$ in the suffix array.  We join this node, $u_1$, to a sibling, $u_2$ that corresponds to $s_2$.  The sibling leaves $u_1$ and $u_2$ are joined to a common parent, $x$, and the labels on the edges $xu_1$ and $xu_2$ are suffixes of $s_1$ and $s_2$, respectively.  The lengths of these labels can be computed by the length of the longest common prefix between $s_1$ and $s_2$, which is given by the value $L_1$.  And now we can continue this way using $s_3$ and $L_2$ to determine how the leaf, $u_3$, corresponding to $s_3$ fits into the picture.  The length of $s_2$ and the value of $L_2$ tells us whether
 \begin{enumerate}
   \item The parent of $u_3$ should subdivide the edge $xu_2$; or
   \item The parent of $u_3$ should be $x$; or
   \item The parent of $u_3$ should be a parent of $x$.
 \end{enumerate}
-In general, when we process the suffix $s_i$, the length of $s_{i-1}$ and $L_{i-1}$ are used to determine how the new leaf, $u_i$ should be attached to the partial tree constructed so far.  Specifically, these values allow the algorithm to walk upward from $u_{i-1}$ to find an appropriate location to attach $u_i$.  This will either result in 
+In general, when we process the suffix $s_i$, the length of $s_{i-1}$ and $L_{i-1}$ are used to determine how the new leaf, $u_i$ should be attached to the partial tree constructed so far.  Specifically, these values allow the algorithm to walk upward from $u_{i-1}$ to find an appropriate location to attach $u_i$.  This will either result in
 \begin{enumerate}
   \item A new parent for $u_3$ being created by splitting an existing edge;
   \item Attaching $u_3$ as the child of an existing node; or
   \item A new parent for $u_3$ being created and becoming the root of the current tree.
 \end{enumerate}
-Processing $u_i$ may require walking up many, say $k$, steps from $u_{i-1}$, 
+Processing $u_i$ may require walking up many, say $k$, steps from $u_{i-1}$,
 which takes $O(k)$ time. However, when this process walks past a node, this node is never visited again by the algorithm. Since the final result is a suffix tree that has at most $2n-1$ nodes, the total running time is therefore $O(n)$. The first few steps of running this algorithm on the suffix array for ``counterrevolutionary\$'' are illustrated in \figref{linear-suffix-array}.
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=.85]{figs/suffix-tree-1} \\[1em]
-\includegraphics[scale=.85]{figs/suffix-tree-2} \\[1em]
-\includegraphics[scale=.85]{figs/suffix-tree-3} \\[1em]
-\includegraphics[scale=.85]{figs/suffix-tree-4} \\[1em]
+\includegraphics[scale=.85,page=1]{figs/suffix-tree} \\[1em]
+\includegraphics[scale=.85,page=2]{figs/suffix-tree} \\[1em]
+\includegraphics[scale=.85,page=3]{figs/suffix-tree} \\[1em]
+\includegraphics[scale=.85,page=4]{figs/suffix-tree} \\[1em]
 \end{center}
 \caption{Building a suffix tree for ``counterrevoluationary\$'' in a bottom-up fashion starting with the suffixes ``ary\$'', ``counterrevoluationary\$'', ``errevoluationary\$'', and ``evoluationary\$''.}
 \figlabel{linear-suffix-array}
@@ -967,7 +967,7 @@ $O(M)$ time and can search for a string $s$ in $O(|s|+\log n)$ time.
 TODO: Talk about how ternary quicksort can build a ternary search tree
 in $O(M+n\log n)$.
 
-TODO: Talk about how to make ternary tries dynamic using treaps, splaying, weight-balancing, or partial rebuilding. 
+TODO: Talk about how to make ternary tries dynamic using treaps, splaying, weight-balancing, or partial rebuilding.
 
 \section{Quad-Trees}
 
@@ -1012,7 +1012,7 @@ a tree in which each node has $2^d$ children.  If we use a Patricia
 tree in place of a trie then we obtain a \emph{compressed quadtree}
 which, like the Patricia tree uses only $O(n+M)$ storage where $M$ is
 the total size of (the binary expansion of) all points stored in the
-quadtree.  
+quadtree.
 
 \section{Discussion and References}
 \seclabel{strings-discussion}
